@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VO-Initiatives — Partner Program · Earn €1,125/mo per client</title>
+<meta name="description" content="Refer a business to VOI and earn 50% of the monthly fee — €1,125 per client, every month, for the lifetime of the client. Plus 50% of setup. No cap, no time limit.">
+<meta name="theme-color" content="#080A0D">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Earn €1,125 per client per month — VOI Partner Program">
+<meta property="og:description" content="50% of the monthly fee, for the lifetime of the client. No cap, no time limit. A product that sells itself.">
+<meta property="og:image" content="https://vo-initiatives.com/assets/hero.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080A0D;--surf:#0F1218;--surf2:#161C26;
+  --ember:#E2572B;--ember-deep:#C8431B;--ember-soft:rgba(226,87,43,.12);--teal:#1E6E62;
+  --text:#EDE9E3;--text2:rgba(237,233,227,.60);--muted:rgba(237,233,227,.34);
+  --border:rgba(237,233,227,.08);--border2:rgba(237,233,227,.14);
+  --display:'Plus Jakarta Sans',system-ui,sans-serif;--body:'Inter',system-ui,sans-serif;
+  --accent:'Fraunces',Georgia,serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+  --r:16px;--maxw:1100px;--ease:cubic-bezier(0.16,1,0.3,1);
+  --shadow:0 2px 2px rgba(0,0,0,.5),0 20px 48px -18px rgba(0,0,0,.8);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,10,13,.66);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+nav .row{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:800;letter-spacing:-.02em;font-size:16px}
+.brand svg{width:24px;height:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:600;font-size:.97rem;border-radius:100px;padding:14px 28px;border:1px solid transparent;transition:.2s var(--ease);cursor:pointer}
+.btn-primary{background:var(--ember);color:#fff}
+.btn-primary:hover{background:var(--ember-deep);transform:translateY(-1px)}
+.btn-secondary{background:transparent;color:var(--text);border-color:var(--border2)}
+.btn-secondary:hover{border-color:var(--ember);color:var(--ember)}
+.glow{position:absolute;border-radius:50%;filter:blur(120px);opacity:.5;z-index:0;pointer-events:none}
+.glow.e{background:radial-gradient(circle,rgba(226,87,43,.30),transparent 70%)}
+.glow.t{background:radial-gradient(circle,rgba(30,110,98,.26),transparent 70%)}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:120px 0 80px;position:relative;overflow:hidden}
+.eyebrow{font-family:var(--mono);text-transform:uppercase;letter-spacing:.24em;font-size:11.5px;color:var(--ember);margin-bottom:24px;display:flex;align-items:center;gap:10px;justify-content:center}
+.eyebrow::before{content:"";width:24px;height:1px;background:var(--ember)}
+h1{font-family:var(--display);font-weight:800;letter-spacing:-.04em;line-height:.98;font-size:clamp(2.6rem,1rem+7vw,5.6rem)}
+h1 em{font-family:var(--accent);font-style:italic;font-weight:400;color:var(--ember)}
+.hero p{color:var(--text2);font-size:clamp(1.05rem,1rem+.5vw,1.3rem);max-width:54ch;margin:1.8rem auto 0;line-height:1.55}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:880px;margin:3rem auto 0}
+.scard{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:32px 24px;box-shadow:var(--shadow)}
+.scard .v{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem,1.4rem+2.5vw,3.4rem);color:var(--ember);letter-spacing:-.03em;line-height:1}
+.scard .v em{font-family:var(--accent);font-style:italic;font-weight:500}
+.scard .l{color:var(--text2);font-size:.92rem;margin-top:12px;line-height:1.4}
+.steps{max-width:620px;margin:3rem auto 0;display:flex;flex-direction:column;gap:16px;text-align:left}
+.step{display:flex;align-items:center;gap:16px;color:var(--text2);font-size:1.02rem}
+.step .n{flex:0 0 auto;width:34px;height:34px;border-radius:50%;border:1px solid var(--ember);color:var(--ember);font-family:var(--mono);font-size:13px;display:flex;align-items:center;justify-content:center}
+.hero-cta{margin-top:3rem;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+section{padding:clamp(4rem,3rem+5vw,7rem) 0;position:relative}
+.eyebrow.l{justify-content:flex-start}.eyebrow.l::before{display:none}
+h2{font-family:var(--display);font-weight:800;letter-spacing:-.03em;font-size:clamp(1.8rem,1.2rem+2.5vw,3rem);margin-bottom:1.2rem}
+h2 em{font-family:var(--accent);font-style:italic;font-weight:400;color:var(--ember)}
+.lead{color:var(--text2);font-size:1.15rem;max-width:60ch;line-height:1.55}
+.math{background:var(--surf2);border:1px solid var(--border2);border-radius:18px;padding:34px;margin-top:2.4rem;box-shadow:var(--shadow);max-width:640px}
+.math .row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);font-size:1.05rem}
+.math .row:last-child{border-bottom:none}
+.math .row .lab{color:var(--text2)}
+.math .row .num{font-family:var(--accent);font-style:italic;color:var(--ember);font-size:1.4rem}
+.math .row.total .lab{color:var(--text);font-weight:600}
+.math .row.total .num{font-size:1.8rem}
+.faq{display:grid;gap:16px;margin-top:2.4rem}
+.qa{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:22px 26px}
+.qa h3{font-family:var(--display);font-weight:700;font-size:1.05rem;margin-bottom:.5rem}
+.qa p{color:var(--text2);font-size:.96rem}
+.note{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.04em;margin-top:24px;max-width:60ch}
+footer{border-top:1px solid var(--border);padding:3rem 0;text-align:center;color:var(--muted);font-size:13px}
+.fade{opacity:0;transform:translateY(20px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.fade.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.fade{opacity:1;transform:none}}
+@media(max-width:820px){.stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap row">
+    <a href="index.html" class="brand">
+      <svg viewBox="0 0 32 32" fill="none"><rect x="1" y="1" width="30" height="30" rx="9" stroke="#E2572B" stroke-width="1.6"/><path d="M9 10.5L16 22L23 10.5" stroke="#E2572B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      VO-Initiatives
+    </a>
+    <a href="#join" class="btn btn-primary">Become a partner</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="glow e" style="width:560px;height:560px;top:-120px;left:50%;transform:translateX(-50%)"></div>
+  <div class="glow t" style="width:420px;height:420px;bottom:-160px;right:-120px"></div>
+  <div class="wrap">
+    <div class="eyebrow">Partner Program</div>
+    <h1>Earn <em>€1,125</em><br>per client, per month.</h1>
+    <p>Refer a business to VOI and earn 50% of the monthly fee — every month, for the lifetime of the client. Plus 50% of the setup. No cap, no time limit.</p>
+
+    <div class="stats">
+      <div class="scard fade"><div class="v">50%</div><div class="l">of the monthly fee, per referred client</div></div>
+      <div class="scard fade"><div class="v">€1.125</div><div class="l">per month, per active client</div></div>
+      <div class="scard fade"><div class="v"><em>∞</em></div><div class="l">no cap · no time limit</div></div>
+    </div>
+
+    <div class="steps">
+      <div class="step fade"><span class="n">1</span> Sign up as a partner</div>
+      <div class="step fade"><span class="n">2</span> Share your link or refer a business by email</div>
+      <div class="step fade"><span class="n">3</span> VOI closes &amp; delivers — you earn €1,125/mo for as long as they stay</div>
+    </div>
+
+    <div class="hero-cta">
+      <a href="mailto:partners@vo-initiatives.com?subject=VOI%20Partner%20Program" class="btn btn-primary">Become a partner →</a>
+      <a href="mailto:partners@vo-initiatives.com?subject=Question%20about%20the%20partner%20program" class="btn btn-secondary">Ask a question</a>
+    </div>
+  </div>
+</header>
+
+<!-- THE MATH -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow l">The math</div>
+    <h2>It <em>compounds</em>.</h2>
+    <p class="lead">One referral isn't a one-off commission — it's a salary line that keeps paying. Here's a single active client:</p>
+    <div class="math fade">
+      <div class="row"><span class="lab">50% of €2.250/mo</span><span class="num">€1.125 / mo</span></div>
+      <div class="row"><span class="lab">50% of the one-time build (€3–4K)</span><span class="num">~€1.500–2.000</span></div>
+      <div class="row total"><span class="lab">3 active clients, recurring</span><span class="num">€3.375 / mo</span></div>
+    </div>
+    <div class="note">Per-client economics shown. Your total depends on how many clients you refer and how long they stay — we don't promise a monthly figure we can't stand behind.</div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section>
+  <div class="glow t" style="width:380px;height:380px;top:-80px;left:-140px"></div>
+  <div class="wrap">
+    <div class="eyebrow l">Why this one</div>
+    <h2>A product that <em>sells itself</em>.</h2>
+    <div class="faq">
+      <div class="qa fade"><h3>Is the recurring real — or capped like other programs?</h3><p>Lifetime. Uncapped. Most "50%" programs stop paying after 12 months — this one keeps paying every month the client stays active.</p></div>
+      <div class="qa fade"><h3>Do I have to sell it?</h3><p>No. It demos itself — the product creates the feeling. You refer; VOI closes the deal, builds, and runs it. You carry no product, no delivery, no support.</p></div>
+      <div class="qa fade"><h3>Will it burn my audience?</h3><p>It's a real, premium, fully-managed product that businesses actually want. Referring it builds your reputation, it doesn't spend it.</p></div>
+      <div class="qa fade"><h3>How do I get paid?</h3><p>Monthly, for as long as the client stays active, plus your share of the setup. <span style="color:var(--muted)">[Payout schedule &amp; terms shared on signup.]</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN -->
+<section id="join" style="text-align:center">
+  <div class="glow e" style="width:480px;height:480px;top:-100px;left:50%;transform:translateX(-50%);opacity:.4"></div>
+  <div class="wrap">
+    <div class="eyebrow">Start</div>
+    <h2>Build income that <em>lasts</em>.</h2>
+    <p class="lead" style="margin:0 auto">Sign up as a partner and start referring today.</p>
+    <div class="hero-cta">
+      <a href="mailto:partners@vo-initiatives.com?subject=VOI%20Partner%20Program" class="btn btn-primary">Become a partner →</a>
+      <a href="index.html" class="btn btn-secondary">See the product</a>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 VO-Initiatives · Partner Program · 50% lifetime, no cap.</footer>
+
+<script src="assets/app.js" defer></script>
+</body>
+</html>

@@ -3,26 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VO-Initiatives — Ingewerkte AI-assistenten voor Belgische KMO's</title>
-<meta name="description" content="Geef je terugkerende werk aan een ingewerkte digitale collega. Wij trainen, hosten en beheren je AI-assistent. Eerste resultaat binnen 14 dagen of je betaalt niet. 100% Belgisch.">
+<title>VO-Initiatives — VOI Agents die je werk begrijpen en uitvoeren</title>
+<meta name="description" content="VOI Agents: digitale collega's die begrijpen wat je bedoelt en je terugkerende taken én hele workflows uitvoeren. Volledig gebouwd en beheerd door VOI. Eerste workflow live binnen 48 uur of je betaalt niet.">
 <meta name="theme-color" content="#080A0D">
 <link rel="canonical" href="https://vo-initiatives.com/">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<!-- Open Graph / social -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="nl_BE">
 <meta property="og:site_name" content="VO-Initiatives">
-<meta property="og:title" content="Een collega die nooit stilstaat — VO-Initiatives">
-<meta property="og:description" content="Ingewerkte AI-assistenten voor Belgische KMO's. Wij trainen, hosten en beheren je digitale collega. Eerste resultaat binnen 14 dagen of je betaalt niet.">
+<meta property="og:title" content="Het weet wat je wil — voor je het typt. | VOI Agents">
+<meta property="og:description" content="Managed AI-agents die je recurring taken én multistep workflows begrijpen en uitvoeren. Eerste workflow live in 48 uur of je betaalt niet.">
 <meta property="og:url" content="https://vo-initiatives.com/">
 <meta property="og:image" content="https://vo-initiatives.com/assets/hero.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Een collega die nooit stilstaat — VO-Initiatives">
-<meta name="twitter:description" content="Ingewerkte AI-assistenten voor Belgische KMO's. Eerste resultaat binnen 14 dagen of je betaalt niet.">
+<meta name="twitter:title" content="Het weet wat je wil — voor je het typt.">
+<meta name="twitter:description" content="VOI Agents: begrijpen je werk en doen het. Live in 48 uur of je betaalt niet.">
 <meta name="twitter:image" content="https://vo-initiatives.com/assets/hero.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#080A0D;--surf:#0F1218;--surf2:#161C26;
@@ -45,8 +44,8 @@ em.acc{font-family:var(--accent);font-style:italic;font-weight:400;color:var(--e
 section{padding-top:var(--pad);padding-bottom:var(--pad);position:relative}
 .eyebrow{font-family:var(--mono);text-transform:uppercase;letter-spacing:.22em;font-size:11px;color:var(--ember);margin-bottom:20px;display:flex;align-items:center;gap:10px}
 .eyebrow::before{content:"";width:24px;height:1px;background:var(--ember);opacity:.7}
-h2{font-size:clamp(2rem,1.2rem+3vw,3.4rem);margin-bottom:1.2rem;max-width:20ch}
-p.lead{font-size:clamp(1.05rem,1rem+.4vw,1.28rem);color:var(--text2);max-width:60ch;line-height:1.55}
+h2{font-size:clamp(2rem,1.2rem+3vw,3.4rem);margin-bottom:1.2rem;max-width:22ch}
+p.lead{font-size:clamp(1.05rem,1rem+.4vw,1.28rem);color:var(--text2);max-width:62ch;line-height:1.55}
 .muted{color:var(--muted)}
 .src{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.04em;margin-top:18px}
 .glow{position:absolute;border-radius:50%;filter:blur(120px);opacity:.5;z-index:0;pointer-events:none}
@@ -57,16 +56,14 @@ p.lead{font-size:clamp(1.05rem,1rem+.4vw,1.28rem);color:var(--text2);max-width:6
 .btn-primary:hover{background:var(--ember-deep);transform:translateY(-1px)}
 .btn-secondary{background:transparent;color:var(--text);border-color:var(--border2)}
 .btn-secondary:hover{border-color:var(--ember);color:var(--ember)}
-/* nav */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,10,13,.66);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
 nav .row{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
 .brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:800;letter-spacing:-.02em;font-size:16px}
 .brand svg{width:24px;height:24px}
-.navlinks{display:flex;gap:26px}
+.navlinks{display:flex;gap:24px}
 .navlinks a{color:var(--text2);font-size:13.5px;font-weight:500;transition:color .2s}
 .navlinks a:hover{color:var(--ember)}
 .navcta{display:flex;align-items:center;gap:14px}
-/* hero */
 .hero{min-height:100vh;display:flex;align-items:center;padding-top:90px;position:relative;overflow:hidden}
 .hero-bg{position:absolute;inset:0;z-index:0}
 .hero-bg img,.hero-bg video{width:100%;height:100%;object-fit:cover;object-position:center right}
@@ -74,75 +71,70 @@ nav .row{display:flex;align-items:center;justify-content:space-between;padding:1
 .hero-scrim2{position:absolute;inset:0;background:linear-gradient(0deg,var(--bg) 2%,transparent 30%)}
 .hero .wrap{position:relative;z-index:2}
 .hero-eyebrow{font-family:var(--mono);text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;color:var(--ember);margin-bottom:24px}
-.hero h1{font-size:clamp(2.8rem,1rem+8vw,6.6rem);letter-spacing:-.045em;line-height:.95;max-width:14ch}
-.hero p{font-size:clamp(1.1rem,1rem+.5vw,1.4rem);color:var(--text2);max-width:46ch;margin-top:1.8rem;line-height:1.5}
+.hero h1{font-size:clamp(2.6rem,1rem+7vw,6rem);letter-spacing:-.045em;line-height:.96;max-width:15ch}
+.hero p{font-size:clamp(1.1rem,1rem+.5vw,1.35rem);color:var(--text2);max-width:48ch;margin-top:1.8rem;line-height:1.5}
 .hero-cta{margin-top:2.4rem;display:flex;gap:14px;flex-wrap:wrap}
 .trust{margin-top:2.6rem;display:flex;gap:10px 22px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--text2);letter-spacing:.04em}
 .trust span{display:flex;align-items:center;gap:8px}
 .trust .dot{width:6px;height:6px;border-radius:50%;background:var(--ember)}
-/* cards/grids */
 .grid{display:grid;gap:18px}
 .g2{grid-template-columns:repeat(2,1fr)}
 .g3{grid-template-columns:repeat(3,1fr)}
 .card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:28px;box-shadow:var(--shadow)}
 .card.elev{background:var(--surf2);box-shadow:var(--shadow-lg)}
 .card .k{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);margin-bottom:12px}
-.stat{font-family:var(--accent);font-style:italic;font-weight:500;font-size:clamp(2.6rem,1.6rem+3vw,3.8rem);color:var(--ember);line-height:1}
+.stat{font-family:var(--accent);font-style:italic;font-weight:500;font-size:clamp(2.4rem,1.6rem+3vw,3.6rem);color:var(--ember);line-height:1}
 .stat-l{color:var(--text2);font-size:.95rem;margin-top:.5rem}
-/* steps */
-.steps{counter-reset:s;display:grid;gap:18px;grid-template-columns:repeat(3,1fr);margin-top:2.6rem}
-.step{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:30px 28px;position:relative}
+.steps{display:grid;gap:18px;grid-template-columns:repeat(3,1fr);margin-top:2.6rem}
+.step{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:30px 28px}
 .step .n{font-family:var(--accent);font-style:italic;font-size:2.4rem;color:var(--ember);line-height:1;margin-bottom:14px}
 .step h3{font-size:1.2rem;margin-bottom:.5rem}
 .step p{color:var(--text2);font-size:.95rem}
-/* tasks */
-.task .tag{display:inline-block;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--ember);background:var(--ember-soft);border-radius:100px;padding:5px 11px;margin-bottom:14px}
-.task h3{font-size:1.18rem;margin-bottom:.5rem}
-.task p{color:var(--text2);font-size:.94rem}
+.flow .tag{display:inline-block;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--ember);background:var(--ember-soft);border-radius:100px;padding:5px 11px;margin-bottom:14px}
+.flow h3{font-size:1.12rem;margin-bottom:.5rem}
+.flow p{color:var(--text2);font-size:.93rem}
+/* dashboard demo */
+.demo{position:relative}
+.demo-frame{margin-top:2.6rem;border:1px solid var(--border2);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-lg);position:relative}
+.demo-frame img{width:100%;display:block}
+.demo-flag{position:absolute;top:16px;right:16px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#0d141d;background:rgba(237,233,227,.92);border-radius:100px;padding:6px 12px}
 /* pricing */
 .price-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:2.6rem}
 .price{background:var(--surf);border:1px solid var(--border);border-radius:20px;padding:36px}
 .price.feat{border-color:var(--ember);background:linear-gradient(165deg,rgba(226,87,43,.10),var(--surf2))}
 .price .pname{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--text2)}
-.price .amt{font-family:var(--display);font-weight:800;font-size:3rem;letter-spacing:-.03em;margin:.4rem 0 .2rem}
-.price .amt small{font-size:1.05rem;font-weight:500;color:var(--text2)}
-.price ul{list-style:none;margin:1.6rem 0;display:flex;flex-direction:column;gap:12px}
+.price .amt{font-family:var(--display);font-weight:800;font-size:2.6rem;letter-spacing:-.03em;margin:.4rem 0 .1rem}
+.price .amt small{font-size:1rem;font-weight:500;color:var(--text2)}
+.price .build{font-family:var(--mono);font-size:12px;color:var(--ember);letter-spacing:.04em;margin-bottom:1rem}
+.price ul{list-style:none;margin:1.4rem 0;display:flex;flex-direction:column;gap:12px}
 .price li{display:flex;gap:11px;align-items:flex-start;color:var(--text2);font-size:.95rem}
 .price li svg{flex:0 0 auto;margin-top:4px}
-.price .guarantee{font-family:var(--mono);font-size:11.5px;color:var(--ember);letter-spacing:.04em;margin-bottom:1.4rem;display:flex;align-items:center;gap:8px}
-/* trust badges */
+.price .guarantee{font-family:var(--mono);font-size:11.5px;color:var(--ember);letter-spacing:.04em;margin-bottom:1.2rem;display:flex;align-items:center;gap:8px}
+/* affiliate strip */
+.aff{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:linear-gradient(160deg,rgba(30,110,98,.06),transparent)}
+.aff .inner{display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap}
+.aff .big{font-family:var(--accent);font-style:italic;font-weight:500;font-size:clamp(2rem,1.4rem+2vw,3rem);color:var(--ember);line-height:1}
 .badges{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:2.4rem}
 .badge{display:flex;align-items:center;gap:14px;background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:20px 22px}
-.badge svg{flex:0 0 auto}
 .badge span{font-size:.96rem;color:var(--text)}
-/* founder */
 .founder{display:grid;grid-template-columns:280px 1fr;gap:48px;align-items:center}
 .founder .photo{width:280px;height:340px;border-radius:20px;overflow:hidden;border:1px solid var(--border2);box-shadow:var(--shadow-lg)}
 .founder .photo img{width:100%;height:100%;object-fit:cover;object-position:center top}
 .founder blockquote{font-family:var(--accent);font-style:italic;font-size:clamp(1.4rem,1rem+1.6vw,2rem);line-height:1.35;color:var(--text);border-left:2px solid var(--ember);padding-left:1.4rem;margin:1.4rem 0}
 .founder .attr{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--text2);text-transform:uppercase}
-/* final cta */
 .finalcta{text-align:center}
 .finalcta h2{margin:0 auto 1.2rem}
 .finalcta .lead{margin:0 auto}
 .finalcta .btns{margin-top:2.2rem;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-/* footer */
 footer{border-top:1px solid var(--border);padding:3.5rem 0 2.5rem}
 footer .frow{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:flex-start}
 footer .flinks{display:flex;gap:22px;flex-wrap:wrap;font-size:13px;color:var(--text2)}
 footer .flinks a:hover{color:var(--ember)}
 footer .copy{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:1.6rem;letter-spacing:.04em}
-/* fade */
 .fade{opacity:0;transform:translateY(22px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
 .fade.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.fade{opacity:1;transform:none;transition:none}}
-/* responsive */
-@media(max-width:900px){
-  .navlinks{display:none}
-  .g2,.g3,.steps,.price-grid,.founder{grid-template-columns:1fr}
-  .founder .photo{width:100%;max-width:300px;height:300px}
-  .hero-scrim{background:linear-gradient(0deg,var(--bg) 6%,rgba(8,10,13,.72) 55%,rgba(8,10,13,.62) 100%)}
-}
+@media(max-width:900px){.navlinks{display:none}.g2,.g3,.steps,.price-grid,.founder{grid-template-columns:1fr}.founder .photo{width:100%;max-width:300px;height:300px}.hero-scrim{background:linear-gradient(0deg,var(--bg) 6%,rgba(8,10,13,.72) 55%,rgba(8,10,13,.62) 100%)}}
 </style>
 </head>
 <body>
@@ -154,12 +146,13 @@ footer .copy{font-family:var(--mono);font-size:11px;color:var(--muted);margin-to
       VO-Initiatives
     </a>
     <div class="navlinks">
-      <a href="#mechanism">Hoe het werkt</a>
-      <a href="#tasks">Wat ze doet</a>
+      <a href="#how">Hoe het werkt</a>
+      <a href="#workflows">Workflows</a>
+      <a href="#demo">Demo</a>
       <a href="#pricing">Prijzen</a>
-      <a href="#trust">Veilig</a>
+      <a href="affiliate.html">Partner worden</a>
     </div>
-    <div class="navcta"><a href="#cta" class="btn btn-primary">Gratis gesprek</a></div>
+    <div class="navcta"><a href="#cta" class="btn btn-primary">Start je build</a></div>
   </div>
 </nav>
 
@@ -173,17 +166,17 @@ footer .copy{font-family:var(--mono);font-size:11px;color:var(--muted);margin-to
   <div class="hero-scrim"></div>
   <div class="hero-scrim2"></div>
   <div class="wrap">
-    <div class="hero-eyebrow">Ingewerkte AI-assistenten · 100% Belgisch</div>
-    <h1>Een collega die <em class="acc">nooit</em> stilstaat.</h1>
-    <p>Geef je terugkerende werk — mail, offertes, opvolging, facturen — aan een ingewerkte digitale collega. Wij trainen, hosten en beheren ze. Jij geeft opdrachten.</p>
+    <div class="hero-eyebrow">VOI Agents · volledig beheerd</div>
+    <h1>Het weet wat je wil — <em class="acc">voor</em> je het typt.</h1>
+    <p>VOI Agents begrijpen wat je bedoelt en voeren je terugkerende taken én hele workflows gewoon uit. Wij bouwen en draaien ze. Jij geeft de opdracht.</p>
     <div class="hero-cta">
-      <a href="#cta" class="btn btn-primary">Start je gratis opstart →</a>
-      <a href="#mechanism" class="btn btn-secondary">Hoe het werkt</a>
+      <a href="#cta" class="btn btn-primary">Start je build →</a>
+      <a href="#how" class="btn btn-secondary">Hoe het werkt</a>
     </div>
     <div class="trust">
-      <span><span class="dot"></span> 2 weken gratis opstart</span>
-      <span><span class="dot"></span> Eerste resultaat binnen 14 dagen</span>
-      <span><span class="dot"></span> 100% Belgisch</span>
+      <span><span class="dot"></span> Eerste workflow live binnen 48 uur</span>
+      <span><span class="dot"></span> Volledig beheerd</span>
+      <span><span class="dot"></span> Belgisch · GDPR</span>
     </div>
   </div>
 </header>
@@ -192,56 +185,70 @@ footer .copy{font-family:var(--mono);font-size:11px;color:var(--muted);margin-to
 <section id="problem">
   <div class="glow e" style="width:480px;height:480px;top:-80px;right:-160px"></div>
   <div class="wrap">
-    <div class="eyebrow fade">Het lek</div>
-    <h2 class="fade">Je bouwde een zaak om vrij te zijn. Je werd haar drukste <em class="acc">medewerker</em>.</h2>
-    <p class="lead fade">Mail, offertes, facturen, opvolging — elke week opnieuw. Een Belgische KMO verliest daar gemiddeld 38 uur per maand aan. Dat is geen karakterfout. Het is een lek.</p>
+    <div class="eyebrow fade">Het probleem</div>
+    <h2 class="fade">Je wilde leverage. Je werd de <em class="acc">flessenhals</em>.</h2>
+    <p class="lead fade">Taken die terugkomen, workflows verspreid over vijf tools, alles dat via jou moet. En als je zélf een agent bouwde? Dan kreeg je er een tweede job bij — eentje die constant breekt.</p>
     <div class="grid g3 fade" style="margin-top:2.6rem">
-      <div class="card"><div class="stat">38 u</div><div class="stat-l">per maand verloren aan administratie</div></div>
-      <div class="card"><div class="stat">~€18.700</div><div class="stat-l">per jaar aan tijd, bij 8u/week</div></div>
-      <div class="card"><div class="stat">8% → 81%</div><div class="stat-l">AI-adoptie bij Belgische KMO's in één jaar</div></div>
+      <div class="card"><div class="stat">79%</div><div class="stat-l">van de bedrijven zet al AI-agents in</div></div>
+      <div class="card"><div class="stat">20–30%</div><div class="stat-l">snellere back-office cycli met agents</div></div>
+      <div class="card"><div class="stat">×46%</div><div class="stat-l">jaarlijkse groei van de agent-markt</div></div>
     </div>
-    <div class="src fade">Bronnen: FDmagazine · Exact KMO Barometer 2026</div>
+    <div class="src fade">Bron: enterprise AI-agent marktdata 2026</div>
   </div>
 </section>
 
-<!-- MECHANISM -->
-<section id="mechanism">
+<!-- HOW / MECHANISM -->
+<section id="how">
   <div class="glow t" style="width:460px;height:460px;bottom:-120px;left:-180px"></div>
   <div class="wrap">
-    <div class="eyebrow fade">Het mechanisme</div>
-    <h2 class="fade">De <em class="acc">ingewerkte</em> assistent.</h2>
-    <p class="lead fade">Geen software die je erbij moet leren. Een collega die we inwerken op jouw zaak — en daarna volledig beheren.</p>
+    <div class="eyebrow fade">Hoe het werkt</div>
+    <h2 class="fade">De <em class="acc">VOI Agent</em>.</h2>
+    <p class="lead fade">Geen software die je erbij moet leren. Geen bot die je zelf moet draaien. Een agent die we bouwen op jouw processen — en volledig voor jou beheren.</p>
     <div class="steps">
-      <div class="step fade"><div class="n">1</div><h3>We koppelen jouw tools</h3><p>Gmail, HubSpot, je boekhouding, Sheets, Slack — we verbinden je assistent met de software die je al gebruikt. Geen migratie, geen nieuw systeem.</p></div>
-      <div class="step fade"><div class="n">2</div><h3>We werken haar in</h3><p>Over een opstart van twee weken trainen we haar op jouw context en geven we haar een geheugen — zoals je een nieuwe collega inwerkt.</p></div>
-      <div class="step fade"><div class="n">3</div><h3>Jij geeft opdrachten</h3><p>"Volg deze klant op." "Maak het weekrapport." Via chat of mail. Zij voert uit. Jij houdt de controle.</p></div>
+      <div class="step fade"><div class="n">1</div><h3>We koppelen je tools</h3><p>Gmail, HubSpot, je boekhouding, Sheets, Slack — we verbinden de agent met de software die je al gebruikt. Geen migratie.</p></div>
+      <div class="step fade"><div class="n">2</div><h3>We bouwen &amp; werken in</h3><p>Tijdens de opstart bouwen we de agent op jouw echte processen en geven we hem een geheugen. Hij begrijpt het doel van je workflow.</p></div>
+      <div class="step fade"><div class="n">3</div><h3>Jij geeft de opdracht</h3><p>"Volg deze klant op." "Draai het maandrapport." Via chat of mail. Hij begrijpt en doet de rest. Jij houdt de controle.</p></div>
     </div>
   </div>
 </section>
 
-<!-- TASKS -->
-<section id="tasks">
+<!-- WORKFLOWS -->
+<section id="workflows">
   <div class="wrap">
-    <div class="eyebrow fade">Concrete automatiseringen</div>
-    <h2 class="fade">Tijdrovend, repetitief werk — <em class="acc">weg</em>.</h2>
+    <div class="eyebrow fade">Wat een agent doet</div>
+    <h2 class="fade">Hele workflows — niet één <em class="acc">klusje</em>.</h2>
     <div class="grid g3" style="margin-top:2.6rem">
-      <div class="card task fade"><span class="tag">Logistics · Transport</span><h3>Track &amp; trace updates</h3><p>Status verandert → de klant krijgt automatisch een update via mail of chat. Geen telefoontjes, geen manueel opzoeken.</p></div>
-      <div class="card task fade"><span class="tag">Finance · Insurance</span><h3>Facturen &amp; audits</h3><p>Inkomende facturen automatisch lezen, controleren en doorsturen. Auditdossiers samenstellen zonder manueel werk.</p></div>
-      <div class="card task fade"><span class="tag">Sales · Operations</span><h3>Email &amp; klantopvolging</h3><p>Leads automatisch opvolgen, afspraken inplannen, herinneringen sturen. Je CRM altijd up-to-date.</p></div>
-      <div class="card task fade"><span class="tag">Management</span><h3>Rapporten &amp; KPI's</h3><p>Elke maandag automatisch een rapport met de cijfers die jij wil zien. Zonder Excel-gedoe.</p></div>
-      <div class="card task fade"><span class="tag">Pharma · Food</span><h3>Compliance &amp; logs</h3><p>Koelketen-data automatisch verwerken, afwijkingen detecteren en rapporteren. Altijd compliant.</p></div>
-      <div class="card task fade"><span class="tag">Alle sectoren</span><h3>Op maat</h3><p>Elke business is anders. We analyseren je dagelijkse taken en bouwen precies wat jij nodig hebt.</p></div>
+      <div class="card flow fade"><span class="tag">Sales</span><h3>Offerte → opvolging → facturatie</h3><p>Van offerte tot betaalde factuur, automatisch opgevolgd. Niets blijft liggen.</p></div>
+      <div class="card flow fade"><span class="tag">Operations</span><h3>Lead → intake → planning</h3><p>Nieuwe lead binnen → intake afgenomen → afspraak ingepland. Zonder jou.</p></div>
+      <div class="card flow fade"><span class="tag">Logistics</span><h3>Order → track &amp; trace → klantupdate</h3><p>Status verandert → de klant krijgt automatisch bericht. Geen telefoontjes.</p></div>
+      <div class="card flow fade"><span class="tag">Finance</span><h3>Facturen &amp; audits verwerken</h3><p>Inkomende facturen lezen, controleren, doorsturen. Auditdossiers samengesteld.</p></div>
+      <div class="card flow fade"><span class="tag">Management</span><h3>Rapporten &amp; KPI's</h3><p>Elke maandag automatisch de cijfers die jij wil zien. Zonder Excel-gedoe.</p></div>
+      <div class="card flow fade"><span class="tag">Elk bedrijf</span><h3>Op maat</h3><p>We analyseren je dagelijkse taken en bouwen precies de workflow die jij nodig hebt.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section id="demo" class="demo">
+  <div class="glow e" style="width:420px;height:420px;top:0;left:-160px"></div>
+  <div class="wrap">
+    <div class="eyebrow fade">Je eigen cockpit</div>
+    <h2 class="fade">Eén heldere plek waar alles <em class="acc">draait</em>.</h2>
+    <p class="lead fade">Geen no-code spaghetti. Een clean, licht en razendsnel dashboard waar je je agents, je pipeline en je cijfers in één oogopslag ziet — en alles bestuurt.</p>
+    <div class="demo-frame fade">
+      <span class="demo-flag">Demo · voorbeelddata</span>
+      <img src="assets/dashboard-preview.jpg" alt="VOI Mission Control dashboard — clean, licht overzicht van agents, pipeline en cijfers" loading="lazy">
     </div>
   </div>
 </section>
 
 <!-- MANAGED -->
 <section id="managed">
-  <div class="glow e" style="width:420px;height:420px;top:0;right:-160px"></div>
+  <div class="glow t" style="width:420px;height:420px;bottom:-120px;right:-160px"></div>
   <div class="wrap">
     <div class="eyebrow fade">Jij draait het niet</div>
-    <h2 class="fade">Geen account. Geen sleutels. Geen technisch <em class="acc">gedoe</em>.</h2>
-    <p class="lead fade">De meeste "AI voor bedrijven" geeft je een systeem dat je daarna zélf mag draaien, hosten en betalen. Wij niet. Wij zetten alles op, hosten en bewaken je assistent — 24/7. De AI-techniek zit volledig in de dienst, in je vaste maandprijs.</p>
+    <h2 class="fade">Geen account. Geen sleutels. Geen <em class="acc">onderhoud</em>.</h2>
+    <p class="lead fade">De meeste "AI voor bedrijven" geeft je een systeem dat je zélf mag draaien, hosten en repareren. Wij niet. Wij bouwen de agent, hosten hem, bewaken hem en houden hem draaiend — 24/7. De AI-techniek zit volledig in de dienst.</p>
   </div>
 </section>
 
@@ -249,36 +256,36 @@ footer .copy{font-family:var(--mono);font-size:11px;color:var(--muted);margin-to
 <section id="pricing">
   <div class="wrap">
     <div class="eyebrow fade">Prijzen</div>
-    <h2 class="fade">Eenvoudig en <em class="acc">transparant</em>.</h2>
-    <p class="lead fade">Geen verborgen kosten. Geen lange contracten. De AI-techniek zit volledig in de dienst.</p>
+    <h2 class="fade">Een gebouwd, eigen <em class="acc">systeem</em>.</h2>
+    <p class="lead fade">Je betaalt voor een agent die op jouw processen gebouwd is — geen chatbot-abonnement. Geen verbruikskosten, geen lange contracten.</p>
     <div class="price-grid">
       <div class="price feat fade">
-        <div class="pname">Vaste prijs</div>
-        <div class="amt">€1.500<small> / maand</small></div>
-        <p class="muted" style="font-size:.92rem">Eén AI-assistent, volledig ingericht — start met 2 weken gratis opstart.</p>
-        <div class="guarantee" style="margin-top:1.4rem">
+        <div class="pname">VOI Agent</div>
+        <div class="build">Eenmalige opstart &amp; build: €3.000–€4.000</div>
+        <div class="amt">€2.250<small> / maand</small></div>
+        <p class="muted" style="font-size:.92rem">Eén agent, volledig gebouwd en beheerd.</p>
+        <div class="guarantee" style="margin-top:1.2rem">
           <svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#E2572B" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-          Eerste resultaat binnen 14 dagen of je betaalt niet
+          Eerste workflow live binnen 48 uur — of je betaalt niet
         </div>
         <ul>
-          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> 1 dedicated AI-assistent</li>
-          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Alle dagelijkse taken geautomatiseerd</li>
-          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Koppeling met je bestaande tools</li>
-          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Bediening via chat of email</li>
-          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Wekelijkse rapportage &amp; prioriteit support</li>
-          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Geen eigen account, geen verbruikskosten</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Eén dedicated agent, op jouw processen gebouwd</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Recurring taken én multistep workflows</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Koppeling met je bestaande tools · geen migratie</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> De owned cockpit · bediening via chat of mail</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Volledig beheerd — geen account, geen verbruik</li>
         </ul>
-        <a href="#cta" class="btn btn-primary" style="width:100%;justify-content:center">Start gratis</a>
+        <a href="#cta" class="btn btn-primary" style="width:100%;justify-content:center">Start je build</a>
       </div>
       <div class="price fade">
         <div class="pname">Enterprise</div>
         <div class="amt">Op maat</div>
-        <p class="muted" style="font-size:.92rem">Voor bedrijven met meerdere afdelingen of complexe processen.</p>
-        <ul style="margin-top:2.6rem">
-          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Meerdere AI-assistenten</li>
-          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Onbeperkte automatiseringen</li>
+        <p class="muted" style="font-size:.92rem">Meerdere afdelingen of complexe processen.</p>
+        <ul style="margin-top:2.4rem">
+          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Meerdere agents</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Onbeperkte workflows</li>
           <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Custom integraties &amp; API</li>
-          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Dedicated accountmanager &amp; SLA</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Dedicated manager &amp; SLA</li>
           <li><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5L5.5 11L12 3.5" stroke="#5EC47B" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Maandelijks strategisch overleg</li>
         </ul>
         <a href="#cta" class="btn btn-secondary" style="width:100%;justify-content:center">Neem contact op</a>
@@ -287,17 +294,27 @@ footer .copy{font-family:var(--mono);font-size:11px;color:var(--muted);margin-to
   </div>
 </section>
 
+<!-- AFFILIATE STRIP -->
+<section class="aff" id="affiliate">
+  <div class="wrap inner">
+    <div>
+      <div class="eyebrow fade" style="color:var(--teal)"><span style="background:var(--teal)"></span>Partnerprogramma</div>
+      <div class="big fade">Verdien €1.125/maand per klant. Levenslang.</div>
+      <p class="fade" style="margin-top:1rem;max-width:52ch">Refereer een bedrijf — wij sluiten en leveren. Jij krijgt 50% van de maandprijs, elke maand zolang de klant blijft, plus 50% van de opstart. Geen cap, geen tijdslimiet.</p>
+    </div>
+    <a href="affiliate.html" class="btn btn-secondary fade">Word partner →</a>
+  </div>
+</section>
+
 <!-- TRUST -->
 <section id="trust">
-  <div class="glow t" style="width:420px;height:420px;bottom:-120px;right:-160px"></div>
   <div class="wrap">
     <div class="eyebrow fade">Belgisch &amp; veilig</div>
-    <h2 class="fade">Jouw data blijft in <em class="acc">Europa</em>. En bij ons.</h2>
+    <h2 class="fade">Je data blijft in <em class="acc">Europa</em>. En bij ons.</h2>
     <div class="badges fade">
       <div class="badge"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L3 5v5c0 4 3 6.5 7 8 4-1.5 7-4 7-8V5l-7-3z" stroke="#E2572B" stroke-width="1.5" stroke-linejoin="round"/></svg><span>100% Belgisch bedrijf</span></div>
       <div class="badge"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#E2572B" stroke-width="1.5"/><path d="M2 10h16M10 2a13 13 0 010 16M10 2a13 13 0 000 16" stroke="#E2572B" stroke-width="1.2"/></svg><span>EU-servers (Duitsland)</span></div>
-      <div class="badge"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="9" width="12" height="8" rx="1.5" stroke="#E2572B" stroke-width="1.5"/><path d="M7 9V6a3 3 0 016 0v3" stroke="#E2572B" stroke-width="1.5"/></svg><span>GDPR-conform</span></div>
-      <div class="badge"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 3h7l3 3v11H5z" stroke="#E2572B" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.5 10l1.5 1.5 3.5-3.5" stroke="#E2572B" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg><span>Verwerkersovereenkomst inbegrepen</span></div>
+      <div class="badge"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="9" width="12" height="8" rx="1.5" stroke="#E2572B" stroke-width="1.5"/><path d="M7 9V6a3 3 0 016 0v3" stroke="#E2572B" stroke-width="1.5"/></svg><span>GDPR-conform · DPA inbegrepen</span></div>
       <div class="badge"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#E2572B" stroke-width="1.5"/><path d="M5 5l10 10" stroke="#E2572B" stroke-width="1.5"/></svg><span>Geen doorverkoop van data</span></div>
     </div>
   </div>
@@ -310,8 +327,8 @@ footer .copy{font-family:var(--mono);font-size:11px;color:var(--muted);margin-to
       <div class="photo fade"><img src="assets/oskar.jpg" alt="Oskar Verschoren, oprichter van VO-Initiatives" width="280" height="340"></div>
       <div>
         <div class="eyebrow fade">Achter VO-Initiatives</div>
-        <h2 class="fade" style="font-size:clamp(1.8rem,1.2rem+2vw,2.8rem)">Ik bouw assistenten die je tijd <em class="acc">teruggeven</em>.</h2>
-        <blockquote class="fade">"Belgische KMO's verliezen elke week uren aan taken die een AI perfect kan overnemen. Ik bouw assistenten die dat werk stil op de achtergrond doen — zodat jij die uren terugkrijgt voor wat écht telt."</blockquote>
+        <h2 class="fade" style="font-size:clamp(1.8rem,1.2rem+2vw,2.8rem)">Automatiseer de oude wereld — zonder ze <em class="acc">stuk</em> te maken.</h2>
+        <blockquote class="fade">"We werken nog in een oud, manueel systeem. Ik bouw agents die ínpassen in de tools die je al hebt en ze stil sneller en slimmer maken — vooruitgang die je niet straft voor wat je al opbouwde."</blockquote>
         <div class="attr fade">Oskar Verschoren · Oprichter, VO-Initiatives</div>
       </div>
     </div>
@@ -323,10 +340,10 @@ footer .copy{font-family:var(--mono);font-size:11px;color:var(--muted);margin-to
   <div class="glow e" style="width:520px;height:520px;top:-120px;left:50%;transform:translateX(-50%);opacity:.4"></div>
   <div class="wrap">
     <div class="eyebrow fade" style="justify-content:center">De volgende stap</div>
-    <h2 class="fade">Geef je <em class="acc">eerste</em> taak weg.</h2>
-    <p class="lead fade">Plan een gratis gesprek van 30 minuten — we kiezen samen welke taak we eerst automatiseren. Geen verplichtingen.</p>
+    <h2 class="fade">Geef je <em class="acc">eerste</em> workflow weg.</h2>
+    <p class="lead fade">Plan een gesprek van 30 minuten — we kiezen samen welke workflow we eerst bouwen. Live binnen 48 uur, of je betaalt niet.</p>
     <div class="btns fade">
-      <a href="mailto:info@vo-initiatives.com" class="btn btn-primary">Start je gratis opstart →</a>
+      <a href="mailto:info@vo-initiatives.com" class="btn btn-primary">Start je build →</a>
       <a href="mailto:info@vo-initiatives.com" class="btn btn-secondary">Plan een gesprek</a>
     </div>
   </div>
@@ -337,13 +354,14 @@ footer .copy{font-family:var(--mono);font-size:11px;color:var(--muted);margin-to
     <div class="frow">
       <a href="#top" class="brand"><svg viewBox="0 0 32 32" fill="none" width="22" height="22"><rect x="1" y="1" width="30" height="30" rx="9" stroke="#E2572B" stroke-width="1.6"/><path d="M9 10.5L16 22L23 10.5" stroke="#E2572B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> VO-Initiatives</a>
       <div class="flinks">
+        <a href="affiliate.html">Partner worden</a>
         <a href="privacy.html">Privacyverklaring</a>
         <a href="verwerkersovereenkomst.html">Verwerkersovereenkomst</a>
         <a href="algemene-voorwaarden.html">Algemene Voorwaarden</a>
         <a href="cookiebeleid.html">Cookiebeleid</a>
       </div>
     </div>
-    <div class="copy">© 2026 VO-Initiatives · Ingewerkte AI-assistenten voor Belgische KMO's · Een collega die nooit stilstaat.</div>
+    <div class="copy">© 2026 VO-Initiatives · VOI Agents die je werk begrijpen en uitvoeren · Het weet wat je wil, voor je het typt.</div>
   </div>
 </footer>
 
