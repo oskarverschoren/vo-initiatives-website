@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Algemene Voorwaarden | AI Assistentie — VO-Initiatives</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: #1a1a1a; background: #fff; }
+
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 60px; border-bottom: 1px solid #eee; background: #fff;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-size: 22px; font-weight: 700; color: #1a1a1a; text-decoration: none; display: block; }
+    .logo span { color: #3c7a8a; }
+    .nav-back { color: #3c7a8a; text-decoration: none; font-size: 14px; font-weight: 600; }
+    .nav-back:hover { text-decoration: underline; }
+
+    .page-header {
+      background: linear-gradient(135deg, #3c6380 0%, #76a9b2 100%);
+      color: #fff; padding: 60px; text-align: center;
+    }
+    .header-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px; padding: 6px 18px;
+      font-size: 13px; font-weight: 600; margin-bottom: 20px;
+    }
+    .page-header h1 { font-size: 40px; font-weight: 800; margin-bottom: 12px; }
+    .page-header p { font-size: 16px; opacity: 0.85; }
+
+    .doc-container { max-width: 860px; margin: 0 auto; padding: 60px 40px 80px; }
+
+    .doc-meta {
+      background: #f0f7f8; border: 1px solid #d8eaed; border-radius: 12px;
+      padding: 24px 28px; margin-bottom: 40px;
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+    }
+    .doc-meta-item { font-size: 14px; color: #555; }
+    .doc-meta-item strong { color: #1a1a1a; display: block; margin-bottom: 2px; }
+
+    h2 {
+      font-size: 22px; font-weight: 800; color: #1a1a1a;
+      margin: 44px 0 16px; padding-bottom: 10px;
+      border-bottom: 2px solid #f0f0f0;
+      display: flex; align-items: center; gap: 12px;
+    }
+    h2 .art-num { color: #3c7a8a; font-size: 14px; font-weight: 700; background: #e8f4f6; padding: 3px 10px; border-radius: 20px; }
+    h3 { font-size: 16px; font-weight: 700; color: #333; margin: 20px 0 8px; }
+
+    p { font-size: 15px; line-height: 1.7; color: #333; margin-bottom: 12px; }
+    ul, ol { margin: 8px 0 12px 20px; }
+    li { font-size: 15px; line-height: 1.7; color: #333; margin-bottom: 6px; }
+
+    .highlight-box {
+      background: #f0f7f8; border-left: 4px solid #3c7a8a;
+      border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 16px 0;
+    }
+    .highlight-box p { margin-bottom: 0; }
+
+    .warning-box {
+      background: #fff8f0; border-left: 4px solid #f0a06a;
+      border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 16px 0;
+    }
+    .warning-box p { margin-bottom: 0; color: #7a4a20; }
+
+    .toc { background: #f8f9fa; border-radius: 12px; padding: 24px 28px; margin-bottom: 40px; }
+    .toc h3 { font-size: 14px; font-weight: 700; color: #3c7a8a; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc ol { margin: 0 0 0 16px; }
+    .toc li { font-size: 14px; margin-bottom: 4px; }
+    .toc a { color: #3c7a8a; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+
+    .contact-box {
+      background: linear-gradient(135deg, #3c6380, #76a9b2);
+      border-radius: 14px; padding: 32px; text-align: center; margin-top: 48px; color: #fff;
+    }
+    .contact-box h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #fff; }
+    .contact-box p { color: rgba(255,255,255,0.85); margin-bottom: 20px; }
+    .contact-box a { display: inline-block; background: #fff; color: #3c7a8a; font-weight: 700; font-size: 15px; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+
+    footer { background: #1a1a1a; color: #aaa; padding: 30px 60px; text-align: center; font-size: 13px; }
+    footer a { color: #76a9b2; text-decoration: none; margin: 0 12px; }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      .page-header { padding: 40px 20px; }
+      .page-header h1 { font-size: 28px; }
+      .doc-container { padding: 40px 20px; }
+      .doc-meta { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">AI<span> Assistentie</span></a>
+  <a href="index.html" class="nav-back">← Terug naar website</a>
+</nav>
+
+<div class="page-header">
+  <div class="header-badge">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="1.5" stroke="#fff" stroke-width="1.5"/><path d="M4 5h6M4 7h6M4 9h4" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Belgisch recht van toepassing
+  </div>
+  <h1>Algemene Voorwaarden</h1>
+  <p>De spelregels voor onze samenwerking — helder en eerlijk</p>
+</div>
+
+<div class="doc-container">
+
+  <div class="doc-meta">
+    <div class="doc-meta-item">
+      <strong>Versie</strong>
+      1.0 — Mei 2026
+    </div>
+    <div class="doc-meta-item">
+      <strong>Van kracht</strong>
+      1 juni 2026
+    </div>
+    <div class="doc-meta-item">
+      <strong>Toepasselijk recht</strong>
+      Belgisch recht
+    </div>
+  </div>
+
+  <div class="toc">
+    <h3>Inhoud</h3>
+    <ol>
+      <li><a href="#av1">Definities</a></li>
+      <li><a href="#av2">Toepasselijkheid</a></li>
+      <li><a href="#av3">Totstandkoming overeenkomst</a></li>
+      <li><a href="#av4">Dienstverlening</a></li>
+      <li><a href="#av5">Prijzen en betaling</a></li>
+      <li><a href="#av6">Looptijd en beëindiging</a></li>
+      <li><a href="#av7">Verplichtingen opdrachtgever</a></li>
+      <li><a href="#av8">Intellectuele eigendom</a></li>
+      <li><a href="#av9">Vertrouwelijkheid</a></li>
+      <li><a href="#av10">Aansprakelijkheid</a></li>
+      <li><a href="#av11">Overmacht</a></li>
+      <li><a href="#av12">Wijzigingen</a></li>
+      <li><a href="#av13">Geschillen</a></li>
+    </ol>
+  </div>
+
+  <!-- ARTIKEL 1 -->
+  <h2 id="av1"><span class="art-num">Art. 1</span> Definities</h2>
+  <ul>
+    <li><strong>VO-Initiatives:</strong> de dienstverlener, Belgisch bedrijf gevestigd te Antwerpen, BTW BE0XXX.XXX.XXX</li>
+    <li><strong>Opdrachtgever:</strong> de natuurlijke of rechtspersoon die een overeenkomst sluit met VO-Initiatives</li>
+    <li><strong>AI Assistent:</strong> de op maat geconfigureerde AI-oplossing geleverd door VO-Initiatives</li>
+    <li><strong>Diensten:</strong> alle door VO-Initiatives geleverde producten, diensten en support</li>
+    <li><strong>Overeenkomst:</strong> de afspraken vastgelegd in de offerte, opdrachtbevestiging of dienstverleningsovereenkomst</li>
+  </ul>
+
+  <!-- ARTIKEL 2 -->
+  <h2 id="av2"><span class="art-num">Art. 2</span> Toepasselijkheid</h2>
+  <p>Deze Algemene Voorwaarden zijn van toepassing op alle offertes, overeenkomsten en diensten van VO-Initiatives. Afwijkende voorwaarden van de Opdrachtgever worden uitdrukkelijk van de hand gewezen, tenzij schriftelijk anders overeengekomen.</p>
+  <p>Door het aanvaarden van een offerte of het plaatsen van een opdracht aanvaardt de Opdrachtgever deze Algemene Voorwaarden.</p>
+
+  <!-- ARTIKEL 3 -->
+  <h2 id="av3"><span class="art-num">Art. 3</span> Totstandkoming overeenkomst</h2>
+  <p>Een overeenkomst komt tot stand door schriftelijke aanvaarding van een offerte van VO-Initiatives. Offertes zijn geldig gedurende 30 dagen na dagtekening, tenzij anders vermeld.</p>
+  <p>VO-Initiatives behoudt het recht een opdracht zonder opgave van reden te weigeren.</p>
+
+  <!-- ARTIKEL 4 -->
+  <h2 id="av4"><span class="art-num">Art. 4</span> Dienstverlening</h2>
+
+  <h3>4.1 Inspanningsverbintenis</h3>
+  <p>VO-Initiatives verbindt zich ertoe de diensten te leveren met de nodige zorg en vakkundigheid. De dienstverlening betreft een inspanningsverbintenis, geen resultaatsverbintenis, tenzij uitdrukkelijk anders schriftelijk overeengekomen.</p>
+
+  <h3>4.2 Levertermijnen</h3>
+  <p>Vermelde levertermijnen (zoals "eerste resultaat binnen 14 dagen") zijn indicatief en afhankelijk van tijdige medewerking van de Opdrachtgever. Overschrijding geeft geen recht op schadevergoeding tenzij schriftelijk anders overeengekomen.</p>
+
+  <h3>4.3 Beschikbaarheid</h3>
+  <p>VO-Initiatives streeft naar een uptime van minimaal 99% voor de AI Assistent-infrastructuur. Geplande onderhoudswerkzaamheden worden minimaal 24 uur vooraf gecommuniceerd. Uptime-garanties buiten deze streefdoelstelling vereisen een afzonderlijk SLA-addendum.</p>
+
+  <h3>4.4 Wijzigingen aan de dienst</h3>
+  <p>VO-Initiatives behoudt het recht de dienst te verbeteren of technisch aan te passen, op voorwaarde dat de kernfunctionaliteit behouden blijft. Substantiële wijzigingen worden 30 dagen vooraf gecommuniceerd.</p>
+
+  <!-- ARTIKEL 5 -->
+  <h2 id="av5"><span class="art-num">Art. 5</span> Prijzen en Betaling</h2>
+
+  <h3>5.1 Tarieven</h3>
+  <p>De tarieven worden vastgelegd in de offerte of overeenkomst en zijn exclusief BTW, tenzij anders vermeld. Prijzen luiden in euro.</p>
+
+  <h3>5.2 Facturatie</h3>
+  <p>Maandelijkse abonnementen worden vooraf gefactureerd op de eerste dag van elke maand. Eenmalige setupkosten worden gefactureerd bij aanvang van de opdracht.</p>
+
+  <h3>5.3 Betalingstermijn</h3>
+  <p>Facturen zijn betaalbaar binnen <strong>14 kalenderdagen</strong> na factuurdatum. Bij laattijdige betaling is van rechtswege en zonder ingebrekestelling een interest verschuldigd van 1% per maand, alsook een forfaitaire schadevergoeding van 10% op het openstaande bedrag (minimum €50).</p>
+
+  <h3>5.4 Opschorting bij wanbetaling</h3>
+  <p>VO-Initiatives heeft het recht de dienstverlening op te schorten bij betalingsachterstand van meer dan 30 dagen, na schriftelijke ingebrekestelling.</p>
+
+  <h3>5.5 Prijsaanpassing</h3>
+  <p>Tarieven kunnen jaarlijks worden aangepast op basis van de Belgische consumentenprijsindex, met 60 dagen voorafgaande kennisgeving.</p>
+
+  <!-- ARTIKEL 6 -->
+  <h2 id="av6"><span class="art-num">Art. 6</span> Looptijd en Beëindiging</h2>
+
+  <h3>6.1 Looptijd</h3>
+  <p>De overeenkomst wordt gesloten voor een initiële periode van <strong>1 maand</strong>, tenzij anders overeengekomen, en wordt daarna maandelijks stilzwijgend verlengd.</p>
+
+  <h3>6.2 Opzegging</h3>
+  <p>Beide partijen kunnen de overeenkomst opzeggen met een opzegtermijn van <strong>30 kalenderdagen</strong>, te rekenen vanaf de eerste dag van de volgende kalendermaand, via aangetekende brief of e-mail met ontvangstbevestiging.</p>
+
+  <h3>6.3 Ontbinding</h3>
+  <p>VO-Initiatives kan de overeenkomst met onmiddellijke ingang ontbinden bij:</p>
+  <ul>
+    <li>Ernstige of herhaalde contractbreuk door de Opdrachtgever</li>
+    <li>Faillissement of staking van betaling door de Opdrachtgever</li>
+    <li>Gebruik van de AI Assistent voor onwettige doeleinden</li>
+  </ul>
+
+  <h3>6.4 Na beëindiging</h3>
+  <p>Bij beëindiging worden alle door VO-Initiatives verwerkte gegevens van de Opdrachtgever verwijderd binnen 30 dagen (zie ook <a href="verwerkersovereenkomst.html" style="color:#3c7a8a">Verwerkersovereenkomst</a>). Openstaande facturen blijven opeisbaar.</p>
+
+  <!-- ARTIKEL 7 -->
+  <h2 id="av7"><span class="art-num">Art. 7</span> Verplichtingen Opdrachtgever</h2>
+
+  <p>De Opdrachtgever verbindt zich ertoe:</p>
+  <ul>
+    <li>Tijdig en correct alle informatie en toegangen te verstrekken die noodzakelijk zijn voor de uitvoering van de diensten</li>
+    <li>De AI Assistent uitsluitend te gebruiken voor wettige doeleinden en conform de instructies van VO-Initiatives</li>
+    <li>De vereiste toestemmingen te hebben voor de persoonsgegevens die worden verwerkt via de AI Assistent</li>
+    <li>Wijzigingen in de bedrijfssituatie die de dienstverlening kunnen beïnvloeden tijdig te melden</li>
+    <li>De AI Assistent niet te gebruiken voor het verspreiden van spam, misleidende inhoud of voor frauduleuze doeleinden</li>
+  </ul>
+
+  <div class="warning-box">
+    <p><strong>Belangrijk:</strong> De Opdrachtgever blijft als verwerkingsverantwoordelijke zelf verantwoordelijk voor de naleving van de AVG met betrekking tot de persoonsgegevens van zijn klanten en medewerkers.</p>
+  </div>
+
+  <!-- ARTIKEL 8 -->
+  <h2 id="av8"><span class="art-num">Art. 8</span> Intellectuele Eigendom</h2>
+
+  <h3>8.1 Eigendom VO-Initiatives</h3>
+  <p>Alle intellectuele eigendomsrechten op de AI Assistent, de onderliggende technologie, configuraties, methodologieën en documentatie berusten bij VO-Initiatives of haar licentiegevers.</p>
+
+  <h3>8.2 Gebruiksrecht</h3>
+  <p>De Opdrachtgever verkrijgt een niet-exclusief, niet-overdraagbaar gebruiksrecht op de AI Assistent voor de duur van de overeenkomst en voor de overeengekomen doeleinden.</p>
+
+  <h3>8.3 Eigendom Opdrachtgever</h3>
+  <p>Gegevens aangeleverd door de Opdrachtgever (e-mails, documenten, klantinformatie) blijven te allen tijde eigendom van de Opdrachtgever.</p>
+
+  <!-- ARTIKEL 9 -->
+  <h2 id="av9"><span class="art-num">Art. 9</span> Vertrouwelijkheid</h2>
+
+  <p>Beide partijen verbinden zich ertoe alle vertrouwelijke informatie die zij in het kader van de overeenkomst ontvangen, strikt vertrouwelijk te behandelen en niet aan derden mee te delen zonder voorafgaande schriftelijke toestemming van de andere partij.</p>
+  <p>Deze verplichting blijft van kracht na beëindiging van de overeenkomst voor een periode van <strong>3 jaar</strong>.</p>
+
+  <!-- ARTIKEL 10 -->
+  <h2 id="av10"><span class="art-num">Art. 10</span> Aansprakelijkheid</h2>
+
+  <h3>10.1 Beperking</h3>
+  <p>De aansprakelijkheid van VO-Initiatives is in alle gevallen beperkt tot het bedrag dat de Opdrachtgever in de <strong>3 maanden voorafgaand aan het schadeveroorzakende feit</strong> heeft betaald aan VO-Initiatives.</p>
+
+  <h3>10.2 Uitsluiting</h3>
+  <p>VO-Initiatives is niet aansprakelijk voor:</p>
+  <ul>
+    <li>Indirecte schade, gevolgschade, gederfde winst of gemiste besparingen</li>
+    <li>Schade door onjuiste, onvolledige of laattijdige aanlevering van informatie door de Opdrachtgever</li>
+    <li>Schade veroorzaakt door storingen bij derden (internetproviders, Google, etc.)</li>
+    <li>Schade door ongeoorloofd gebruik van de AI Assistent door de Opdrachtgever of diens medewerkers</li>
+    <li>Beslissingen genomen op basis van output van de AI Assistent</li>
+  </ul>
+
+  <div class="highlight-box">
+    <p><strong>Opmerking:</strong> De AI Assistent is een ondersteunend hulpmiddel. De eindverantwoordelijkheid voor beslissingen, communicaties en acties op basis van de output van de AI Assistent berust altijd bij de Opdrachtgever.</p>
+  </div>
+
+  <!-- ARTIKEL 11 -->
+  <h2 id="av11"><span class="art-num">Art. 11</span> Overmacht</h2>
+  <p>VO-Initiatives is niet aansprakelijk voor vertraging of niet-nakoming van zijn verplichtingen als gevolg van omstandigheden buiten zijn redelijke controle, waaronder maar niet beperkt tot: storingen bij externe dienstverleners, cyberaanvallen, wijzigingen in API's van derde partijen, overheidsbeslissingen of extreme weersomstandigheden.</p>
+  <p>Bij overmacht schort VO-Initiatives zijn verplichtingen op en informeert de Opdrachtgever hiervan zo spoedig mogelijk. Indien de overmacht langer dan 60 dagen duurt, hebben beide partijen het recht de overeenkomst te ontbinden zonder schadevergoeding.</p>
+
+  <!-- ARTIKEL 12 -->
+  <h2 id="av12"><span class="art-num">Art. 12</span> Wijzigingen aan de Voorwaarden</h2>
+  <p>VO-Initiatives behoudt het recht deze Algemene Voorwaarden te wijzigen. Wijzigingen worden minimaal <strong>30 dagen vooraf</strong> schriftelijk meegedeeld. Indien de Opdrachtgever niet akkoord gaat, heeft hij het recht de overeenkomst te beëindigen vóór de ingangsdatum van de wijzigingen.</p>
+  <p>De meest actuele versie is steeds beschikbaar op onze website.</p>
+
+  <!-- ARTIKEL 13 -->
+  <h2 id="av13"><span class="art-num">Art. 13</span> Geschillen en Toepasselijk Recht</h2>
+  <p>Op alle overeenkomsten met VO-Initiatives is <strong>Belgisch recht</strong> van toepassing.</p>
+  <p>Bij geschillen streven partijen eerst naar een minnelijke oplossing. Indien dit niet lukt binnen 30 dagen, zijn uitsluitend de <strong>rechtbanken van het arrondissement Antwerpen</strong> bevoegd, tenzij dwingende wettelijke bepalingen anders voorschrijven.</p>
+
+  <div class="contact-box">
+    <h3>Vragen over onze voorwaarden?</h3>
+    <p>Wij lichten onze voorwaarden graag toe — neem contact op en we antwoorden binnen 2 werkdagen.</p>
+    <a href="mailto:oskar@vo-initiatives.com">Neem contact op</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 VO-Initiatives · Antwerpen, België</p>
+  <p style="margin-top:8px">
+    <a href="index.html">Home</a>
+    <a href="privacy.html">Privacyverklaring</a>
+    <a href="verwerkersovereenkomst.html">Verwerkersovereenkomst</a>
+  </p>
+</footer>
+
+</body>
+</html>

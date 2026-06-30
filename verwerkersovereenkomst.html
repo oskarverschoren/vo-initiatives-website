@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verwerkersovereenkomst | AI Assistentie — VO-Initiatives</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: #1a1a1a; background: #fff; }
+
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 60px; border-bottom: 1px solid #eee; background: #fff;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-size: 22px; font-weight: 700; color: #1a1a1a; text-decoration: none; display: block; }
+    .logo span { color: #3c7a8a; }
+    .nav-back { color: #3c7a8a; text-decoration: none; font-size: 14px; font-weight: 600; }
+    .nav-back:hover { text-decoration: underline; }
+
+    .page-header {
+      background: linear-gradient(135deg, #3c6380 0%, #76a9b2 100%);
+      color: #fff; padding: 60px; text-align: center;
+    }
+    .page-header h1 { font-size: 40px; font-weight: 800; margin-bottom: 12px; }
+    .page-header p { font-size: 16px; opacity: 0.85; }
+    .header-badge {
+      display: inline-block; background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px; padding: 6px 18px;
+      font-size: 13px; font-weight: 600; margin-bottom: 20px;
+    }
+
+    .doc-container { max-width: 860px; margin: 0 auto; padding: 60px 40px 80px; }
+
+    .doc-meta {
+      background: #f0f7f8; border: 1px solid #d8eaed; border-radius: 12px;
+      padding: 24px 28px; margin-bottom: 40px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .doc-meta-item { font-size: 14px; color: #555; }
+    .doc-meta-item strong { color: #1a1a1a; display: block; margin-bottom: 2px; }
+
+    .fill-block {
+      background: #fff8f0; border: 2px dashed #f0a06a;
+      border-radius: 8px; padding: 16px 20px; margin: 8px 0;
+      font-size: 14px; color: #b35a2a;
+    }
+    .fill-block strong { display: block; margin-bottom: 4px; color: #e8604a; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    h2 {
+      font-size: 22px; font-weight: 800; color: #1a1a1a;
+      margin: 44px 0 16px; padding-bottom: 10px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    h2 .art-num { color: #3c7a8a; margin-right: 8px; }
+    h3 { font-size: 16px; font-weight: 700; color: #333; margin: 20px 0 8px; }
+
+    p { font-size: 15px; line-height: 1.7; color: #333; margin-bottom: 12px; }
+    ul, ol { margin: 8px 0 12px 20px; }
+    li { font-size: 15px; line-height: 1.7; color: #333; margin-bottom: 6px; }
+
+    .highlight-box {
+      background: #f0f7f8; border-left: 4px solid #3c7a8a;
+      border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 16px 0;
+    }
+    .highlight-box p { margin-bottom: 0; }
+
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    th { background: #3c7a8a; color: #fff; padding: 10px 14px; text-align: left; font-weight: 700; }
+    td { padding: 10px 14px; border-bottom: 1px solid #eee; vertical-align: top; }
+    tr:nth-child(even) td { background: #f8f9fa; }
+
+    .signature-block {
+      margin-top: 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+    }
+    .sig-party { border-top: 2px solid #1a1a1a; padding-top: 16px; }
+    .sig-party h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+    .sig-party p { font-size: 13px; color: #666; margin-bottom: 0; }
+    .sig-line { height: 60px; border-bottom: 1px solid #ccc; margin: 20px 0 8px; }
+
+    .toc { background: #f8f9fa; border-radius: 12px; padding: 24px 28px; margin-bottom: 40px; }
+    .toc h3 { font-size: 14px; font-weight: 700; color: #3c7a8a; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc ol { margin: 0 0 0 16px; }
+    .toc li { font-size: 14px; margin-bottom: 4px; }
+    .toc a { color: #3c7a8a; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+
+    footer { background: #1a1a1a; color: #aaa; padding: 30px 60px; text-align: center; font-size: 13px; }
+    footer a { color: #76a9b2; text-decoration: none; margin: 0 12px; }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      .page-header { padding: 40px 20px; }
+      .page-header h1 { font-size: 28px; }
+      .doc-container { padding: 40px 20px; }
+      .doc-meta { grid-template-columns: 1fr; }
+      .signature-block { grid-template-columns: 1fr; gap: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">AI<span> Assistentie</span></a>
+  <a href="/" class="nav-back">← Terug naar website</a>
+</nav>
+
+<div class="page-header">
+  <div class="header-badge">🔒 GDPR AVG-conform</div>
+  <h1>Verwerkersovereenkomst</h1>
+  <p>Conform Verordening (EU) 2016/679 (AVG/GDPR) — Artikel 28</p>
+</div>
+
+<div class="doc-container">
+
+  <div class="doc-meta">
+    <div class="doc-meta-item">
+      <strong>Documentnummer</strong>
+      VOI-DPA-2026-[NUMMER]
+    </div>
+    <div class="doc-meta-item">
+      <strong>Versie</strong>
+      1.2 — Mei 2026
+    </div>
+    <div class="doc-meta-item">
+      <strong>Van kracht</strong>
+      Ingangsdatum dienstverleningsovereenkomst
+    </div>
+    <div class="doc-meta-item">
+      <strong>Looptijd</strong>
+      Gekoppeld aan hoofdovereenkomst
+    </div>
+  </div>
+
+  <div class="toc">
+    <h3>Inhoudstafel</h3>
+    <ol>
+      <li><a href="#art1">Partijen & Definities</a></li>
+      <li><a href="#art2">Onderwerp en duur van de verwerking</a></li>
+      <li><a href="#art3">Aard, doel en categorieën van de verwerking</a></li>
+      <li><a href="#art4">Verplichtingen van de Verwerker</a></li>
+      <li><a href="#art5">Verplichtingen van de Verwerkingsverantwoordelijke</a></li>
+      <li><a href="#art6">Sub-verwerkers</a></li>
+      <li><a href="#art7">Beveiliging</a></li>
+      <li><a href="#art8">Datalekken</a></li>
+      <li><a href="#art9">Rechten van betrokkenen</a></li>
+      <li><a href="#art10">Doorgifte buiten de EER</a></li>
+      <li><a href="#art11">Teruggave en verwijdering van gegevens</a></li>
+      <li><a href="#art12">Audit en controle</a></li>
+      <li><a href="#art13">Aansprakelijkheid</a></li>
+      <li><a href="#art14">Slotbepalingen</a></li>
+    </ol>
+  </div>
+
+  <!-- ARTIKEL 1 -->
+  <h2 id="art1"><span class="art-num">Art. 1</span> Partijen en Definities</h2>
+
+  <h3>1.1 Partijen</h3>
+  <p>Deze Verwerkersovereenkomst ("Overeenkomst") wordt gesloten tussen:</p>
+
+  <div class="fill-block">
+    <strong>In te vullen — Verwerkingsverantwoordelijke</strong>
+    [VOLLEDIGE BEDRIJFSNAAM], [RECHTSVORM]<br>
+    Maatschappelijke zetel: [ADRES]<br>
+    BTW-nummer: [BE XXXXXXXXX]<br>
+    Vertegenwoordigd door: [NAAM], [FUNCTIE]<br>
+    Hierna te noemen: <strong>"Verwerkingsverantwoordelijke"</strong> of <strong>"Opdrachtgever"</strong>
+  </div>
+
+  <p style="text-align:center;font-weight:700;margin:12px 0">— EN —</p>
+
+  <div class="highlight-box">
+    <p><strong>VO-Initiatives</strong>, eenmanszaak / BV<br>
+    Maatschappelijke zetel: Antwerpen, België<br>
+    BTW-nummer: BE0XXX.XXX.XXX<br>
+    Vertegenwoordigd door: Oskar Verschoren, Zaakvoerder<br>
+    E-mail: oskar@vo-initiatives.com<br>
+    Hierna te noemen: <strong>"Verwerker"</strong></p>
+  </div>
+
+  <h3>1.2 Definities</h3>
+  <p>In deze Overeenkomst hebben de volgende begrippen de betekenis die daaraan is toegekend in de AVG:</p>
+  <ul>
+    <li><strong>Persoonsgegevens:</strong> alle informatie over een geïdentificeerde of identificeerbare natuurlijke persoon</li>
+    <li><strong>Verwerking:</strong> elke bewerking op persoonsgegevens, al dan niet geautomatiseerd</li>
+    <li><strong>AVG:</strong> Verordening (EU) 2016/679 van het Europees Parlement en de Raad</li>
+    <li><strong>AI Assistent:</strong> de door Verwerker geleverde kunstmatige-intelligentieoplossing, inclusief alle software, infrastructuur en integraties</li>
+    <li><strong>Sub-verwerker:</strong> een derde partij ingeschakeld door de Verwerker voor de uitvoering van de dienstverlening</li>
+    <li><strong>Datalek:</strong> een inbreuk in verband met persoonsgegevens als bedoeld in artikel 4(12) AVG</li>
+  </ul>
+
+  <!-- ARTIKEL 2 -->
+  <h2 id="art2"><span class="art-num">Art. 2</span> Onderwerp en Duur</h2>
+
+  <p>Deze Overeenkomst regelt de verwerking van persoonsgegevens door de Verwerker in het kader van de AI Assistent-dienstverlening zoals beschreven in de Dienstverleningsovereenkomst tussen partijen.</p>
+
+  <p>De Overeenkomst treedt in werking op de ingangsdatum van de Dienstverleningsovereenkomst en eindigt automatisch bij beëindiging van die overeenkomst, tenzij hiervan schriftelijk wordt afgeweken.</p>
+
+  <!-- ARTIKEL 3 -->
+  <h2 id="art3"><span class="art-num">Art. 3</span> Aard, Doel en Categorieën van Verwerking</h2>
+
+  <h3>3.1 Aard van de verwerking</h3>
+  <p>De AI Assistent verwerkt persoonsgegevens ten behoeve van de volgende activiteiten:</p>
+  <ul>
+    <li>Automatische verwerking en beantwoording van e-mails</li>
+    <li>Beheer en opvolging van agenda-afspraken</li>
+    <li>Verwerking van documenten en spreadsheets</li>
+    <li>Opstellen en verzenden van communicaties namens de Verwerkingsverantwoordelijke</li>
+    <li>Analyseren en samenvatten van bedrijfsinformatie</li>
+    <li>Herinneringen en taakbeheer</li>
+  </ul>
+
+  <h3>3.2 Doel van de verwerking</h3>
+  <p>Persoonsgegevens worden uitsluitend verwerkt voor de uitvoering van de dienstverlening zoals overeengekomen met de Verwerkingsverantwoordelijke, en niet voor eigen doeleinden van de Verwerker.</p>
+
+  <h3>3.3 Categorieën van persoonsgegevens</h3>
+  <table>
+    <tr>
+      <th>Categorie</th>
+      <th>Voorbeelden</th>
+      <th>Bron</th>
+    </tr>
+    <tr>
+      <td>Identificatiegegevens</td>
+      <td>Naam, adres, e-mailadres, telefoonnummer</td>
+      <td>E-mails, documenten, agenda's</td>
+    </tr>
+    <tr>
+      <td>Professionele gegevens</td>
+      <td>Bedrijfsnaam, BTW-nummer, functietitel</td>
+      <td>Facturen, correspondentie</td>
+    </tr>
+    <tr>
+      <td>Financiële gegevens</td>
+      <td>Factuurbedragen, betalingsreferenties</td>
+      <td>Facturen, boekhouddocumenten</td>
+    </tr>
+    <tr>
+      <td>Communicatiegegevens</td>
+      <td>E-mailinhoud, vergadernotities</td>
+      <td>Gmail, agenda</td>
+    </tr>
+  </table>
+
+  <div class="highlight-box">
+    <p><strong>Bijzondere categorieën:</strong> De AI Assistent verwerkt standaard geen bijzondere categorieën persoonsgegevens (gezondheid, religie, politieke voorkeur, etc.). Indien dit toch vereist is, dient hiervoor een afzonderlijk addendum te worden opgesteld.</p>
+  </div>
+
+  <h3>3.4 Categorieën van betrokkenen</h3>
+  <ul>
+    <li>Klanten en prospects van de Verwerkingsverantwoordelijke</li>
+    <li>Leveranciers en zakenrelaties</li>
+    <li>Medewerkers van de Verwerkingsverantwoordelijke</li>
+  </ul>
+
+  <!-- ARTIKEL 4 -->
+  <h2 id="art4"><span class="art-num">Art. 4</span> Verplichtingen van de Verwerker</h2>
+
+  <p>De Verwerker verbindt zich ertoe:</p>
+  <ol>
+    <li>Persoonsgegevens uitsluitend te verwerken op schriftelijke instructie van de Verwerkingsverantwoordelijke, tenzij een wettelijke verplichting anders vereist</li>
+    <li>Te waarborgen dat personen die gemachtigd zijn persoonsgegevens te verwerken, een passende vertrouwelijkheidsverbintenis hebben aangegaan</li>
+    <li>Alle passende technische en organisatorische maatregelen te treffen overeenkomstig artikel 32 AVG (zie art. 7)</li>
+    <li>De Verwerkingsverantwoordelijke bij te staan bij de nakoming van diens verplichtingen m.b.t. rechten van betrokkenen (zie art. 9)</li>
+    <li>De Verwerkingsverantwoordelijke bij te staan bij de nakoming van de verplichtingen uit artikelen 32-36 AVG (beveiliging, datalekken, DPIA)</li>
+    <li>Na afloop van de dienstverlening alle persoonsgegevens te verwijderen of terug te bezorgen (zie art. 11)</li>
+    <li>De Verwerkingsverantwoordelijke alle informatie te verstrekken die noodzakelijk is om de naleving aan te tonen, en audits mogelijk te maken (zie art. 12)</li>
+    <li>De Verwerkingsverantwoordelijke onmiddellijk te informeren indien een instructie naar zijn mening inbreuk maakt op de AVG of andere Unierechtelijke of lidstaatrechtelijke bepalingen</li>
+  </ol>
+
+  <!-- ARTIKEL 5 -->
+  <h2 id="art5"><span class="art-num">Art. 5</span> Verplichtingen van de Verwerkingsverantwoordelijke</h2>
+
+  <p>De Verwerkingsverantwoordelijke verbindt zich ertoe:</p>
+  <ol>
+    <li>Te beschikken over een geldige rechtsgrond voor alle verwerkingen waarvoor de AI Assistent wordt ingezet</li>
+    <li>Betrokkenen adequaat te informeren over de verwerking van hun persoonsgegevens door middel van de AI Assistent (via de eigen privacyverklaring)</li>
+    <li>Uitsluitend rechtmatig verkregen persoonsgegevens te verstrekken aan de AI Assistent</li>
+    <li>De Verwerker schriftelijk te instrueren wanneer specifieke verwerkingen vereist zijn</li>
+    <li>Wijzigingen in de verwerkingsactiviteiten tijdig te melden aan de Verwerker</li>
+  </ol>
+
+  <!-- ARTIKEL 6 -->
+  <h2 id="art6"><span class="art-num">Art. 6</span> Sub-verwerkers</h2>
+
+  <h3>6.1 Toegestane sub-verwerkers</h3>
+  <p>De Verwerkingsverantwoordelijke verleent hierbij algemene toestemming aan de Verwerker voor het inschakelen van de volgende sub-verwerkers:</p>
+
+  <table>
+    <tr>
+      <th>Sub-verwerker</th>
+      <th>Rol</th>
+      <th>Land</th>
+      <th>Garantie</th>
+    </tr>
+    <tr>
+      <td><strong>Hetzner Online GmbH</strong></td>
+      <td>Serverhosting (AI Assistent infrastructuur)</td>
+      <td>Duitsland 🇩🇪</td>
+      <td>AVG — EU/EER</td>
+    </tr>
+    <tr>
+      <td><strong>Google LLC</strong></td>
+      <td>Integratie met Google Workspace (mail, agenda, documenten) — enkel indien van toepassing</td>
+      <td>VS / EU-regio's</td>
+      <td>SCCs + Google EU Data Processing Addendum</td>
+    </tr>
+    <tr>
+      <td><strong>AI-modelaanbieder</strong></td>
+      <td>Verwerking van taalinstructies door het AI-model — geanonimiseerd, niet bewaard</td>
+      <td>VS 🇺🇸</td>
+      <td>SCCs + Data Processing Agreement</td>
+    </tr>
+  </table>
+
+  <h3>6.2 Nieuwe sub-verwerkers</h3>
+  <p>De Verwerker zal de Verwerkingsverantwoordelijke minimaal 14 dagen vooraf schriftelijk informeren over elke beoogde wijziging met betrekking tot de toevoeging of vervanging van sub-verwerkers. De Verwerkingsverantwoordelijke heeft het recht bezwaar te maken binnen deze termijn.</p>
+
+  <h3>6.3 Doorstroom verplichtingen</h3>
+  <p>De Verwerker legt aan alle sub-verwerkers dezelfde verplichtingen op als vastgelegd in deze Overeenkomst, en blijft volledig aansprakelijk jegens de Verwerkingsverantwoordelijke voor de nakoming van die verplichtingen door de sub-verwerkers.</p>
+
+  <!-- ARTIKEL 7 -->
+  <h2 id="art7"><span class="art-num">Art. 7</span> Beveiliging</h2>
+
+  <p>De Verwerker implementeert passende technische en organisatorische maatregelen, waaronder:</p>
+
+  <h3>Technische maatregelen</h3>
+  <ul>
+    <li>Versleuteling van gegevens in transit (TLS 1.3) en in rust</li>
+    <li>Beveiligde VPN-verbinding tussen componenten (Tailscale)</li>
+    <li>Toegangscontrole via OAuth 2.0 met minimale permissies ("least privilege")</li>
+    <li>API-authenticatie via geheime sleutels opgeslagen in omgevingsvariabelen</li>
+    <li>Regelmatige beveiligingsupdates van de serverinfrastructuur</li>
+    <li>Firewall-configuratie (UFW) met beperkte poortopening</li>
+  </ul>
+
+  <h3>Organisatorische maatregelen</h3>
+  <ul>
+    <li>Toegang tot productiesystemen beperkt tot geautoriseerde medewerkers</li>
+    <li>Geen opslag van persoonsgegevens buiten de expliciete verwerkingsdoelen</li>
+    <li>Regelmatige evaluatie van beveiligingsmaatregelen</li>
+    <li>Geheimhoudingsverplichting voor alle betrokken personen</li>
+  </ul>
+
+  <!-- ARTIKEL 8 -->
+  <h2 id="art8"><span class="art-num">Art. 8</span> Datalekken</h2>
+
+  <p>Bij een (vermoedelijk) datalek:</p>
+  <ol>
+    <li>Informeert de Verwerker de Verwerkingsverantwoordelijke <strong>binnen 24 uur</strong> nadat hij er kennis van heeft gekregen, via e-mail aan het in de Dienstverleningsovereenkomst opgegeven adres</li>
+    <li>Bevat deze melding ten minste: aard van het datalek, categorieën en aantal betrokkenen (geschat), contactpunt voor meer informatie, waarschijnlijke gevolgen, reeds genomen maatregelen</li>
+    <li>Werkt de Verwerker mee aan de melding aan de Autoriteit Persoonsgegevens / Gegevensbeschermingsautoriteit (GBA) indien vereist</li>
+    <li>Documenteert de Verwerker alle datalekken conform artikel 33(5) AVG</li>
+  </ol>
+
+  <div class="highlight-box">
+    <p><strong>Meldpunt GBA (België):</strong> www.gegevensbeschermingsautoriteit.be · Tel: +32 2 274 48 00<br>
+    Melding vereist binnen 72 uur na vaststelling van het datalek (art. 33 AVG).</p>
+  </div>
+
+  <!-- ARTIKEL 9 -->
+  <h2 id="art9"><span class="art-num">Art. 9</span> Rechten van Betrokkenen</h2>
+
+  <p>De Verwerker staat de Verwerkingsverantwoordelijke bij bij de afhandeling van verzoeken van betrokkenen m.b.t.:</p>
+  <ul>
+    <li>Recht op inzage (art. 15 AVG)</li>
+    <li>Recht op rectificatie (art. 16 AVG)</li>
+    <li>Recht op gegevenswissing / "vergetelheid" (art. 17 AVG)</li>
+    <li>Recht op beperking van de verwerking (art. 18 AVG)</li>
+    <li>Recht op gegevensoverdraagbaarheid (art. 20 AVG)</li>
+    <li>Recht van bezwaar (art. 21 AVG)</li>
+  </ul>
+
+  <p>De Verwerker behandelt verzoeken doorgestuurd door de Verwerkingsverantwoordelijke <strong>binnen 5 werkdagen</strong>. Betrokkenen richten hun verzoeken rechtstreeks aan de Verwerkingsverantwoordelijke, niet aan de Verwerker.</p>
+
+  <!-- ARTIKEL 10 -->
+  <h2 id="art10"><span class="art-num">Art. 10</span> Doorgifte Buiten de EER</h2>
+
+  <p>Voor verwerkingen waarbij persoonsgegevens worden doorgegeven aan sub-verwerkers buiten de Europese Economische Ruimte (EER) — met name Anthropic (VS) en Google (VS) — zijn de volgende waarborgen van toepassing:</p>
+  <ul>
+    <li><strong>Standaard Contractuele Clausules (SCCs)</strong> conform Uitvoeringsbesluit (EU) 2021/914</li>
+    <li>Data Processing Addenda met respectieve sub-verwerkers</li>
+    <li>Technische maatregelen ter minimalisatie van blootstelling van persoonsgegevens (prompt-ontwerp, minimale gegevensinvoer)</li>
+  </ul>
+
+  <div class="highlight-box">
+    <p><strong>Praktische maatregel:</strong> De AI Assistent is zo geconfigureerd dat prompts aan het AI-model worden geminimaliseerd tot wat strikt noodzakelijk is voor de taakuitvoering. Geen persoonsgegevens worden opgeslagen door het AI-model zelf.</p>
+  </div>
+
+  <!-- ARTIKEL 11 -->
+  <h2 id="art11"><span class="art-num">Art. 11</span> Teruggave en Verwijdering van Gegevens</h2>
+
+  <p>Na beëindiging van de Dienstverleningsovereenkomst:</p>
+  <ol>
+    <li>Verwijdert de Verwerker alle persoonsgegevens van de Verwerkingsverantwoordelijke van zijn systemen <strong>binnen 30 dagen</strong>, tenzij wettelijke bewaarplicht anders vereist</li>
+    <li>Op verzoek van de Verwerkingsverantwoordelijke bezorgt de Verwerker een exportbestand van alle verwerkte gegevens in een gangbaar formaat (CSV/JSON) vóór de verwijdering</li>
+    <li>Certificeert de Verwerker schriftelijk dat alle gegevens zijn verwijderd</li>
+    <li>Google Workspace-gegevens (Gmail, Drive, Sheets) blijven eigendom van de Verwerkingsverantwoordelijke en worden door intrekking van de OAuth-toegang afgeschermd — deze gegevens worden door de Verwerker niet bewaard</li>
+  </ol>
+
+  <!-- ARTIKEL 12 -->
+  <h2 id="art12"><span class="art-num">Art. 12</span> Audit en Controle</h2>
+
+  <p>De Verwerker:</p>
+  <ul>
+    <li>Stelt alle nodige informatie beschikbaar om de naleving van deze Overeenkomst aan te tonen</li>
+    <li>Staat audits toe door de Verwerkingsverantwoordelijke of een door hem gemandateerde auditor, mits 30 dagen voorafgaandelijke schriftelijke kennisgeving</li>
+    <li>Draagt de kosten van zijn eigen medewerking; de kosten van externe auditoren zijn voor rekening van de Verwerkingsverantwoordelijke</li>
+    <li>Mag een maximaal 1 audit per kalenderjaar weigeren indien de timing operationeel niet haalbaar is, en stelt een alternatieve datum voor</li>
+  </ul>
+
+  <!-- ARTIKEL 13 -->
+  <h2 id="art13"><span class="art-num">Art. 13</span> Aansprakelijkheid</h2>
+
+  <p>De aansprakelijkheid van partijen voor schade als gevolg van een inbreuk op de AVG is als volgt geregeld:</p>
+  <ul>
+    <li>Elke partij is aansprakelijk voor de schade veroorzaakt door een verwerking die niet in overeenstemming is met de AVG en waarvoor zij verantwoordelijk is</li>
+    <li>De Verwerker is niet aansprakelijk voor schade veroorzaakt door niet-naleving van instructies van de Verwerkingsverantwoordelijke of door handelingen van de Verwerkingsverantwoordelijke zelf</li>
+    <li>De aansprakelijkheid van de Verwerker onder deze Overeenkomst is beperkt tot het bedrag betaald door de Verwerkingsverantwoordelijke in de 12 maanden voorafgaand aan de schadeveroorzakende gebeurtenis</li>
+  </ul>
+
+  <!-- ARTIKEL 14 -->
+  <h2 id="art14"><span class="art-num">Art. 14</span> Slotbepalingen</h2>
+
+  <h3>14.1 Toepasselijk recht</h3>
+  <p>Op deze Overeenkomst is Belgisch recht van toepassing. Alle geschillen worden bij uitsluiting voorgelegd aan de bevoegde rechtbanken van het arrondissement Antwerpen.</p>
+
+  <h3>14.2 Wijzigingen</h3>
+  <p>Wijzigingen aan deze Overeenkomst zijn enkel geldig indien schriftelijk overeengekomen door beide partijen. De Verwerker behoudt het recht deze Overeenkomst eenzijdig aan te passen bij wijzigingen in de AVG of gerelateerde regelgeving, mits 30 dagen voorafgaande kennisgeving.</p>
+
+  <h3>14.3 Onverbindbare bepalingen</h3>
+  <p>Indien enige bepaling van deze Overeenkomst nietig of niet-afdwingbaar is, blijven de overige bepalingen onverminderd van kracht.</p>
+
+  <h3>14.4 Hiërarchie</h3>
+  <p>In geval van tegenstrijdigheid tussen de bepalingen van deze Verwerkersovereenkomst en de Dienstverleningsovereenkomst, prevaleert deze Verwerkersovereenkomst voor alles wat de verwerking van persoonsgegevens betreft.</p>
+
+  <!-- HANDTEKENINGEN -->
+  <h2>Handtekeningen</h2>
+
+  <p>Partijen verklaren deze Verwerkersovereenkomst te hebben gelezen, begrepen en te aanvaarden:</p>
+
+  <div class="signature-block">
+    <div class="sig-party">
+      <h4>Verwerkingsverantwoordelijke</h4>
+      <div class="fill-block" style="margin:0 0 12px">
+        <strong>In te vullen</strong>
+        [BEDRIJFSNAAM]<br>
+        [NAAM ONDERTEKENAAR], [FUNCTIE]
+      </div>
+      <div class="sig-line"></div>
+      <p>Handtekening &amp; datum</p>
+      <p style="margin-top:8px;font-size:13px;color:#888">Plaats: _______________</p>
+    </div>
+    <div class="sig-party">
+      <h4>Verwerker</h4>
+      <p style="margin-bottom:12px">VO-Initiatives<br>Oskar Verschoren, Zaakvoerder</p>
+      <div class="sig-line"></div>
+      <p>Handtekening &amp; datum</p>
+      <p style="margin-top:8px;font-size:13px;color:#888">Plaats: Antwerpen</p>
+    </div>
+  </div>
+
+  <p style="margin-top:40px;font-size:13px;color:#888;text-align:center">
+    Vragen over deze overeenkomst? Neem contact op via <a href="mailto:oskar@vo-initiatives.com" style="color:#3c7a8a">oskar@vo-initiatives.com</a>
+  </p>
+
+</div>
+
+<footer>
+  <p>© 2026 VO-Initiatives · Antwerpen, België</p>
+  <p style="margin-top:8px">
+    <a href="/">Home</a>
+    <a href="/privacy">Privacyverklaring</a>
+    <a href="/algemene-voorwaarden">Algemene Voorwaarden</a>
+  </p>
+</footer>
+
+</body>
+</html>
