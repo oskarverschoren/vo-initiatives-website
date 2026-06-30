@@ -110,28 +110,114 @@
       "final.lead": `Réservez un appel de 30 minutes — nous choisissons ensemble le premier workflow à construire. En ligne sous 48 h, ou vous ne payez pas.`,
       "final.cta1": `Lancer votre build →`, "final.cta2": `Réserver un appel`,
       "foot.partner": `Devenir partenaire`, "foot.privacy": `Politique de confidentialité`, "foot.dpa": `Accord de traitement des données`, "foot.terms": `Conditions générales`, "foot.cookies": `Politique cookies`,
-      "foot.copy": `© 2026 VO-Initiatives · Des VOI Agents qui comprennent votre travail et l'exécutent · Il sait ce que vous voulez, avant que vous le demandiez.`
+      "foot.copy": `© 2026 VO-Initiatives · Des VOI Agents qui comprennent votre travail et l'exécutent · Il sait ce que vous voulez, avant que vous le demandiez.`,
+      "ap.meta.title": `VO-Initiatives — Programme partenaire · 1 125 €/mois par client`,
+      "ap.meta.desc": `Recommandez une entreprise à VOI et touchez 50 % de l'abonnement mensuel — 1 125 € par client, chaque mois, à vie. Plus 50 % du build. Sans plafond, sans limite de durée.`,
+      "ap.nav.cta": `Devenir partenaire`,
+      "ap.hero.eyebrow": `Programme partenaire`,
+      "ap.hero.h1": `Gagnez <em>1 125 €</em><br>par client, par mois.`,
+      "ap.hero.p": `Recommandez une entreprise à VOI et touchez 50 % de l'abonnement mensuel — chaque mois, tant que le client reste. Plus 50 % du build. Sans plafond, sans limite de durée.`,
+      "ap.s1l": `de l'abonnement mensuel, par client recommandé`,
+      "ap.s2l": `par mois, par client actif`,
+      "ap.s3l": `sans plafond · sans limite de durée`,
+      "ap.step1": `Inscrivez-vous comme partenaire`,
+      "ap.step2": `Partagez votre lien ou recommandez une entreprise par e-mail`,
+      "ap.step3": `VOI conclut & livre — vous gagnez 1 125 €/mois tant qu'ils restent`,
+      "ap.hero.cta1": `Devenir partenaire →`,
+      "ap.hero.cta2": `Poser une question`,
+      "ap.math.eyebrow": `Le calcul`,
+      "ap.math.h2": `Ça <em>s'accumule</em>.`,
+      "ap.math.lead": `Une recommandation n'est pas une commission ponctuelle — c'est un revenu qui continue de tomber. Pour un seul client actif :`,
+      "ap.math.r1l": `50 % de 2 250 €/mois`, "ap.math.r1v": `1 125 € / mois`,
+      "ap.math.r2l": `50 % du build unique (3–4 K€)`, "ap.math.r2v": `~1 500–2 000 €`,
+      "ap.math.r3l": `3 clients actifs, récurrent`, "ap.math.r3v": `3 375 € / mois`,
+      "ap.math.note": `Chiffres par client. Votre total dépend du nombre de clients recommandés et de leur durée — nous ne promettons aucun montant mensuel que nous ne pourrions tenir.`,
+      "ap.why.eyebrow": `Pourquoi celui-ci`,
+      "ap.why.h2": `Un produit qui <em>se vend tout seul</em>.`,
+      "ap.q1": `Le récurrent est-il réel — ou plafonné comme ailleurs ?`,
+      "ap.a1": `À vie. Sans plafond. La plupart des programmes « 50 % » s'arrêtent après 12 mois — celui-ci paie chaque mois tant que le client reste actif.`,
+      "ap.q2": `Dois-je le vendre ?`,
+      "ap.a2": `Non. Il se démontre tout seul — le produit crée le déclic. Vous recommandez ; VOI conclut, construit et pilote. Aucun produit, aucune livraison, aucun support à votre charge.`,
+      "ap.q3": `Vais-je griller mon audience ?`,
+      "ap.a3": `C'est un produit réel, premium, entièrement géré que les entreprises veulent vraiment. Le recommander renforce votre réputation au lieu de l'entamer.`,
+      "ap.q4": `Comment suis-je payé ?`,
+      "ap.a4": `Mensuellement, tant que le client reste actif, plus votre part du build. <span style="color:var(--muted)">[Calendrier de paiement & conditions communiqués à l'inscription.]</span>`,
+      "ap.join.eyebrow": `Démarrer`,
+      "ap.join.h2": `Bâtissez un revenu qui <em>dure</em>.`,
+      "ap.join.lead": `Inscrivez-vous comme partenaire et commencez à recommander dès aujourd'hui.`,
+      "ap.join.cta1": `Devenir partenaire →`, "ap.join.cta2": `Voir le produit`,
+      "ap.foot": `© 2026 VO-Initiatives · Programme partenaire · 50 % à vie, sans plafond.`
+    },
+    nl: {
+      "ap.meta.title": `VO-Initiatives — Partnerprogramma · €1.125/mnd per klant`,
+      "ap.meta.desc": `Refereer een bedrijf aan VOI en verdien 50% van de maandprijs — €1.125 per klant, elke maand, levenslang. Plus 50% van de opstart. Geen cap, geen tijdslimiet.`,
+      "ap.nav.cta": `Word partner`,
+      "ap.hero.eyebrow": `Partnerprogramma`,
+      "ap.hero.h1": `Verdien <em>€1.125</em><br>per klant, per maand.`,
+      "ap.hero.p": `Refereer een bedrijf aan VOI en verdien 50% van de maandprijs — elke maand, zolang de klant blijft. Plus 50% van de opstart. Geen cap, geen tijdslimiet.`,
+      "ap.s1l": `van de maandprijs, per aangebrachte klant`,
+      "ap.s2l": `per maand, per actieve klant`,
+      "ap.s3l": `geen cap · geen tijdslimiet`,
+      "ap.step1": `Schrijf je in als partner`,
+      "ap.step2": `Deel je link of refereer een bedrijf via mail`,
+      "ap.step3": `VOI sluit & levert — jij verdient €1.125/mnd zolang ze blijven`,
+      "ap.hero.cta1": `Word partner →`,
+      "ap.hero.cta2": `Stel een vraag`,
+      "ap.math.eyebrow": `De rekensom`,
+      "ap.math.h2": `Het <em>stapelt op</em>.`,
+      "ap.math.lead": `Eén referral is geen eenmalige commissie — het is een loonlijn die blijft betalen. Eén actieve klant:`,
+      "ap.math.r1l": `50% van €2.250/mnd`, "ap.math.r1v": `€1.125 / mnd`,
+      "ap.math.r2l": `50% van de eenmalige build (€3–4K)`, "ap.math.r2v": `~€1.500–2.000`,
+      "ap.math.r3l": `3 actieve klanten, recurring`, "ap.math.r3v": `€3.375 / mnd`,
+      "ap.math.note": `Per-klant cijfers getoond. Je totaal hangt af van hoeveel klanten je aanbrengt en hoe lang ze blijven — we beloven geen maandbedrag dat we niet kunnen waarmaken.`,
+      "ap.why.eyebrow": `Waarom deze`,
+      "ap.why.h2": `Een product dat <em>zichzelf verkoopt</em>.`,
+      "ap.q1": `Is het recurring echt — of gecapt zoals andere programma's?`,
+      "ap.a1": `Levenslang. Ongecapt. De meeste "50%"-programma's stoppen na 12 maanden — dit blijft elke maand betalen zolang de klant actief is.`,
+      "ap.q2": `Moet ik het verkopen?`,
+      "ap.a2": `Nee. Het verkoopt zichzelf — het product creëert het gevoel. Jij refereert; VOI sluit, bouwt en draait het. Jij draagt geen product, geen levering, geen support.`,
+      "ap.q3": `Brandt het mijn publiek?`,
+      "ap.a3": `Het is een echt, premium, volledig beheerd product dat bedrijven écht willen. Het aanbevelen bouwt je reputatie op, het kost ze niet.`,
+      "ap.q4": `Hoe word ik betaald?`,
+      "ap.a4": `Maandelijks, zolang de klant actief blijft, plus jouw deel van de opstart. <span style="color:var(--muted)">[Uitbetalingsschema & voorwaarden bij inschrijving.]</span>`,
+      "ap.join.eyebrow": `Start`,
+      "ap.join.h2": `Bouw inkomen dat <em>blijft</em>.`,
+      "ap.join.lead": `Schrijf je in als partner en begin vandaag met refereren.`,
+      "ap.join.cta1": `Word partner →`, "ap.join.cta2": `Bekijk het product`,
+      "ap.foot": `© 2026 VO-Initiatives · Partnerprogramma · 50% levenslang, geen cap.`
     }
   };
 
   const OG_LOCALE = { nl: "nl_BE", en: "en_US", fr: "fr_FR" };
   const SUPPORTED = ["nl", "en", "fr"];
 
+  // Cache the page's original inline content so that switching to a language
+  // that lacks a given key restores the source text instead of leaving stale text.
+  const ORIG = new Map();
+  const original = (k, v) => { if (!ORIG.has(k)) ORIG.set(k, v); return ORIG.get(k); };
+
   function apply(lang) {
     document.documentElement.lang = lang;
-    const d = DICT[lang]; // undefined for nl → keep inline HTML
+    const d = DICT[lang]; // may be undefined or only partial → fall back to original inline
     document.querySelectorAll("[data-i18n]").forEach((el) => {
       const key = el.getAttribute("data-i18n");
-      if (d && d[key] != null) el.innerHTML = d[key];
+      const base = original(el, el.innerHTML);
+      el.innerHTML = (d && d[key] != null) ? d[key] : base;
     });
-    // head/meta
-    const t = (d && d["meta.title"]) || "VO-Initiatives — VOI Agents die je werk begrijpen en uitvoeren";
-    document.title = t;
-    const set = (sel, val) => { const m = document.querySelector(sel); if (m && val) m.setAttribute("content", val); };
-    set('meta[name="description"]', (d && d["meta.desc"]) || null);
-    set('meta[property="og:title"]', (d && d["meta.ogtitle"]) || null);
-    set('meta[property="og:description"]', (d && d["meta.desc"]) || null);
-    set('meta[property="og:locale"]', OG_LOCALE[lang]);
+    // head/meta (a page may scope its meta keys via <html data-i18n-meta="ap.">)
+    const mp = document.documentElement.getAttribute("data-i18n-meta") || "";
+    const get = (k) => (d && d[mp + k]) || null;
+    document.title = get("meta.title") || original("__title", document.title);
+    const set = (sel, key) => {
+      const m = document.querySelector(sel); if (!m) return;
+      m.setAttribute("content", get(key) || original(sel, m.getAttribute("content")));
+    };
+    set('meta[name="description"]', "meta.desc");
+    const ogt = document.querySelector('meta[property="og:title"]');
+    if (ogt) ogt.setAttribute("content", get("meta.ogtitle") || get("meta.title") || original("__ogt", ogt.getAttribute("content")));
+    set('meta[property="og:description"]', "meta.desc");
+    const ogl = document.querySelector('meta[property="og:locale"]');
+    if (ogl) ogl.setAttribute("content", OG_LOCALE[lang]);
     // switch state
     document.querySelectorAll("#lang button").forEach((b) => b.classList.toggle("on", b.dataset.lang === lang));
     try { localStorage.setItem("voi_lang", lang); } catch (e) {}

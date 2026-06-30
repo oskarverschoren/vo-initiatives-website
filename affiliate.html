@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-meta="ap.">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,6 +34,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,10,13,.66)
 nav .row{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
 .brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:800;letter-spacing:-.02em;font-size:16px}
 .brand svg{width:24px;height:24px}
+.navcta{display:flex;align-items:center;gap:14px}
+.langswitch{display:flex;gap:1px}
+.langswitch button{background:none;border:none;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.06em;cursor:pointer;padding:4px 7px;border-radius:6px;text-transform:uppercase;transition:color .2s}
+.langswitch button.on{color:var(--ember)}
+.langswitch button:hover{color:var(--text)}
 .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:600;font-size:.97rem;border-radius:100px;padding:14px 28px;border:1px solid transparent;transition:.2s var(--ease);cursor:pointer}
 .btn-primary{background:var(--ember);color:#fff}
 .btn-primary:hover{background:var(--ember-deep);transform:translateY(-1px)}
@@ -63,10 +68,10 @@ h2{font-family:var(--display);font-weight:800;letter-spacing:-.03em;font-size:cl
 h2 em{font-family:var(--accent);font-style:italic;font-weight:400;color:var(--ember)}
 .lead{color:var(--text2);font-size:1.15rem;max-width:60ch;line-height:1.55}
 .math{background:var(--surf2);border:1px solid var(--border2);border-radius:18px;padding:34px;margin-top:2.4rem;box-shadow:var(--shadow);max-width:640px}
-.math .row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);font-size:1.05rem}
+.math .row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);font-size:1.05rem;gap:16px}
 .math .row:last-child{border-bottom:none}
 .math .row .lab{color:var(--text2)}
-.math .row .num{font-family:var(--accent);font-style:italic;color:var(--ember);font-size:1.4rem}
+.math .row .num{font-family:var(--accent);font-style:italic;color:var(--ember);font-size:1.4rem;white-space:nowrap}
 .math .row.total .lab{color:var(--text);font-weight:600}
 .math .row.total .num{font-size:1.8rem}
 .faq{display:grid;gap:16px;margin-top:2.4rem}
@@ -89,7 +94,14 @@ footer{border-top:1px solid var(--border);padding:3rem 0;text-align:center;color
       <svg viewBox="0 0 32 32" fill="none"><rect x="1" y="1" width="30" height="30" rx="9" stroke="#E2572B" stroke-width="1.6"/><path d="M9 10.5L16 22L23 10.5" stroke="#E2572B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       VO-Initiatives
     </a>
-    <a href="#join" class="btn btn-primary">Become a partner</a>
+    <div class="navcta">
+      <div class="langswitch" id="lang">
+        <button data-lang="nl">NL</button>
+        <button data-lang="en" class="on">EN</button>
+        <button data-lang="fr">FR</button>
+      </div>
+      <a href="#join" class="btn btn-primary" data-i18n="ap.nav.cta">Become a partner</a>
+    </div>
   </div>
 </nav>
 
@@ -97,75 +109,73 @@ footer{border-top:1px solid var(--border);padding:3rem 0;text-align:center;color
   <div class="glow e" style="width:560px;height:560px;top:-120px;left:50%;transform:translateX(-50%)"></div>
   <div class="glow t" style="width:420px;height:420px;bottom:-160px;right:-120px"></div>
   <div class="wrap">
-    <div class="eyebrow">Partner Program</div>
-    <h1>Earn <em>€1,125</em><br>per client, per month.</h1>
-    <p>Refer a business to VOI and earn 50% of the monthly fee — every month, for the lifetime of the client. Plus 50% of the setup. No cap, no time limit.</p>
+    <div class="eyebrow" data-i18n="ap.hero.eyebrow">Partner Program</div>
+    <h1 data-i18n="ap.hero.h1">Earn <em>€1,125</em><br>per client, per month.</h1>
+    <p data-i18n="ap.hero.p">Refer a business to VOI and earn 50% of the monthly fee — every month, for the lifetime of the client. Plus 50% of the setup. No cap, no time limit.</p>
 
     <div class="stats">
-      <div class="scard fade"><div class="v">50%</div><div class="l">of the monthly fee, per referred client</div></div>
-      <div class="scard fade"><div class="v">€1.125</div><div class="l">per month, per active client</div></div>
-      <div class="scard fade"><div class="v"><em>∞</em></div><div class="l">no cap · no time limit</div></div>
+      <div class="scard fade"><div class="v">50%</div><div class="l" data-i18n="ap.s1l">of the monthly fee, per referred client</div></div>
+      <div class="scard fade"><div class="v">€1.125</div><div class="l" data-i18n="ap.s2l">per month, per active client</div></div>
+      <div class="scard fade"><div class="v"><em>∞</em></div><div class="l" data-i18n="ap.s3l">no cap · no time limit</div></div>
     </div>
 
     <div class="steps">
-      <div class="step fade"><span class="n">1</span> Sign up as a partner</div>
-      <div class="step fade"><span class="n">2</span> Share your link or refer a business by email</div>
-      <div class="step fade"><span class="n">3</span> VOI closes &amp; delivers — you earn €1,125/mo for as long as they stay</div>
+      <div class="step fade"><span class="n">1</span> <span data-i18n="ap.step1">Sign up as a partner</span></div>
+      <div class="step fade"><span class="n">2</span> <span data-i18n="ap.step2">Share your link or refer a business by email</span></div>
+      <div class="step fade"><span class="n">3</span> <span data-i18n="ap.step3">VOI closes &amp; delivers — you earn €1,125/mo for as long as they stay</span></div>
     </div>
 
     <div class="hero-cta">
-      <a href="mailto:partners@vo-initiatives.com?subject=VOI%20Partner%20Program" class="btn btn-primary">Become a partner →</a>
-      <a href="mailto:partners@vo-initiatives.com?subject=Question%20about%20the%20partner%20program" class="btn btn-secondary">Ask a question</a>
+      <a href="mailto:partners@vo-initiatives.com?subject=VOI%20Partner%20Program" class="btn btn-primary" data-i18n="ap.hero.cta1">Become a partner →</a>
+      <a href="mailto:partners@vo-initiatives.com?subject=Question%20about%20the%20partner%20program" class="btn btn-secondary" data-i18n="ap.hero.cta2">Ask a question</a>
     </div>
   </div>
 </header>
 
-<!-- THE MATH -->
 <section>
   <div class="wrap">
-    <div class="eyebrow l">The math</div>
-    <h2>It <em>compounds</em>.</h2>
-    <p class="lead">One referral isn't a one-off commission — it's a salary line that keeps paying. Here's a single active client:</p>
+    <div class="eyebrow l" data-i18n="ap.math.eyebrow">The math</div>
+    <h2 data-i18n="ap.math.h2">It <em>compounds</em>.</h2>
+    <p class="lead" data-i18n="ap.math.lead">One referral isn't a one-off commission — it's a salary line that keeps paying. Here's a single active client:</p>
     <div class="math fade">
-      <div class="row"><span class="lab">50% of €2.250/mo</span><span class="num">€1.125 / mo</span></div>
-      <div class="row"><span class="lab">50% of the one-time build (€3–4K)</span><span class="num">~€1.500–2.000</span></div>
-      <div class="row total"><span class="lab">3 active clients, recurring</span><span class="num">€3.375 / mo</span></div>
+      <div class="row"><span class="lab" data-i18n="ap.math.r1l">50% of €2.250/mo</span><span class="num" data-i18n="ap.math.r1v">€1.125 / mo</span></div>
+      <div class="row"><span class="lab" data-i18n="ap.math.r2l">50% of the one-time build (€3–4K)</span><span class="num" data-i18n="ap.math.r2v">~€1.500–2.000</span></div>
+      <div class="row total"><span class="lab" data-i18n="ap.math.r3l">3 active clients, recurring</span><span class="num" data-i18n="ap.math.r3v">€3.375 / mo</span></div>
     </div>
-    <div class="note">Per-client economics shown. Your total depends on how many clients you refer and how long they stay — we don't promise a monthly figure we can't stand behind.</div>
+    <div class="note" data-i18n="ap.math.note">Per-client economics shown. Your total depends on how many clients you refer and how long they stay — we don't promise a monthly figure we can't stand behind.</div>
   </div>
 </section>
 
-<!-- WHY -->
 <section>
   <div class="glow t" style="width:380px;height:380px;top:-80px;left:-140px"></div>
   <div class="wrap">
-    <div class="eyebrow l">Why this one</div>
-    <h2>A product that <em>sells itself</em>.</h2>
+    <div class="eyebrow l" data-i18n="ap.why.eyebrow">Why this one</div>
+    <h2 data-i18n="ap.why.h2">A product that <em>sells itself</em>.</h2>
     <div class="faq">
-      <div class="qa fade"><h3>Is the recurring real — or capped like other programs?</h3><p>Lifetime. Uncapped. Most "50%" programs stop paying after 12 months — this one keeps paying every month the client stays active.</p></div>
-      <div class="qa fade"><h3>Do I have to sell it?</h3><p>No. It demos itself — the product creates the feeling. You refer; VOI closes the deal, builds, and runs it. You carry no product, no delivery, no support.</p></div>
-      <div class="qa fade"><h3>Will it burn my audience?</h3><p>It's a real, premium, fully-managed product that businesses actually want. Referring it builds your reputation, it doesn't spend it.</p></div>
-      <div class="qa fade"><h3>How do I get paid?</h3><p>Monthly, for as long as the client stays active, plus your share of the setup. <span style="color:var(--muted)">[Payout schedule &amp; terms shared on signup.]</span></p></div>
+      <div class="qa fade"><h3 data-i18n="ap.q1">Is the recurring real — or capped like other programs?</h3><p data-i18n="ap.a1">Lifetime. Uncapped. Most "50%" programs stop paying after 12 months — this one keeps paying every month the client stays active.</p></div>
+      <div class="qa fade"><h3 data-i18n="ap.q2">Do I have to sell it?</h3><p data-i18n="ap.a2">No. It demos itself — the product creates the feeling. You refer; VOI closes the deal, builds, and runs it. You carry no product, no delivery, no support.</p></div>
+      <div class="qa fade"><h3 data-i18n="ap.q3">Will it burn my audience?</h3><p data-i18n="ap.a3">It's a real, premium, fully-managed product that businesses actually want. Referring it builds your reputation, it doesn't spend it.</p></div>
+      <div class="qa fade"><h3 data-i18n="ap.q4">How do I get paid?</h3><p data-i18n="ap.a4">Monthly, for as long as the client stays active, plus your share of the setup. <span style="color:var(--muted)">[Payout schedule &amp; terms shared on signup.]</span></p></div>
     </div>
   </div>
 </section>
 
-<!-- JOIN -->
 <section id="join" style="text-align:center">
   <div class="glow e" style="width:480px;height:480px;top:-100px;left:50%;transform:translateX(-50%);opacity:.4"></div>
   <div class="wrap">
-    <div class="eyebrow">Start</div>
-    <h2>Build income that <em>lasts</em>.</h2>
-    <p class="lead" style="margin:0 auto">Sign up as a partner and start referring today.</p>
+    <div class="eyebrow" data-i18n="ap.join.eyebrow">Start</div>
+    <h2 data-i18n="ap.join.h2">Build income that <em>lasts</em>.</h2>
+    <p class="lead" style="margin:0 auto" data-i18n="ap.join.lead">Sign up as a partner and start referring today.</p>
     <div class="hero-cta">
-      <a href="mailto:partners@vo-initiatives.com?subject=VOI%20Partner%20Program" class="btn btn-primary">Become a partner →</a>
-      <a href="index.html" class="btn btn-secondary">See the product</a>
+      <a href="mailto:partners@vo-initiatives.com?subject=VOI%20Partner%20Program" class="btn btn-primary" data-i18n="ap.join.cta1">Become a partner →</a>
+      <a href="index.html" class="btn btn-secondary" data-i18n="ap.join.cta2">See the product</a>
     </div>
   </div>
 </section>
 
-<footer>© 2026 VO-Initiatives · Partner Program · 50% lifetime, no cap.</footer>
+<footer data-i18n="ap.foot">© 2026 VO-Initiatives · Partner Program · 50% lifetime, no cap.</footer>
 
+<script src="assets/i18n.js" defer></script>
 <script src="assets/app.js" defer></script>
 </body>
 </html>
