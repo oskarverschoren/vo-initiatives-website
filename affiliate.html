@@ -82,9 +82,25 @@ h2 em{font-family:var(--accent);font-style:italic;font-weight:400;color:var(--em
 .qa p{color:var(--text2);font-size:.96rem}
 .note{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.04em;margin-top:24px;max-width:60ch}
 footer{border-top:1px solid var(--border);padding:3rem 0;text-align:center;color:var(--muted);font-size:13px}
-.fade{opacity:0;transform:translateY(20px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.fade{opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
 .fade.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.fade{opacity:1;transform:none}}
+.btn{transition:transform .25s var(--ease),background .2s,border-color .2s,box-shadow .35s var(--ease)}
+.btn-primary:hover{box-shadow:0 14px 36px -10px rgba(226,87,43,.55)}
+.btn-primary:active,.btn-secondary:active{transform:translateY(0) scale(.97)}
+.btn-secondary:hover{transform:translateY(-2px)}
+.scard,.qa{transition:transform .35s var(--ease),border-color .35s}
+.scard:hover,.qa:hover{transform:translateY(-3px);border-color:var(--border2)}
+nav{transition:background .3s}
+nav.scrolled{background:rgba(8,10,13,.9)}
+.hero > .wrap > *{opacity:0;animation:heroIn 1s var(--ease) forwards}
+.hero > .wrap > .eyebrow{animation-delay:.15s}
+.hero > .wrap > h1{animation-delay:.3s}
+.hero > .wrap > p{animation-delay:.46s}
+.hero > .wrap > .stats{animation-delay:.6s}
+.hero > .wrap > .steps{animation-delay:.72s}
+.hero > .wrap > .hero-cta{animation-delay:.84s}
+@keyframes heroIn{from{opacity:0;transform:translateY(18px);filter:blur(6px)}to{opacity:1;transform:none;filter:blur(0)}}
+@media(prefers-reduced-motion:reduce){.fade,.hero > .wrap > *{opacity:1!important;transform:none!important;filter:none!important;transition:none!important;animation:none!important}}
 @media(max-width:820px){.stats{grid-template-columns:1fr}}
 </style>
 </head>

@@ -134,9 +134,36 @@ footer .frow{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;
 footer .flinks{display:flex;gap:22px;flex-wrap:wrap;font-size:13px;color:var(--text2)}
 footer .flinks a:hover{color:var(--ember)}
 footer .copy{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:1.6rem;letter-spacing:.04em}
-.fade{opacity:0;transform:translateY(22px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.fade{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
 .fade.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.fade{opacity:1;transform:none;transition:none}}
+/* ---- cinematic motion ---- */
+.btn{transition:transform .25s var(--ease),background .2s,border-color .2s,box-shadow .35s var(--ease)}
+.btn-primary:hover{box-shadow:0 14px 36px -10px rgba(226,87,43,.55)}
+.btn-primary:active,.btn-secondary:active{transform:translateY(0) scale(.97)}
+.btn-secondary:hover{transform:translateY(-2px)}
+.card{transition:transform .35s var(--ease),border-color .35s,box-shadow .35s}
+.card:hover{transform:translateY(-3px);border-color:var(--border2)}
+.step:hover,.price:hover{transform:translateY(-3px);transition:transform .35s var(--ease)}
+nav{transition:background .3s,border-color .3s}
+nav.scrolled{background:rgba(8,10,13,.9)}
+nav.scrolled .row{padding-top:10px;padding-bottom:10px}
+.navlinks a{position:relative}
+.navlinks a::after{content:"";position:absolute;left:0;right:100%;bottom:-5px;height:1px;background:var(--ember);transition:right .35s var(--ease)}
+.navlinks a:hover::after{right:0}
+.demo-frame{transition:transform .5s var(--ease),box-shadow .5s}
+.demo-frame:hover{transform:translateY(-4px) scale(1.004)}
+/* hero entrance (runs once on load) */
+.hero .wrap > *{opacity:0;animation:heroIn 1s var(--ease) forwards}
+.hero .wrap > *:nth-child(1){animation-delay:.15s}
+.hero .wrap > *:nth-child(2){animation-delay:.30s}
+.hero .wrap > *:nth-child(3){animation-delay:.46s}
+.hero .wrap > *:nth-child(4){animation-delay:.62s}
+.hero .wrap > *:nth-child(5){animation-delay:.74s}
+@keyframes heroIn{from{opacity:0;transform:translateY(20px);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
+@media(prefers-reduced-motion:reduce){
+  .fade,.hero .wrap > *{opacity:1!important;transform:none!important;filter:none!important;transition:none!important;animation:none!important}
+  .card:hover,.step:hover,.price:hover,.demo-frame:hover,.btn:hover{transform:none!important}
+}
 @media(max-width:900px){.navlinks{display:none}.g2,.g3,.steps,.price-grid,.founder{grid-template-columns:1fr}.founder .photo{width:100%;max-width:300px;height:300px}.hero-scrim{background:linear-gradient(0deg,var(--bg) 6%,rgba(8,10,13,.72) 55%,rgba(8,10,13,.62) 100%)}}
 </style>
 </head>
