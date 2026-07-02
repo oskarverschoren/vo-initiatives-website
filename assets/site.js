@@ -26,6 +26,23 @@
     });
   });
 
+  /* ---- taalknoppen op juridische pagina's (sturen de tekstnode-engine aan) ---- */
+  var legalLang = document.getElementById("legalLang");
+  if (legalLang && typeof window.voiSetLang === "function") {
+    var syncLegalLang = function () {
+      var cur = "nl";
+      try { cur = localStorage.getItem("voi_lang") || document.documentElement.lang || "nl"; } catch (e) {}
+      legalLang.querySelectorAll("button").forEach(function (b) {
+        b.classList.toggle("on", b.dataset.lang === cur);
+      });
+    };
+    legalLang.addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-lang]");
+      if (b) { window.voiSetLang(b.dataset.lang); syncLegalLang(); }
+    });
+    syncLegalLang();
+  }
+
   /* ---- scroll-reveal ---- */
   var faders = document.querySelectorAll(".fade");
   if (reducedMotion || !("IntersectionObserver" in window)) {
