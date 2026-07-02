@@ -26,6 +26,63 @@
     });
   });
 
+  /* ---- onboarding-formulier (/start): POST naar de provisioning-pipeline ---- */
+  var onboardForm = document.getElementById("onboardForm");
+  if (onboardForm) {
+    var errorBox = document.getElementById("onboardError");
+    var successBox = document.getElementById("onboardSuccess");
+    var fallbackBox = document.getElementById("onboardFallback");
+    var submitBtn = document.getElementById("onboardSubmit");
+
+    var showError = function (msg) {
+      errorBox.textContent = msg;
+      errorBox.hidden = false;
+    };
+
+    onboardForm.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      errorBox.hidden = true;
+
+      // honeypot: stil "slagen" voor bots
+      if (onboardForm.querySelector('[name="website"]').value) {
+        onboardForm.hidden = true;
+        successBox.hidden = false;
+        return;
+      }
+      if (!onboardForm.reportValidity()) return;
+
+      var payload = {
+        naam: onboardForm.naam.value.trim(),
+        email: onboardForm.email.value.trim(),
+        bedrijf: onboardForm.bedrijf.value.trim(),
+        wens: onboardForm.wens.value.trim()
+      };
+
+      submitBtn.disabled = true;
+      fetch("/api/onboard", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+        .then(function (r) { return r.json().then(function (j) { return { status: r.status, body: j }; }); })
+        .then(function (res) {
+          if (res.body && res.body.ok) {
+            onboardForm.hidden = true;
+            successBox.hidden = false;
+            successBox.scrollIntoView({ block: "center", behavior: "smooth" });
+          } else {
+            showError((res.body && res.body.error) || "Er ging iets mis — probeer het opnieuw.");
+          }
+        })
+        .catch(function () {
+          // endpoint niet bereikbaar → val terug op het opstartgesprek
+          onboardForm.hidden = true;
+          fallbackBox.hidden = false;
+        })
+        .finally(function () { submitBtn.disabled = false; });
+    });
+  }
+
   /* ---- taalknoppen op juridische pagina's (sturen de tekstnode-engine aan) ---- */
   var legalLang = document.getElementById("legalLang");
   if (legalLang && typeof window.voiSetLang === "function") {

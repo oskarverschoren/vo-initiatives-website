@@ -328,6 +328,43 @@ section{padding-top:var(--space-section);padding-bottom:var(--space-section);pos
 .price-note{margin-top:26px;font-size:13px;color:var(--ink-3);display:flex;align-items:center;justify-content:center;gap:8px}
 .price-note .dot{width:6px;height:6px;border-radius:50%;background:var(--ember)}
 
+/* ---- onboarding (/start) ---- */
+.onboard{min-height:70vh}
+.onboard h1{font-size:clamp(2.2rem,1.4rem + 3.4vw,3.8rem);max-width:16ch;margin:0 auto 1.2rem}
+.onboard .lead{max-width:46ch;margin-bottom:2.4rem}
+.onboard-card{
+  max-width:560px;margin:0 auto;text-align:left;
+  background:var(--surface);border:1px solid var(--line-strong);border-radius:16px;
+  padding:clamp(22px,4vw,34px);box-shadow:var(--shadow);
+}
+.of-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.of-field{display:block;margin-bottom:14px}
+.of-field span{display:block;font-size:12.5px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+.of-field em{font-style:normal;font-weight:400;color:var(--ink-3)}
+.of-field input,.of-field textarea{
+  width:100%;font:inherit;font-size:14.5px;color:var(--ink);
+  background:var(--bg);border:1px solid var(--line-strong);border-radius:10px;
+  padding:11px 13px;transition:border-color var(--duration-fast),box-shadow var(--duration-fast);
+}
+.of-field input:focus,.of-field textarea:focus{
+  outline:none;border-color:var(--ember);box-shadow:0 0 0 3px var(--ember-soft);
+}
+.of-field textarea{resize:vertical;min-height:74px}
+.of-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.of-error{
+  color:var(--ember);font-size:13.5px;margin:2px 0 12px;
+  border-left:2px solid var(--ember);padding-left:10px;
+}
+.of-submit{width:100%;margin-top:4px}
+.of-submit[disabled]{opacity:.6;cursor:wait;transform:none}
+.onboard-card .hero-note{margin-top:14px}
+.of-result{text-align:center;padding:clamp(30px,5vw,44px)}
+.of-result h2{font-size:clamp(1.5rem,1.2rem + 1.4vw,2.1rem);margin-bottom:.7rem}
+.of-result p{color:var(--ink-2);font-size:14.5px;max-width:40ch;margin:0 auto 1.5rem}
+.of-check{display:inline-flex;color:var(--success);margin-bottom:14px}
+.of-privacy{margin-top:22px;font-size:12.5px;color:var(--ink-3);max-width:46ch;margin-left:auto;margin-right:auto}
+@media(max-width:560px){.of-row{grid-template-columns:1fr}}
+
 /* ---- trust strip ---- */
 .trust-strip{
   display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);

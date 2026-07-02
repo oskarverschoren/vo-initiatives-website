@@ -122,6 +122,25 @@
       "foot2.t": `Company`, "foot2.l1": `About VO-Initiatives`, "foot2.l2": `Become a partner`, "foot2.l3": `Contact`,
       "foot3.t": `VOI for`, "foot3.l1": `Sales`, "foot3.l2": `Operations`, "foot3.l3": `Logistics`, "foot3.l4": `Finance`, "foot3.l5": `Management`,
       "foot4.t": `Legal`, "foot4.l1": `Privacy policy`, "foot4.l2": `Data processing agreement`, "foot4.l3": `Terms & conditions`, "foot4.l4": `Cookie policy`,
+      "start.back": `Back to home`,
+      "start.badge": `Onboarding · starts right away`,
+      "start.h1": `Start your build`,
+      "start.lead": `Tell us in one minute who you are and what you want to automate. Your onboarding starts immediately — the intake continues in your mailbox.`,
+      "start.f.naam": `Name`,
+      "start.f.email": `Email address`,
+      "start.f.bedrijf": `Company`,
+      "start.f.wens": `What do you want to automate? <em>(optional)</em>`,
+      "start.f.optioneel": `(optional)`,
+      "start.f.wensph": `E.g. following up quotes, processing invoices, the monthly report…`,
+      "start.submit": `Start your build`,
+      "start.note": `First workflow live within 48 hours — or you don't pay`,
+      "start.ok.h2": `We're on it`,
+      "start.ok.p": `Your onboarding is running. Check your mailbox — the intake continues there. First workflow live within 48 hours, or you don't pay.`,
+      "start.ok.home": `Back to home`,
+      "start.fb.h2": `Direct start is briefly unavailable`,
+      "start.fb.p": `No worries — book your 30-minute onboarding call right away and we'll start there.`,
+      "start.fb.cta": `Book your call`,
+      "start.privacy": `We only use your details for your onboarding — never for anything else. See our <a href="privacy.html" style="text-decoration:underline">privacy policy</a>.`,
       "foot.copy": `© 2026 VO-Initiatives · It knows what you want, before you ask.`
     },
     fr: {
@@ -242,6 +261,25 @@
       "foot2.t": `Entreprise`, "foot2.l1": `À propos de VO-Initiatives`, "foot2.l2": `Devenir partenaire`, "foot2.l3": `Contact`,
       "foot3.t": `VOI pour`, "foot3.l1": `Ventes`, "foot3.l2": `Opérations`, "foot3.l3": `Logistique`, "foot3.l4": `Finance`, "foot3.l5": `Management`,
       "foot4.t": `Juridique`, "foot4.l1": `Politique de confidentialité`, "foot4.l2": `Accord de sous-traitance`, "foot4.l3": `Conditions générales`, "foot4.l4": `Politique de cookies`,
+      "start.back": `Retour à l'accueil`,
+      "start.badge": `Onboarding · démarre immédiatement`,
+      "start.h1": `Lancez votre build`,
+      "start.lead": `Dites-nous en une minute qui vous êtes et ce que vous voulez automatiser. Votre onboarding démarre immédiatement — l'intake continue dans votre boîte mail.`,
+      "start.f.naam": `Nom`,
+      "start.f.email": `Adresse e-mail`,
+      "start.f.bedrijf": `Entreprise`,
+      "start.f.wens": `Que voulez-vous automatiser ? <em>(facultatif)</em>`,
+      "start.f.optioneel": `(facultatif)`,
+      "start.f.wensph": `Par ex. relancer des devis, traiter des factures, le rapport mensuel…`,
+      "start.submit": `Lancer votre build`,
+      "start.note": `Premier workflow en ligne sous 48 h — ou vous ne payez pas`,
+      "start.ok.h2": `C'est parti`,
+      "start.ok.p": `Votre onboarding est lancé. Vérifiez votre boîte mail — l'intake y continue. Premier workflow en ligne sous 48 h, ou vous ne payez pas.`,
+      "start.ok.home": `Retour à l'accueil`,
+      "start.fb.h2": `Le démarrage direct est momentanément indisponible`,
+      "start.fb.p": `Pas d'inquiétude — réservez tout de suite votre appel d'onboarding de 30 minutes et nous démarrerons là.`,
+      "start.fb.cta": `Réserver votre appel`,
+      "start.privacy": `Nous utilisons vos données uniquement pour votre onboarding — jamais pour autre chose. Voir notre <a href="privacy.html" style="text-decoration:underline">politique de confidentialité</a>.`,
       "foot.copy": `© 2026 VO-Initiatives · Il sait ce dont vous avez besoin, avant de le demander.`
     }
   };
@@ -288,6 +326,11 @@
       const key = el.getAttribute("data-i18n-aria");
       const base = original(ORIG_ATTR, el, el.getAttribute("aria-label"));
       el.setAttribute("aria-label", (d && d[key] != null) ? d[key] : base);
+    });
+    document.querySelectorAll("[data-i18n-ph]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-ph");
+      const base = original(ORIG_ATTR, el, el.getAttribute("placeholder"));
+      el.setAttribute("placeholder", (d && d[key] != null) ? d[key] : base);
     });
     // <head>-metadata
     const get = (k) => (d && d[k]) || null;
