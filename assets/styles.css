@@ -121,6 +121,9 @@ section{padding-top:var(--space-section);padding-bottom:var(--space-section);pos
 .nav-row{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px clamp(20px,4vw,56px)}
 .brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.01em;font-size:15.5px}
 .brand img{height:26px;width:auto}
+.brand .logo-dark{display:none}
+[data-theme="dark"] .brand .logo-light{display:none}
+[data-theme="dark"] .brand .logo-dark{display:block}
 .nav-links{display:flex;gap:6px}
 .nav-links a{
   color:var(--ink-2);font-size:14px;font-weight:500;padding:8px 13px;border-radius:9px;
