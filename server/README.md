@@ -52,19 +52,19 @@ WantedBy=multi-user.target
 
 ```bash
 systemctl daemon-reload && systemctl enable --now vo-onboard-chat
-curl -s http://127.0.0.1:8098/api/onboard/chat/health   # -> {"ok": true, ...}
+curl -s http://127.0.0.1:8097/api/onboard/chat/health   # -> {"ok": true, ...}
 ```
 
 ## 4. nginx (naast de bestaande /api/onboard-locatie)
 
 ```nginx
     location /api/onboard/chat {
-        proxy_pass http://127.0.0.1:8098;
+        proxy_pass http://127.0.0.1:8097;
         proxy_set_header X-Forwarded-For $remote_addr;
         proxy_read_timeout 90s;
     }
     location /api/onboard/stripe-webhook {
-        proxy_pass http://127.0.0.1:8098;
+        proxy_pass http://127.0.0.1:8097;
     }
 ```
 

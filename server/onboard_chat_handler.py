@@ -7,8 +7,8 @@ licht publiek onderzoek (website ophalen), en levert aan het einde een dossier
 af aan de bestaande provisioning-pipeline (onboard_handler.py, poort 8099).
 
 Draait loopback-only; nginx proxyt:
-    /api/onboard/chat           -> 127.0.0.1:8098  (POST gesprek, GET /health, GET /status)
-    /api/onboard/stripe-webhook -> 127.0.0.1:8098  (Stripe checkout.session.completed)
+    /api/onboard/chat           -> 127.0.0.1:8097  (POST gesprek, GET /health, GET /status)
+    /api/onboard/stripe-webhook -> 127.0.0.1:8097  (Stripe checkout.session.completed)
 
 ENV (zet in de systemd-unit):
     OPENROUTER_API_KEY   verplicht — VO's eigen key (NIET een klant-key)
@@ -313,4 +313,4 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    ThreadingHTTPServer(("127.0.0.1", 8098), Handler).serve_forever()
+    ThreadingHTTPServer(("127.0.0.1", 8097), Handler).serve_forever()
