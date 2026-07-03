@@ -644,6 +644,38 @@ footer{border-top:1px solid var(--line)}
 /* hidden-attribuut wint altijd van display-regels */
 [hidden]{display:none!important}
 
+/* ---- web-dashboard (/dashboard) ---- */
+.dash-state{text-align:center;padding:clamp(4rem,3rem + 5vw,9rem) 0}
+.dash-state h1{font-size:clamp(1.8rem,1.3rem + 2vw,2.6rem);margin-bottom:1rem}
+.dash-state .lead{max-width:42ch;margin:0 auto 1.6rem}
+.dash-spinner{width:34px;height:34px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--ember);margin:0 auto 20px;animation:dashspin .8s linear infinite}
+@keyframes dashspin{to{transform:rotate(360deg)}}
+.dash-hero{padding:clamp(2.5rem,2rem + 3vw,4.5rem) 0 clamp(1.5rem,1rem + 2vw,2.6rem)}
+.dash-badge{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);border:1px solid var(--line-strong);border-radius:100px;padding:6px 14px;margin-bottom:20px;background:var(--surface)}
+.dash-dot{width:7px;height:7px;border-radius:50%;background:var(--ember);animation:dashpulse 2s ease-in-out infinite}
+@keyframes dashpulse{50%{opacity:.4}}
+.dash-hero h1{font-size:clamp(2rem,1.4rem + 2.6vw,3.4rem);margin-bottom:1rem}
+.dash-hero .lead{max-width:56ch}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+.dash-card{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:clamp(20px,3vw,28px);box-shadow:var(--shadow)}
+.dash-card-head{margin-bottom:18px}
+.dash-card-head h2{font-size:1.15rem;font-weight:600;letter-spacing:-.01em}
+.dash-hint{display:block;font-size:13px;color:var(--ink-3);margin-top:4px}
+.dash-note{font-size:12px;color:var(--ink-3);margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.conn-row,.flow-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+.conn-row:first-child,.flow-row:first-child{border-top:none}
+.conn-name{flex:1;font-size:14.5px;font-weight:500}
+.conn-btn{padding:7px 16px;font-size:13px}
+.flow-dot{width:8px;height:8px;border-radius:50%;background:var(--ember);flex:0 0 auto}
+.flow-name{flex:1;font-size:14px}
+.flow-status{font-size:12px;color:var(--ink-3);white-space:nowrap}
+.dash-goal .lead,.dash-deep .lead{max-width:64ch}
+.dash-goal,.dash-deep{margin-bottom:20px}
+.deep-soon{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.deep-chip{font-size:12.5px;font-weight:500;color:var(--ink-2);border:1px solid var(--line-strong);border-radius:100px;padding:6px 14px;background:var(--bg)}
+.deep-chip.muted{color:var(--ink-3);border-style:dashed}
+@media(max-width:760px){.dash-grid{grid-template-columns:1fr}}
+
 /* ---- audit-chat (/start) ---- */
 .chat-card{
   max-width:640px;margin:0 auto;text-align:left;

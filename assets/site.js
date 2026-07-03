@@ -64,7 +64,9 @@
       wizardForm.hidden = false;
     };
 
-    var showPreviewFromServer = function (pv) {
+    var showPreviewFromServer = function (pv, dashUrl) {
+      var dashLink = document.getElementById("dashLink");
+      if (dashLink && dashUrl) dashLink.href = dashUrl;
       var voornaam = ((pv && pv.naam) || "").split(/\s+/)[0];
       var greet = document.getElementById("pvGreet");
       greet.textContent = (greet.dataset.hello || "Goedemorgen") + (voornaam ? ", " + voornaam : "");
@@ -145,7 +147,8 @@
           else addMsg("agent", (j && j.error) || t("chatErr"));
           if (j.done) {
             chatForm.hidden = true;
-            setTimeout(function () { showPreviewFromServer(j.preview); }, 2200);
+            var dashUrl = j.dashboard_url || "/dashboard";
+            setTimeout(function () { showPreviewFromServer(j.preview, dashUrl); }, 2200);
           }
         })
         .catch(function () { typing.remove(); addMsg("agent", t("chatErr")); })

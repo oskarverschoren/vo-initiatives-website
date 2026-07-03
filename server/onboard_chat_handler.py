@@ -3,12 +3,14 @@
 
 Interactieve audit-chat voor /start: het model ondervraagt de bezoeker grondig
 (naar het model van skills/productivity/belgian-business-audit), doet vooraf
-licht publiek onderzoek (website ophalen), en levert aan het einde een dossier
-af aan de bestaande provisioning-pipeline (onboard_handler.py, poort 8099).
+licht publiek onderzoek (website ophalen), en schrijft aan het einde een schoon
+klantdossier naar AUDIT_DIR. Dat record is de bron voor het web-dashboard
+(/dashboard?id=<token>); een agent bouwt daaruit later de cockpit op.
 
 Draait loopback-only; nginx proxyt:
     /api/onboard/chat           -> 127.0.0.1:8097  (POST gesprek, GET /health, GET /status)
     /api/onboard/stripe-webhook -> 127.0.0.1:8097  (Stripe checkout.session.completed)
+    /api/dashboard?id=<token>   -> 127.0.0.1:8097  (GET klantrecord voor het dashboard)
 
 ENV (zet in de systemd-unit):
     OPENROUTER_API_KEY   verplicht — VO's eigen key (NIET een klant-key)
@@ -40,10 +42,12 @@ STRIPE_LINK = os.environ.get("STRIPE_LINK", "")
 STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
 ONBOARD_URL = os.environ.get("ONBOARD_URL", "http://127.0.0.1:8099/api/onboard")
 STATE_DIR = os.environ.get("STATE_DIR", "/root/.hermes/onboard-chat")
+AUDIT_DIR = os.environ.get("AUDIT_DIR", "/root/.hermes/audits")
 MAX_TURNS = int(os.environ.get("MAX_TURNS", "30"))
 IP_SESSIONS_PER_HOUR = int(os.environ.get("IP_SESSIONS_PER_HOUR", "3"))
 
 os.makedirs(STATE_DIR, exist_ok=True)
+os.makedirs(AUDIT_DIR, exist_ok=True)
 _ip_log = {}  # ip -> [timestamps]
 
 SYSTEM_PROMPT = """Je bent de audit-agent van VO-Initiatives (VOI). Je voert een grondige,
@@ -168,21 +172,45 @@ def _extract_dossier(reply):
     return visible.strip(), dossier
 
 
-def _submit_dossier(sess, dossier):
+def _save_customer_record(sess, dossier):
+    """Schrijf een schoon klantdossier naar AUDIT_DIR (losgekoppeld van Nova).
+    Dit record is de bron voor het dashboard-build. Geeft het dashboard-token
+    terug, of None als opslaan mislukt (dan tonen we geen valse success)."""
     payload = {k: str(dossier.get(k, ""))[:1900] for k in
                ("naam", "email", "bedrijf", "telefoon", "tools", "taak", "uren", "doel")}
-    payload["kanaal"] = "web-audit"
+    token = uuid.uuid4().hex
+    record = {
+        "token": token,
+        "created": _now(),
+        "status": "audit_complete",
+        "lang": sess.get("lang", "nl"),
+        "profile": {k: payload[k] for k in ("naam", "email", "bedrijf", "telefoon")},
+        "connections": [t.strip() for t in payload["tools"].split(",") if t.strip()],
+        "workflows": [t.strip() for t in re.split(r"[;\n]", payload["taak"]) if t.strip()],
+        "uren": payload["uren"],
+        "doel": payload["doel"],
+        "dossier": payload,
+        "transcript": sess.get("messages", []),
+    }
     try:
-        req = urllib.request.Request(
-            ONBOARD_URL, data=json.dumps(payload).encode(),
-            headers={"Content-Type": "application/json"})
-        with urllib.request.urlopen(req, timeout=60) as r:
-            ok = json.loads(r.read()).get("ok", False)
+        tmp = os.path.join(AUDIT_DIR, token + ".json.tmp")
+        with open(tmp, "w") as f:
+            json.dump(record, f, ensure_ascii=False, indent=2)
+        os.replace(tmp, os.path.join(AUDIT_DIR, token + ".json"))
+        sess["customer_token"] = token
+        return token
     except Exception:
-        ok = False
-    sess["dossier"] = payload
-    sess["dossier_sent"] = ok
-    return ok
+        return None
+
+
+def _load_record(token):
+    if not re.fullmatch(r"[0-9a-f]{32}", token or ""):
+        return None
+    p = os.path.join(AUDIT_DIR, token + ".json")
+    if os.path.exists(p):
+        with open(p) as f:
+            return json.load(f)
+    return None
 
 
 def _verify_stripe(sig_header, body):
@@ -219,6 +247,19 @@ class Handler(BaseHTTPRequestHandler):
             if not sess:
                 return self._send(404, {"ok": False})
             return self._send(200, {"ok": True, "paid": sess.get("paid", False), "turns": sess.get("turns", 0)})
+        if path == "/api/dashboard":
+            m = re.search(r"id=([0-9a-f]{32})", self.path)
+            rec = _load_record(m.group(1)) if m else None
+            if not rec:
+                return self._send(404, {"ok": False})
+            return self._send(200, {
+                "ok": True,
+                "profile": rec.get("profile", {}),
+                "connections": rec.get("connections", []),
+                "workflows": rec.get("workflows", []),
+                "status": rec.get("status", ""),
+                "doel": rec.get("doel", ""),
+            })
         return self._send(404, {"ok": False})
 
     def do_POST(self):
@@ -266,8 +307,13 @@ class Handler(BaseHTTPRequestHandler):
                     "turns": 0, "paid": False, "lang": lang, "messages": [], "researched": False}
 
         if sess["turns"] >= MAX_TURNS:
-            return self._send(200, {"ok": True, "session": sess["id"], "done": True,
-                                    "reply": "De audit zit vol — we nemen het verder op via mail."})
+            token = _save_customer_record(sess, {k: "" for k in
+                                                 ("naam", "email", "bedrijf", "telefoon", "tools", "taak", "uren", "doel")})
+            out = {"ok": True, "session": sess["id"], "done": True,
+                   "reply": "We hebben genoeg om mee te starten — je dashboard wordt nu opgezet."}
+            if token:
+                out["dashboard_url"] = "/dashboard?id=" + token
+            return self._send(200, out)
         if PAYWALL and not sess["paid"] and sess["turns"] >= FREE_TURNS:
             url = STRIPE_LINK + ("&" if "?" in STRIPE_LINK else "?") + "client_reference_id=" + sess["id"]
             _save(sess)
@@ -298,13 +344,18 @@ class Handler(BaseHTTPRequestHandler):
 
         out = {"ok": True, "session": sess["id"], "reply": reply, "done": False}
         if dossier:
-            _submit_dossier(sess, dossier)
-            out["done"] = True
-            out["preview"] = {
-                "naam": dossier.get("naam", ""),
-                "tools": [t.strip() for t in str(dossier.get("tools", "")).split(",") if t.strip()][:8],
-                "flows": [t.strip() for t in re.split(r"[;\n]", str(dossier.get("taak", ""))) if t.strip()][:5],
-            }
+            token = _save_customer_record(sess, dossier)
+            if token:
+                out["done"] = True
+                out["dashboard_url"] = "/dashboard?id=" + token
+                out["preview"] = {
+                    "naam": dossier.get("naam", ""),
+                    "tools": [t.strip() for t in str(dossier.get("tools", "")).split(",") if t.strip()][:8],
+                    "flows": [t.strip() for t in re.split(r"[;\n]", str(dossier.get("taak", ""))) if t.strip()][:5],
+                }
+            else:
+                # opslaan mislukt: geen valse "klaar" tonen, laat de bezoeker het opnieuw proberen
+                out["reply"] = reply + "\n\n(Ik kon je audit even niet opslaan — stuur je laatste bericht nog eens.)"
         _save(sess)
         return self._send(200, out)
 
