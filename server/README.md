@@ -11,10 +11,16 @@ scp server/onboard_chat_handler.py server/create-stripe-link.sh root@vo-initiati
 
 ## 2. Stripe-link + webhook (eenmalig)
 
+Gebruik een **restricted key** (`rk_live_...`) met schrijfrechten op Products, Prices,
+Payment Links en Webhook Endpoints — geen volledige `sk_live_` nodig. Zet hem in de
+credential-map:
+
 ```bash
 ssh root@vo-initiatives.com
-STRIPE_SECRET_KEY=sk_live_... bash /root/.hermes/scripts/create-stripe-link.sh
-# noteer PAYMENT LINK; maak daarna de webhook aan zoals het script toont en noteer whsec_...
+echo '{"restricted_key":"rk_live_..."}' > /root/.hermes/secrets/stripe.json
+chmod 600 /root/.hermes/secrets/stripe.json
+bash /root/.hermes/scripts/create-stripe-link.sh   # leest de key uit stripe.json
+# script print: PAYMENT LINK + WEBHOOK SECRET (whsec_...) + de env-regels
 ```
 
 ## 3. systemd-unit
