@@ -640,3 +640,6 @@ footer{border-top:1px solid var(--line)}
   .hero-cta .btn{width:100%}
   .app-meet .mrow span:last-child{display:none}
 }
+
+/* hidden-attribuut wint altijd van display-regels */
+[hidden]{display:none!important}
