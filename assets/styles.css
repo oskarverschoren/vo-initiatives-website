@@ -365,6 +365,52 @@ section{padding-top:var(--space-section);padding-bottom:var(--space-section);pos
 .of-privacy{margin-top:22px;font-size:12.5px;color:var(--ink-3);max-width:46ch;margin-left:auto;margin-right:auto}
 @media(max-width:560px){.of-row{grid-template-columns:1fr}}
 
+/* ---- audit-wizard ---- */
+.wizard{max-width:640px}
+.wiz-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.wiz-steplabel{font-size:12px;font-weight:600;color:var(--ink-3);white-space:nowrap}
+.wiz-progress{flex:1;height:4px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.wiz-progress i{display:block;height:100%;background:var(--ember);border-radius:4px;transition:width .5s var(--ease-out-expo)}
+.wiz-step{display:none;border:none;padding:0;margin:0}
+.wiz-step.on{display:block;animation:rise .45s var(--ease-out-expo)}
+.wiz-step legend{
+  font-family:var(--serif);font-weight:600;font-size:1.35rem;letter-spacing:-.01em;
+  margin-bottom:6px;padding:0;
+}
+.wiz-hint{font-size:13px;color:var(--ink-3);margin-bottom:14px}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:9px}
+.tool-chip{position:relative;display:block;cursor:pointer}
+.tool-chip input{position:absolute;opacity:0;pointer-events:none}
+.tool-chip span{
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  font-size:13px;font-weight:500;color:var(--ink-2);
+  border:1px solid var(--line-strong);border-radius:10px;padding:11px 10px;background:var(--bg);
+  transition:border-color var(--duration-fast),background var(--duration-fast),color var(--duration-fast),transform .25s var(--ease-out-expo);
+}
+.tool-chip:hover span{transform:translateY(-1px);border-color:var(--ink-3)}
+.tool-chip input:checked + span{border-color:var(--ember);background:var(--ember-soft);color:var(--ink)}
+.tool-chip input:focus-visible + span{outline:2px solid var(--ember);outline-offset:2px}
+.of-field select{
+  width:100%;font:inherit;font-size:14.5px;color:var(--ink);
+  background:var(--bg);border:1px solid var(--line-strong);border-radius:10px;padding:11px 13px;
+}
+.of-field select:focus{outline:none;border-color:var(--ember);box-shadow:0 0 0 3px var(--ember-soft)}
+.wiz-summary{margin-top:14px;border-top:1px dashed var(--line-dash);padding-top:14px;font-size:13px;color:var(--ink-2)}
+.wiz-summary div{display:flex;gap:10px;padding:3px 0}
+.wiz-summary b{color:var(--ink-3);font-weight:600;flex:0 0 110px;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;padding-top:1px}
+.wiz-nav{display:flex;gap:10px;margin-top:18px}
+.wiz-nav .btn{flex:1}
+/* ---- cockpit-voorstel (realtime preview) ---- */
+.preview-wrap{max-width:640px;margin:0 auto;text-align:center}
+.preview-wrap .lead{max-width:44ch;margin:0 auto 1.8rem}
+.preview-wrap h2{font-size:clamp(1.6rem,1.2rem + 1.8vw,2.3rem);margin:.9rem 0 .8rem}
+.preview-card{border-radius:16px;border-bottom:1px solid var(--line-strong);-webkit-mask-image:none;mask-image:none;margin-bottom:18px;text-align:left}
+.preview-card .app-main{padding-bottom:26px}
+.pv-label{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);margin:20px 0 9px}
+.pv-chips{justify-content:flex-start;margin-top:0}
+.pv-chips .chip svg{color:var(--success)}
+#pvFlows .mrow:first-child{border-top:none}
+
 /* ---- trust strip ---- */
 .trust-strip{
   display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);

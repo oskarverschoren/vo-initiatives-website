@@ -140,6 +140,27 @@
       "start.fb.h2": `Direct start is briefly unavailable`,
       "start.fb.p": `No worries — book your 30-minute onboarding call right away and we'll start there.`,
       "start.fb.cta": `Book your call`,
+      "start.step": `Step`, "start.prev": `Back`, "start.next": `Next`,
+      "start.s1.t": `About your company`,
+      "start.f.telefoon": `Phone <em>(optional)</em>`,
+      "start.s2.t": `Which tools do you use today?`,
+      "start.s2.p": `These become your agent's connections. You can always add more later from your dashboard.`,
+      "start.s2.anders": `Other tools`,
+      "start.s2.andersph": `E.g. your accounting package, planning tool…`,
+      "start.s3.t": `What should be off your plate?`,
+      "start.s3.p": `Pick everything that keeps coming back — these become your agent's workflows.`,
+      "start.s3.o1": `Quotes & follow-up`, "start.s3.o2": `Invoices & bookkeeping`, "start.s3.o3": `Reports & KPIs`,
+      "start.s3.o4": `Customer communication`, "start.s3.o5": `Planning & appointments`, "start.s3.o6": `Orders & track-and-trace`,
+      "start.s3.uren": `How much time do you lose on this weekly?`,
+      "start.s3.u0": `Make an estimate…`, "start.s3.u1": `Less than 5 hours`, "start.s3.u2": `5–10 hours`, "start.s3.u3": `10–20 hours`, "start.s3.u4": `More than 20 hours`,
+      "start.s4.t": `Where do you want to go?`,
+      "start.s4.doel": `What should be different three months from now?`,
+      "start.s4.doelph": `E.g. no open quotes anymore, my numbers automatically every Monday…`,
+      "start.pv.flag": `Proposal · from your audit`,
+      "start.pv.conn": `Connections`, "start.pv.flows": `Workflows being built`,
+      "start.pv.hello": `Good morning`, "start.pv.status": `being built`,
+      "start.sum.bedrijf": `Company`, "start.sum.tools": `Tools`, "start.sum.taken": `Workflows`, "start.sum.uren": `Time`,
+      "start.ok.later": `Your agent sets up every connection together with you during onboarding — and you can always add new connections later, straight from your dashboard.`,
       "start.privacy": `We only use your details for your onboarding — never for anything else. See our <a href="privacy.html" style="text-decoration:underline">privacy policy</a>.`,
       "foot.copy": `© 2026 VO-Initiatives · It knows what you want, before you ask.`
     },
@@ -279,6 +300,27 @@
       "start.fb.h2": `Le démarrage direct est momentanément indisponible`,
       "start.fb.p": `Pas d'inquiétude — réservez tout de suite votre appel d'onboarding de 30 minutes et nous démarrerons là.`,
       "start.fb.cta": `Réserver votre appel`,
+      "start.step": `Étape`, "start.prev": `Retour`, "start.next": `Suivant`,
+      "start.s1.t": `À propos de votre entreprise`,
+      "start.f.telefoon": `Téléphone <em>(facultatif)</em>`,
+      "start.s2.t": `Quels outils utilisez-vous aujourd'hui ?`,
+      "start.s2.p": `Ils deviennent les connexions de votre agent. Vous pourrez toujours en ajouter plus tard depuis votre tableau de bord.`,
+      "start.s2.anders": `Autres outils`,
+      "start.s2.andersph": `Par ex. votre logiciel comptable, outil de planification…`,
+      "start.s3.t": `Qu'est-ce qui doit sortir de vos mains ?`,
+      "start.s3.p": `Choisissez tout ce qui revient sans cesse — cela devient les workflows de votre agent.`,
+      "start.s3.o1": `Devis & relances`, "start.s3.o2": `Factures & comptabilité`, "start.s3.o3": `Rapports & KPI`,
+      "start.s3.o4": `Communication client`, "start.s3.o5": `Planification & rendez-vous`, "start.s3.o6": `Commandes & track-and-trace`,
+      "start.s3.uren": `Combien de temps y perdez-vous chaque semaine ?`,
+      "start.s3.u0": `Faites une estimation…`, "start.s3.u1": `Moins de 5 heures`, "start.s3.u2": `5–10 heures`, "start.s3.u3": `10–20 heures`, "start.s3.u4": `Plus de 20 heures`,
+      "start.s4.t": `Où voulez-vous aller ?`,
+      "start.s4.doel": `Qu'est-ce qui doit être différent dans trois mois ?`,
+      "start.s4.doelph": `Par ex. plus de devis en attente, mes chiffres chaque lundi automatiquement…`,
+      "start.pv.flag": `Proposition · issue de votre audit`,
+      "start.pv.conn": `Connexions`, "start.pv.flows": `Workflows en construction`,
+      "start.pv.hello": `Bonjour`, "start.pv.status": `en construction`,
+      "start.sum.bedrijf": `Entreprise`, "start.sum.tools": `Outils`, "start.sum.taken": `Workflows`, "start.sum.uren": `Temps`,
+      "start.ok.later": `Votre agent configure chaque connexion avec vous pendant l'onboarding — et vous pourrez toujours ajouter de nouvelles connexions plus tard, directement depuis votre tableau de bord.`,
       "start.privacy": `Nous utilisons vos données uniquement pour votre onboarding — jamais pour autre chose. Voir notre <a href="privacy.html" style="text-decoration:underline">politique de confidentialité</a>.`,
       "foot.copy": `© 2026 VO-Initiatives · Il sait ce dont vous avez besoin, avant de le demander.`
     }
@@ -326,6 +368,14 @@
       const key = el.getAttribute("data-i18n-aria");
       const base = original(ORIG_ATTR, el, el.getAttribute("aria-label"));
       el.setAttribute("aria-label", (d && d[key] != null) ? d[key] : base);
+    });
+    document.querySelectorAll("[data-i18n-map]").forEach((el) => {
+      el.getAttribute("data-i18n-map").split(",").forEach((pair) => {
+        const [prop, key] = pair.split(":");
+        if (!prop || !key) return;
+        const base = original(ORIG_ATTR, prop + "@" + key, el.dataset[prop] || "");
+        el.dataset[prop] = (d && d[key] != null) ? d[key] : base;
+      });
     });
     document.querySelectorAll("[data-i18n-ph]").forEach((el) => {
       const key = el.getAttribute("data-i18n-ph");
