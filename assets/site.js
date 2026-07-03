@@ -26,6 +26,161 @@
     });
   });
 
+  /* ---- audit-chat (/start): interactief auditgesprek met de agent ---- */
+  var chatCard = document.getElementById("auditChat");
+  if (chatCard) {
+    var chatLog = document.getElementById("chatLog");
+    var chatForm = document.getElementById("chatInput");
+    var chatText = document.getElementById("chatText");
+    var chatFlag = document.getElementById("chatFlag");
+    var chatSend = chatForm.querySelector(".chat-send");
+    var wizardForm = document.getElementById("onboardForm");
+    var chatSession = null;
+    var chatBusy = false;
+    var pollTimer = null;
+    try { chatSession = sessionStorage.getItem("voi_chat_session"); } catch (e) {}
+
+    var t = function (id) { var el = document.getElementById(id); return el ? el.textContent : ""; };
+
+    var addMsg = function (role, text) {
+      var m = document.createElement("div");
+      m.className = "msg " + role;
+      m.textContent = text;
+      chatLog.appendChild(m);
+      chatLog.scrollTop = chatLog.scrollHeight;
+      return m;
+    };
+    var addTyping = function () {
+      var m = document.createElement("div");
+      m.className = "msg agent typing";
+      m.innerHTML = "<i></i><i></i><i></i>";
+      chatLog.appendChild(m);
+      chatLog.scrollTop = chatLog.scrollHeight;
+      return m;
+    };
+
+    var fallbackToWizard = function () {
+      chatCard.hidden = true;
+      wizardForm.hidden = false;
+    };
+
+    var showPreviewFromServer = function (pv) {
+      var voornaam = ((pv && pv.naam) || "").split(/\s+/)[0];
+      var greet = document.getElementById("pvGreet");
+      greet.textContent = (greet.dataset.hello || "Goedemorgen") + (voornaam ? ", " + voornaam : "");
+      var chips = document.getElementById("pvTools");
+      chips.innerHTML = "";
+      ((pv && pv.tools && pv.tools.length) ? pv.tools : ["Gmail"]).forEach(function (tool) {
+        var c = document.createElement("span"); c.className = "chip";
+        c.innerHTML = '<svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.5L5 9.5L10 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        c.appendChild(document.createTextNode(" " + tool));
+        chips.appendChild(c);
+      });
+      var flowHost = document.getElementById("pvFlows");
+      flowHost.innerHTML = "";
+      ((pv && pv.flows && pv.flows.length) ? pv.flows : ["Werkplek automatiseren"]).forEach(function (fl, idx) {
+        var row = document.createElement("div"); row.className = "mrow" + (idx === 0 ? " m1" : idx === 1 ? " m2" : " m3");
+        var left = document.createElement("span");
+        var dot = document.createElement("span"); dot.className = "mdot";
+        dot.style.background = idx === 0 ? "var(--ember)" : idx === 1 ? "var(--success)" : "var(--ink-3)";
+        left.appendChild(dot); left.appendChild(document.createTextNode(" " + fl));
+        var right = document.createElement("span");
+        right.textContent = flowHost.dataset.status || "in opbouw";
+        row.appendChild(left); row.appendChild(right);
+        flowHost.appendChild(row);
+      });
+      chatCard.hidden = true;
+      document.getElementById("onboardSuccess").hidden = false;
+    };
+
+    var showPaywall = function (url) {
+      if (chatLog.querySelector(".chat-pay")) return;
+      var card = document.createElement("div");
+      card.className = "chat-pay";
+      card.innerHTML = '<h3><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="4" y="9" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.8"/><path d="M7 9V6a3 3 0 016 0v3" stroke="currentColor" stroke-width="1.8"/></svg></h3><p></p>';
+      card.querySelector("h3").appendChild(document.createTextNode(t("chatPayT")));
+      card.querySelector("p").textContent = t("chatPayP");
+      var a = document.createElement("a");
+      a.className = "btn btn-primary"; a.href = url; a.target = "_blank"; a.rel = "noopener";
+      a.textContent = t("chatPayCta");
+      card.appendChild(a);
+      chatLog.appendChild(card);
+      chatLog.scrollTop = chatLog.scrollHeight;
+      chatForm.hidden = true;
+      pollTimer = setInterval(function () {
+        fetch("/api/onboard/chat/status?session=" + chatSession)
+          .then(function (r) { return r.json(); })
+          .then(function (j) {
+            if (j && j.paid) {
+              clearInterval(pollTimer);
+              card.remove();
+              chatForm.hidden = false;
+              addMsg("agent", t("chatPaid"));
+              sendChat(t("chatPaid") ? "Ik heb betaald — ga verder." : "verder");
+            }
+          }).catch(function () {});
+      }, 5000);
+    };
+
+    var sendChat = function (text) {
+      if (chatBusy) return;
+      chatBusy = true;
+      chatSend.disabled = true;
+      var typing = addTyping();
+      fetch("/api/onboard/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session: chatSession, message: text, lang: document.documentElement.lang || "nl" })
+      })
+        .then(function (r) { return r.json().then(function (j) { return { s: r.status, j: j }; }); })
+        .then(function (res) {
+          typing.remove();
+          var j = res.j || {};
+          if (j.session) {
+            chatSession = j.session;
+            try { sessionStorage.setItem("voi_chat_session", chatSession); } catch (e) {}
+          }
+          if (j.paywall && j.payment_url) { showPaywall(j.payment_url); return; }
+          if (j.ok && j.reply) addMsg("agent", j.reply);
+          else addMsg("agent", (j && j.error) || t("chatErr"));
+          if (j.done) {
+            chatForm.hidden = true;
+            setTimeout(function () { showPreviewFromServer(j.preview); }, 2200);
+          }
+        })
+        .catch(function () { typing.remove(); addMsg("agent", t("chatErr")); })
+        .finally(function () { chatBusy = false; chatSend.disabled = false; chatText.focus(); });
+    };
+
+    chatForm.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var text = chatText.value.trim();
+      if (!text) return;
+      addMsg("user", text);
+      chatText.value = "";
+      sendChat(text);
+    });
+    chatText.addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter" && !ev.shiftKey) { ev.preventDefault(); chatForm.requestSubmit(); }
+    });
+
+    // health-check bepaalt: chat of wizard-fallback
+    fetch("/api/onboard/chat/health")
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (j && j.ok) {
+          chatFlag.textContent = chatFlag.dataset.live || "Live";
+          chatForm.hidden = false;
+          addMsg("agent", t("chatGreeting"));
+          if (new URLSearchParams(location.search).get("paid") === "1" && chatSession) {
+            sendChat("Ik heb betaald — ga verder.");
+          }
+          chatText.focus();
+        } else { fallbackToWizard(); }
+      })
+      .catch(fallbackToWizard);
+  }
+
   /* ---- audit-wizard (/start): grondige intake -> POST naar de provisioning-pipeline ---- */
   var onboardForm = document.getElementById("onboardForm");
   if (onboardForm) {
