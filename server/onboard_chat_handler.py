@@ -26,6 +26,7 @@ ENV (zet in de systemd-unit):
 """
 import hashlib
 import hmac
+import imaplib
 import json
 import os
 import re
@@ -46,8 +47,15 @@ AUDIT_DIR = os.environ.get("AUDIT_DIR", "/root/.hermes/audits")
 MAX_TURNS = int(os.environ.get("MAX_TURNS", "30"))
 IP_SESSIONS_PER_HOUR = int(os.environ.get("IP_SESSIONS_PER_HOUR", "3"))
 
+CONN_DIR = os.environ.get("CONN_SECRETS_DIR", "/root/.hermes/audit-connections")
+
 os.makedirs(STATE_DIR, exist_ok=True)
 os.makedirs(AUDIT_DIR, exist_ok=True)
+os.makedirs(CONN_DIR, exist_ok=True)
+try:
+    os.chmod(CONN_DIR, 0o700)
+except OSError:
+    pass
 _ip_log = {}  # ip -> [timestamps]
 
 SYSTEM_PROMPT = """Je bent de audit-agent van VO-Initiatives (VOI). Je voert een grondige,
@@ -63,18 +71,19 @@ ernaar te vragen. Staat er "WEBSITE-ONDERZOEK-MISLUKT", zeg dan eerlijk dat de s
 prijsgaf en vraag naar de juiste website.
 Vraag in beurt 2-3 ook het e-mailadres ("dan kan de opstart meteen starten").
 
-FASE 2 — PLUIS UIT (de kern): breng systematisch in kaart, met doorvragen:
-- Wie ze zijn: activiteit, sector, team (hoeveel mensen, wie doet wat), sinds wanneer.
-- Hoe ze werken: de belangrijkste processen stap voor stap (offerte→factuur, order→levering…),
-  volumes (per week/maand), seizoenspatronen, waar het schuurt of blijft liggen.
-- Tools: welke software voor mail, boekhouding, CRM, planning, communicatie — per proces.
-- Doelen: wat moet er over 3 maanden anders zijn; wat is de grootste tijdvreter.
-Wees een auditor: vraag door op vage antwoorden ("hoeveel per week ongeveer?", "wie doet dat nu?").
+FASE 2 — KERN (kort — streef naar 5 à 6 vragen totaal): breng alleen de hoofdlijnen in kaart:
+- Activiteit + teamgrootte (één vraag).
+- De 1 à 3 grootste tijdvreters die eruit moeten, met een ruwe volume-indicatie.
+- Welke tools ze gebruiken voor mail, boekhouding, CRM en planning (één vraag).
+- Wat er over 3 maanden anders moet zijn.
+Vraag GEEN organigram-details (wie precies wat doet) en geen stap-voor-stap procesbeschrijvingen —
+die details lees je straks zelf uit de gekoppelde tools tijdens de diepere audit, en dat zeg je
+ook zo ("dat hoef je me niet uit te leggen — dat zie ik zo zelf in je agenda/mailbox zodra je
+koppelt"). Eén verduidelijkingsvraag bij een vaag antwoord, daarna verder.
 
-FASE 3 — ROND AF: wanneer je een volledig beeld hebt (of de bezoeker wil afronden), geef je
-een korte samenvatting, zeg je dat de verbindingen en de diepere inlees van mails/documenten
-volgen tijdens de opstart (na veilige koppeling — nooit wachtwoorden in deze chat), en sluit
-je af. Direct NA je afsluitende zin schrijf je op een nieuwe regel exact dit blok:
+FASE 3 — ROND AF (begin het afronden vanaf beurt 6 à 8): geef een korte samenvatting en zeg dat
+de echte diepgang in het dashboard gebeurt: daar koppelt de klant zijn tools en lees jij zelf
+hoe alles loopt (nooit wachtwoorden in deze chat). Direct NA je afsluitende zin schrijf je op een nieuwe regel exact dit blok:
 ###DOSSIER###
 {"naam":"…","email":"…","bedrijf":"…","telefoon":"…","tools":"…","taak":"…","uren":"…","doel":"…"}
 Elke waarde beknopt maar volledig (max 1800 tekens), in het Nederlands. "taak" = de processen/
@@ -238,6 +247,70 @@ def _load_record(token):
     return None
 
 
+# ---- verbindingen (Fase 3): IMAP app-wachtwoord, ICS-agenda, API-key ----
+IMAP_HOSTS = {
+    "gmail": "imap.gmail.com", "google": "imap.gmail.com",
+    "outlook": "outlook.office365.com", "hotmail": "outlook.office365.com",
+    "office": "outlook.office365.com",
+}
+
+
+def _conn_type_for(tool):
+    t = tool.lower()
+    # agenda eerst — "Google Agenda" mag niet op de mail-key "google" matchen
+    if "agenda" in t or "calendar" in t or "cal.com" in t:
+        return "ics", None
+    for key, host in IMAP_HOSTS.items():
+        if key in t:
+            return "imap", host
+    return "apikey", None
+
+
+def _test_imap(host, email, password):
+    try:
+        box = imaplib.IMAP4_SSL(host, 993, timeout=10)
+        box.login(email, password)
+        box.logout()
+        return True, None
+    except Exception as e:
+        return False, str(e)[:200]
+
+
+def _test_ics(url):
+    if not url.startswith(("https://", "webcal://")):
+        return False, "geef de geheime iCal/ICS-link (begint met https://)"
+    try:
+        req = urllib.request.Request(url.replace("webcal://", "https://", 1),
+                                     headers={"User-Agent": "VOI-audit/1.0"})
+        head = urllib.request.urlopen(req, timeout=10).read(2048).decode("utf-8", "ignore")
+        if "BEGIN:VCALENDAR" in head:
+            return True, None
+        return False, "die link geeft geen agenda (ICS) terug"
+    except Exception as e:
+        return False, str(e)[:200]
+
+
+def _store_connection(token, tool, conn_type, fields):
+    """Credentials apart van het record, 0600, worden nooit teruggegeven."""
+    d = os.path.join(CONN_DIR, token)
+    os.makedirs(d, exist_ok=True)
+    os.chmod(d, 0o700)
+    safe = re.sub(r"[^a-z0-9-]+", "-", tool.lower())[:40] or "tool"
+    p = os.path.join(d, safe + ".json")
+    with open(p, "w") as f:
+        json.dump({"tool": tool, "type": conn_type, "fields": fields, "created": _now()}, f)
+    os.chmod(p, 0o600)
+
+
+def _set_conn_status(record, tool, status):
+    st = record.setdefault("connections_status", {})
+    st[tool] = status
+    tmp = os.path.join(AUDIT_DIR, record["token"] + ".json.tmp")
+    with open(tmp, "w") as f:
+        json.dump(record, f, ensure_ascii=False, indent=2)
+    os.replace(tmp, os.path.join(AUDIT_DIR, record["token"] + ".json"))
+
+
 def _verify_stripe(sig_header, body):
     if not STRIPE_WEBHOOK_SECRET:
         return False
@@ -281,6 +354,7 @@ class Handler(BaseHTTPRequestHandler):
                 "ok": True,
                 "profile": rec.get("profile", {}),
                 "connections": rec.get("connections", []),
+                "connections_status": rec.get("connections_status", {}),
                 "workflows": rec.get("workflows", []),
                 "status": rec.get("status", ""),
                 "doel": rec.get("doel", ""),
@@ -308,6 +382,46 @@ class Handler(BaseHTTPRequestHandler):
             except Exception:
                 pass
             return self._send(200, {"ok": True})
+
+        if path == "/api/dashboard/connect":
+            try:
+                data = json.loads(body)
+            except Exception:
+                return self._send(400, {"ok": False, "error": "ongeldige JSON"})
+            rec = _load_record(str(data.get("id", "")))
+            tool = str(data.get("tool", "")).strip()[:60]
+            if not rec or not tool:
+                return self._send(404, {"ok": False, "error": "onbekend dashboard of tool"})
+            attempts = rec.get("connect_attempts", 0)
+            if attempts >= 25:
+                return self._send(429, {"ok": False, "error": "te veel pogingen"})
+            rec["connect_attempts"] = attempts + 1
+            conn_type, host = _conn_type_for(tool)
+            if conn_type == "imap":
+                email = str(data.get("email", "")).strip()[:200]
+                password = str(data.get("password", ""))[:200]
+                if not email or not password:
+                    _set_conn_status(rec, tool, "todo")
+                    return self._send(400, {"ok": False, "error": "e-mail en app-wachtwoord zijn nodig"})
+                ok, err = _test_imap(host, email, password)
+                if not ok:
+                    _set_conn_status(rec, tool, "fout")
+                    return self._send(400, {"ok": False, "error": "koppeling geweigerd: " + (err or "onbekend")})
+                _store_connection(rec["token"], tool, "imap", {"host": host, "email": email, "password": password})
+            elif conn_type == "ics":
+                url = str(data.get("url", "")).strip()[:500]
+                ok, err = _test_ics(url)
+                if not ok:
+                    _set_conn_status(rec, tool, "fout")
+                    return self._send(400, {"ok": False, "error": err or "ongeldige agenda-link"})
+                _store_connection(rec["token"], tool, "ics", {"url": url})
+            else:
+                apikey = str(data.get("apikey", "")).strip()[:500]
+                if not apikey:
+                    return self._send(400, {"ok": False, "error": "API-key is nodig"})
+                _store_connection(rec["token"], tool, "apikey", {"apikey": apikey})
+            _set_conn_status(rec, tool, "verbonden")
+            return self._send(200, {"ok": True, "tool": tool, "status": "verbonden"})
 
         if path != "/api/onboard/chat":
             return self._send(404, {"ok": False})

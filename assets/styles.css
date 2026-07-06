@@ -674,6 +674,12 @@ footer{border-top:1px solid var(--line)}
 .deep-soon{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .deep-chip{font-size:12.5px;font-weight:500;color:var(--ink-2);border:1px solid var(--line-strong);border-radius:100px;padding:6px 14px;background:var(--bg)}
 .deep-chip.muted{color:var(--ink-3);border-style:dashed}
+.conn-ok{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--success);background:color-mix(in oklab,var(--success) 12%,transparent);border-radius:100px;padding:6px 13px}
+.conn-wizard{border:1px solid var(--line);border-left:3px solid var(--ember);border-radius:10px;background:var(--surface-2);padding:16px;margin:4px 0 12px;animation:rise .35s var(--ease-out-expo)}
+.conn-help{font-size:12.5px;color:var(--ink-2);line-height:1.55;margin-bottom:12px}
+.conn-wizard .of-field input{background:var(--surface)}
+.conn-submit{width:100%;margin-top:4px}
+.conn-submit[disabled]{opacity:.6;cursor:wait}
 @media(max-width:760px){.dash-grid{grid-template-columns:1fr}}
 
 /* ---- audit-chat (/start) ---- */
