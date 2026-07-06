@@ -16,6 +16,11 @@
     var el = document.getElementById(id);
     return el ? el.textContent : fallback;
   };
+  // Voor uitleg met een klikbare link: lees de HTML i.p.v. platte tekst.
+  var tHtml = function (id, fallback) {
+    var el = document.getElementById(id);
+    return el ? el.innerHTML : fallback;
+  };
 
   var show = function (el) { el.hidden = false; };
   var hide = function (el) { el.hidden = true; };
@@ -62,7 +67,7 @@
 
     var help = document.createElement("p");
     help.className = "conn-help";
-    help.textContent = t(kind.help, "");
+    help.innerHTML = tHtml(kind.help, "");
     wiz.appendChild(help);
 
     if (kind.type === "imap") {
@@ -100,7 +105,8 @@
         .then(function (j) {
           if (j && j.ok) { wiz.remove(); markConnected(); }
           else {
-            err.textContent = (j && j.error) || t("tConnErr", "Koppelen lukte niet — probeer opnieuw.");
+            if (j && j.code === "app_password") err.innerHTML = tHtml("tErrAppPw", t("tConnErr", ""));
+            else err.textContent = (j && j.error) || t("tConnErr", "Koppelen lukte niet — probeer opnieuw.");
             err.hidden = false;
           }
         })

@@ -273,7 +273,10 @@ def _test_imap(host, email, password):
         box.logout()
         return True, None
     except Exception as e:
-        return False, str(e)[:200]
+        msg = str(e)
+        if "AUTHENTICATIONFAILED" in msg.upper() or "INVALID CREDENTIALS" in msg.upper():
+            return False, "app_password"  # signaal voor vriendelijke, vertaalde melding
+        return False, msg[:200]
 
 
 def _test_ics(url):
@@ -406,6 +409,9 @@ class Handler(BaseHTTPRequestHandler):
                 ok, err = _test_imap(host, email, password)
                 if not ok:
                     _set_conn_status(rec, tool, "fout")
+                    if err == "app_password":
+                        return self._send(400, {"ok": False, "code": "app_password",
+                                                "error": "gebruik een app-wachtwoord, niet je gewone wachtwoord"})
                     return self._send(400, {"ok": False, "error": "koppeling geweigerd: " + (err or "onbekend")})
                 _store_connection(rec["token"], tool, "imap", {"host": host, "email": email, "password": password})
             elif conn_type == "ics":
