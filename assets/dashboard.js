@@ -193,6 +193,59 @@
     }
 
     renderInsights(rec.insights);
+    renderAgent(rec.provision);
+  }
+
+  function renderAgent(prov) {
+    if (!prov) return;
+    var card = document.getElementById("agentCard");
+    var form = document.getElementById("agentInput");
+    var status = document.getElementById("agentStatus");
+    show(card);
+    if (!prov.active) {
+      status.textContent = t("tAgentSoon", "wordt geactiveerd");
+      hide(form);
+      show(document.getElementById("agentPending"));
+      return;
+    }
+    status.textContent = t("tAgentLive", "Live");
+    var log = document.getElementById("agentLog");
+    var addAgentMsg = function (role, text) {
+      var m = document.createElement("div");
+      m.className = "msg " + role;
+      m.textContent = text;
+      log.appendChild(m);
+      log.scrollTop = log.scrollHeight;
+      return m;
+    };
+    var busy = false;
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var text = document.getElementById("agentText").value.trim();
+      if (!text || busy) return;
+      busy = true;
+      addAgentMsg("user", text);
+      document.getElementById("agentText").value = "";
+      var typing = document.createElement("div");
+      typing.className = "msg agent typing";
+      typing.innerHTML = "<i></i><i></i><i></i>";
+      log.appendChild(typing);
+      fetch("/api/dashboard/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: token, message: text })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (jr) {
+          typing.remove();
+          addAgentMsg("agent", (jr && jr.ok && jr.reply) ? jr.reply : t("tAgentErr", "Even niet bereikbaar."));
+        })
+        .catch(function () { typing.remove(); addAgentMsg("agent", t("tAgentErr", "Even niet bereikbaar.")); })
+        .finally(function () { busy = false; });
+    });
+    document.getElementById("agentText").addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter" && !ev.shiftKey) { ev.preventDefault(); form.requestSubmit(); }
+    });
   }
 
   function renderInsights(ins) {

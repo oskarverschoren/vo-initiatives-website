@@ -71,7 +71,7 @@ in je context ziet ("WEBSITE-ONDERZOEK"), gebruik je het actief: leid de bedrijf
 activiteit eruit af en BEVESTIG ze ("ik zie dat jullie X doen — klopt dat?") in plaats van
 ernaar te vragen. Staat er "WEBSITE-ONDERZOEK-MISLUKT", zeg dan eerlijk dat de site weinig
 prijsgaf en vraag naar de juiste website.
-Vraag in beurt 2-3 ook het e-mailadres ("dan kan de opstart meteen starten").
+Vraag in beurt 2-3 ook het e-mailadres én telefoonnummer ("dan kan de opstart meteen starten").
 
 FASE 2 — KERN (kort — streef naar 5 à 6 vragen totaal): breng alleen de hoofdlijnen in kaart:
 - Activiteit + teamgrootte (één vraag).
@@ -261,6 +261,13 @@ def _save_customer_record(sess, dossier):
         return None
 
 
+def _save_record(record):
+    tmp = os.path.join(AUDIT_DIR, record["token"] + ".json.tmp")
+    with open(tmp, "w") as f:
+        json.dump(record, f, ensure_ascii=False, indent=2)
+    os.replace(tmp, os.path.join(AUDIT_DIR, record["token"] + ".json"))
+
+
 def _load_record(token):
     if not re.fullmatch(r"[0-9a-f]{32}", token or ""):
         return None
@@ -351,6 +358,72 @@ def _spawn_deep_audit(token):
         pass
 
 
+# ---- brug naar de Hermes-pipeline: provisioner + per-klant gateway-chat ----
+PROVISION = "/root/.hermes/scripts/provision_client.py"
+CLIENTS_DIR = "/root/.hermes/clients"
+
+
+def _slug(value):
+    v = re.sub(r"[^a-z0-9]+", "-", (value or "").lower()).strip("-")
+    return v[:50] or "klant"
+
+
+def _spawn_provision(record):
+    """Alle verplichte velden aanwezig -> dossier wegschrijven en de
+    provisioner starten (credit-safe: key blijft PENDING tot goedkeuring)."""
+    dossier = dict(record.get("dossier", {}))
+    if not all(str(dossier.get(k, "")).strip() for k in ("bedrijf", "email", "telefoon", "taak")):
+        return None
+    dossier.setdefault("kanaal", "app")
+    path = os.path.join(AUDIT_DIR, record["token"] + "-dossier.json")
+    with open(path, "w") as f:
+        json.dump(dossier, f, ensure_ascii=False, indent=2)
+    try:
+        subprocess.Popen([sys.executable, PROVISION, path],
+                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                         start_new_session=True)
+    except Exception:
+        return None
+    return {"slug": _slug(dossier.get("bedrijf")), "spawned": _now()}
+
+
+def _gateway_for(slug):
+    """Poort + key van de per-klant Hermes-gateway, als die bestaat."""
+    try:
+        with open(os.path.join(CLIENTS_DIR, slug, "app_env.json")) as f:
+            env = json.load(f)
+        port = int(env.get("API_SERVER_PORT", 0))
+        key = env.get("API_SERVER_KEY", "")
+        if port and key:
+            return port, key
+    except Exception:
+        pass
+    return None, None
+
+
+def _gateway_chat(port, key, message):
+    body = json.dumps({
+        "model": "voi-agent",
+        "messages": [{"role": "user", "content": message}],
+    }).encode()
+    req = urllib.request.Request(
+        f"http://127.0.0.1:{port}/v1/chat/completions", data=body,
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=90) as r:
+        data = json.loads(r.read())
+    return data["choices"][0]["message"]["content"]
+
+
+def _provision_view(rec):
+    prov = rec.get("provision")
+    if not prov:
+        return None
+    slug = prov.get("slug", "")
+    port, key = _gateway_for(slug)
+    return {"slug": slug, "active": bool(port),
+            "provisioned": os.path.isdir(os.path.join(CLIENTS_DIR, slug))}
+
+
 def _verify_stripe(sig_header, body):
     if not STRIPE_WEBHOOK_SECRET:
         return False
@@ -399,6 +472,7 @@ class Handler(BaseHTTPRequestHandler):
                 "status": rec.get("status", ""),
                 "doel": rec.get("doel", ""),
                 "insights": rec.get("insights"),
+                "provision": _provision_view(rec),
             })
         return self._send(404, {"ok": False})
 
@@ -467,6 +541,25 @@ class Handler(BaseHTTPRequestHandler):
             _set_conn_status(rec, tool, "verbonden")
             _spawn_deep_audit(rec["token"])
             return self._send(200, {"ok": True, "tool": tool, "status": "verbonden"})
+
+        if path == "/api/dashboard/chat":
+            try:
+                data = json.loads(body)
+            except Exception:
+                return self._send(400, {"ok": False, "error": "ongeldige JSON"})
+            rec = _load_record(str(data.get("id", "")))
+            msg = str(data.get("message", "")).strip()[:4000]
+            if not rec or not msg:
+                return self._send(404, {"ok": False})
+            prov = rec.get("provision") or {}
+            port, key = _gateway_for(prov.get("slug", ""))
+            if not port:
+                return self._send(409, {"ok": False, "code": "not_active"})
+            try:
+                reply = _gateway_chat(port, key, msg)
+            except Exception:
+                return self._send(502, {"ok": False, "code": "gateway_error"})
+            return self._send(200, {"ok": True, "reply": reply})
 
         if path != "/api/onboard/chat":
             return self._send(404, {"ok": False})
@@ -538,6 +631,11 @@ class Handler(BaseHTTPRequestHandler):
         if dossier:
             token = _save_customer_record(sess, dossier)
             if token:
+                rec = _load_record(token)
+                prov = _spawn_provision(rec)
+                if prov:
+                    rec["provision"] = prov
+                    _save_record(rec)
                 out["done"] = True
                 out["dashboard_url"] = "/dashboard?id=" + token
                 out["preview"] = {

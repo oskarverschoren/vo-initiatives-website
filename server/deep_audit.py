@@ -70,7 +70,9 @@ def read_imap(fields):
                         subjects.append(subj[:120])
                 if m_date:
                     try:
-                        dates.append(email.utils.parsedate_to_datetime(m_date.group(1).strip()))
+                        parsed = email.utils.parsedate_tz(m_date.group(1).strip())
+                        if parsed:
+                            dates.append(email.utils.mktime_tz(parsed))
                     except Exception:
                         pass
     finally:
@@ -81,7 +83,7 @@ def read_imap(fields):
 
     weeks = 1.0
     if len(dates) >= 2:
-        span = (max(dates) - min(dates)).total_seconds() / (7 * 86400)
+        span = (max(dates) - min(dates)) / (7 * 86400)
         weeks = max(span, 0.5)
     uniq_subjects = list(dict.fromkeys(subjects))
     return {
