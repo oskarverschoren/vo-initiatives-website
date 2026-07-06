@@ -27,6 +27,7 @@ API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 MODEL = os.environ.get("CHAT_MODEL", "anthropic/claude-haiku-4.5")
 AUDIT_DIR = os.environ.get("AUDIT_DIR", "/root/.hermes/audits")
 CONN_DIR = os.environ.get("CONN_SECRETS_DIR", "/root/.hermes/audit-connections")
+CLIENTS_DIR = os.environ.get("CLIENTS_DIR", "/root/.hermes/clients")
 MAIL_SAMPLE = int(os.environ.get("DEEP_MAIL_SAMPLE", "300"))
 
 
@@ -155,6 +156,58 @@ Antwoord met UITSLUITEND dit JSON-object (Nederlands, geen tekst eromheen):
     return json.loads(m.group(0))
 
 
+MARK_BEGIN = "<!-- web-audit:begin -->"
+MARK_END = "<!-- web-audit:end -->"
+
+
+def sync_memory(record):
+    """Schrijf de audit-kennis in de MEMORY.md-seed van de klant, zodat de
+    Hermes-agent op dag één alles weet wat de audit zag. Idempotent: het blok
+    tussen de markers wordt vervangen. Draait alleen zolang het profiel nog
+    niet gelanceerd is (de seed wordt eenmalig gekopieerd door client_launch)."""
+    slug = (record.get("provision") or {}).get("slug", "")
+    if not slug:
+        return
+    mem_path = os.path.join(CLIENTS_DIR, slug, "MEMORY.md")
+    if not os.path.exists(mem_path):
+        return
+    ins = record.get("insights") or {}
+    d = record.get("dossier") or {}
+    lines = ["", MARK_BEGIN, "## Audit-bevindingen (web-audit)"]
+    bron = ins.get("bron") or {}
+    if bron:
+        lines.append(f"Bron: {bron.get('mails', 0)} mails, {bron.get('events', 0)} agenda-items gelezen (read-only staal).")
+    for o in ins.get("observaties", []):
+        lines.append(f"- {o}")
+    for w in ins.get("workflow_signalen", []):
+        lines.append(f"- {w}")
+    vragen = ins.get("bevestig", [])
+    if vragen:
+        lines.append("")
+        lines.append("### Nog te bevestigen met de klant")
+        lines += [f"- {v}" for v in vragen]
+    flows = record.get("workflows") or []
+    if flows:
+        lines.append("")
+        lines.append("### Voorgestelde workflows (uit de audit — stel voor en plan via `hermes cron` na akkoord)")
+        lines += [f"- {f}" for f in flows]
+    if d.get("doel"):
+        lines.append("")
+        lines.append(f"### Doel van de klant\n{d['doel']}")
+    lines.append(MARK_END)
+    block = "\n".join(lines) + "\n"
+
+    current = open(mem_path).read()
+    if MARK_BEGIN in current and MARK_END in current:
+        pre = current.split(MARK_BEGIN)[0].rstrip("\n")
+        post = current.split(MARK_END, 1)[1]
+        current = pre + block + post
+    else:
+        current = current.rstrip("\n") + "\n" + block
+    with open(mem_path, "w") as f:
+        f.write(current)
+
+
 def main(token):
     rec_path = os.path.join(AUDIT_DIR, token + ".json")
     with open(rec_path) as f:
@@ -195,6 +248,11 @@ def main(token):
     with open(tmp, "w") as f:
         json.dump(record, f, ensure_ascii=False, indent=2)
     os.replace(tmp, rec_path)
+
+    try:
+        sync_memory(record)
+    except Exception:
+        pass
 
 
 if __name__ == "__main__":

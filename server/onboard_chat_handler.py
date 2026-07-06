@@ -414,13 +414,22 @@ def _gateway_chat(port, key, message):
     return data["choices"][0]["message"]["content"]
 
 
+def _port_open(port):
+    import socket
+    try:
+        with socket.create_connection(("127.0.0.1", port), timeout=0.4):
+            return True
+    except OSError:
+        return False
+
+
 def _provision_view(rec):
     prov = rec.get("provision")
     if not prov:
         return None
     slug = prov.get("slug", "")
     port, key = _gateway_for(slug)
-    return {"slug": slug, "active": bool(port),
+    return {"slug": slug, "active": bool(port and _port_open(port)),
             "provisioned": os.path.isdir(os.path.join(CLIENTS_DIR, slug))}
 
 
@@ -554,6 +563,8 @@ class Handler(BaseHTTPRequestHandler):
             prov = rec.get("provision") or {}
             port, key = _gateway_for(prov.get("slug", ""))
             if not port:
+                return self._send(409, {"ok": False, "code": "not_active"})
+            if not _port_open(port):
                 return self._send(409, {"ok": False, "code": "not_active"})
             try:
                 reply = _gateway_chat(port, key, msg)

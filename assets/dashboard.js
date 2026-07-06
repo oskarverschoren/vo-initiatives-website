@@ -238,7 +238,14 @@
         .then(function (r) { return r.json(); })
         .then(function (jr) {
           typing.remove();
-          addAgentMsg("agent", (jr && jr.ok && jr.reply) ? jr.reply : t("tAgentErr", "Even niet bereikbaar."));
+          if (jr && jr.ok && jr.reply) { addAgentMsg("agent", jr.reply); return; }
+          if (jr && jr.code === "not_active") {
+            status.textContent = t("tAgentSoon", "wordt geactiveerd");
+            hide(form);
+            show(document.getElementById("agentPending"));
+            return;
+          }
+          addAgentMsg("agent", t("tAgentErr", "Even niet bereikbaar."));
         })
         .catch(function () { typing.remove(); addAgentMsg("agent", t("tAgentErr", "Even niet bereikbaar.")); })
         .finally(function () { busy = false; });
