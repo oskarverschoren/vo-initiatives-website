@@ -57,7 +57,10 @@ Antwoord in de taal van de bezoeker (NL/EN/FR). Kort en gericht: max 3 zinnen + 
 per beurt. Nooit meer dan één vraag tegelijk.
 
 FASE 1 — IDENTIFICEER (beurt 1-2): vraag bedrijfsnaam + website. Zodra je website-onderzoek
-in je context ziet ("WEBSITE-ONDERZOEK"), bouw je vragen daarop voort ("ik zie dat jullie …").
+in je context ziet ("WEBSITE-ONDERZOEK"), gebruik je het actief: leid de bedrijfsnaam en
+activiteit eruit af en BEVESTIG ze ("ik zie dat jullie X doen — klopt dat?") in plaats van
+ernaar te vragen. Staat er "WEBSITE-ONDERZOEK-MISLUKT", zeg dan eerlijk dat de site weinig
+prijsgaf en vraag naar de juiste website.
 Vraag in beurt 2-3 ook het e-mailadres ("dan kan de opstart meteen starten").
 
 FASE 2 — PLUIS UIT (de kern): breng systematisch in kaart, met doorvragen:
@@ -115,25 +118,47 @@ def _rate_ok(ip):
     return True
 
 
+def _fetch_one(url):
+    req = urllib.request.Request(url, headers={"User-Agent": "VOI-audit/1.0"})
+    html = urllib.request.urlopen(req, timeout=6).read(300_000).decode("utf-8", "ignore")
+    txt = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", html, flags=re.S | re.I)
+    txt = re.sub(r"<[^>]+>", " ", txt)
+    txt = re.sub(r"\s+", " ", txt).strip()
+    vat = re.search(r"BE ?0?\d{3}[. ]?\d{3}[. ]?\d{3}", html)
+    return txt, (vat.group(0) if vat else None)
+
+
 def _fetch_site(text):
-    """Licht publiek onderzoek: haal de website uit het bericht en lees hem."""
+    """Publiek onderzoek volgens de audit-skill: probeer domein-varianten
+    (www, alternatieve TLD .be/.com — Belgische sites zitten vaak op .be) en
+    veelgebruikte paden; lege lander-pagina's tellen niet als resultaat.
+    Geeft (onderzoek, host) terug; onderzoek is None als niets bruikbaars."""
     m = re.search(r"(?:https?://)?((?:[a-z0-9-]+\.)+[a-z]{2,})(/\S*)?", text, re.I)
     if not m:
-        return None
-    host = m.group(1).lower()
-    for url in (f"https://{host}", f"https://www.{host}", f"http://{host}"):
-        try:
-            req = urllib.request.Request(url, headers={"User-Agent": "VOI-audit/1.0"})
-            html = urllib.request.urlopen(req, timeout=8).read(300_000).decode("utf-8", "ignore")
-            txt = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", html, flags=re.S | re.I)
-            txt = re.sub(r"<[^>]+>", " ", txt)
-            txt = re.sub(r"\s+", " ", txt).strip()
-            vat = re.search(r"BE ?0?\d{3}[. ]?\d{3}[. ]?\d{3}", html)
-            head = f"WEBSITE-ONDERZOEK ({url})" + (f" · BTW gevonden: {vat.group(0)}" if vat else "")
-            return head + ":\n" + txt[:6000]
-        except Exception:
-            continue
-    return None
+        return None, None
+    host = m.group(1).lower().removeprefix("www.")
+    variants = [host, "www." + host]
+    base, _, tld = host.rpartition(".")
+    if base and tld == "com":
+        variants += [base + ".be", "www." + base + ".be"]
+    elif base and tld == "be":
+        variants += [base + ".com"]
+    attempts = 0
+    for h in variants:
+        for path in ("", "/nl", "/en"):
+            if attempts >= 8:
+                return None, host
+            attempts += 1
+            url = f"https://{h}{path}"
+            try:
+                txt, vat = _fetch_one(url)
+            except Exception:
+                continue
+            if len(txt) < 400:  # lege lander/redirect-pagina — geen echt resultaat
+                continue
+            head = f"WEBSITE-ONDERZOEK ({url})" + (f" · BTW gevonden: {vat}" if vat else "")
+            return head + ":\n" + txt[:6000], host
+    return None, host
 
 
 def _llm(messages):
@@ -321,16 +346,24 @@ class Handler(BaseHTTPRequestHandler):
 
         sess["messages"].append({"role": "user", "content": msg})
 
-        # eenmalig publiek onderzoek zodra er een domein voorbijkomt
-        research = None
-        if not sess["researched"]:
-            research = _fetch_site(msg)
+        # publiek onderzoek: bij elk nieuw domein in het gesprek, tot het lukt;
+        # het resultaat blijft in de sessie zodat ELKE beurt het meekrijgt
+        if not sess.get("research") or sess.get("research_failed"):
+            research, host = _fetch_site(msg)
             if research:
-                sess["researched"] = True
+                sess["research"] = research
+                sess["research_failed"] = False
+            elif host and host != sess.get("research_host"):
+                sess["research"] = (f"WEBSITE-ONDERZOEK-MISLUKT: {host} gaf geen bruikbare "
+                                    "inhoud (lege pagina of redirect). Zeg dit eerlijk en "
+                                    "vraag naar de juiste website, of ga verder met vragen.")
+                sess["research_failed"] = True
+            if host:
+                sess["research_host"] = host
 
         convo = [{"role": "system", "content": SYSTEM_PROMPT + f"\n\nTaal van de bezoeker: {lang}."}]
-        if research:
-            convo.append({"role": "system", "content": research})
+        if sess.get("research"):
+            convo.append({"role": "system", "content": sess["research"]})
         convo += sess["messages"][-24:]
 
         try:
