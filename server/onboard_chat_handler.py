@@ -87,7 +87,9 @@ hoe alles loopt (nooit wachtwoorden in deze chat). Direct NA je afsluitende zin 
 ###DOSSIER###
 {"naam":"…","email":"…","bedrijf":"…","telefoon":"…","tools":"…","taak":"…","uren":"…","doel":"…"}
 Elke waarde beknopt maar volledig (max 1800 tekens), in het Nederlands. "taak" = de processen/
-workflows die de agent gaat overnemen; "tools" = alle genoemde software; "uren" = geschat
+workflows die de agent gaat overnemen; "tools" = ALLEEN de losse app-/softwarenamen, komma-gescheiden, zonder uitleg
+(dus "CrewPlanner, Gmail, Exact" — NIET "CrewPlanner voor planning; ..."). Noem tools die ze
+niet gebruiken niet; "uren" = geschat
 tijdverlies; "doel" = de doelen + belangrijkste context over het bedrijf (sector, team, volumes).
 
 REGELS: geen wachtwoorden/API-keys vragen of aannemen. Geen prijzen beloven buiten wat de
@@ -206,6 +208,26 @@ def _extract_dossier(reply):
     return visible.strip(), dossier
 
 
+def _clean_tools(raw):
+    """Maak van een tools-veld een schone lijst app-namen: split op , en ;,
+    kap uitleg achter 'voor'/'(' af, gooi fragmenten zonder echte tool weg."""
+    out, seen = [], set()
+    for part in re.split(r"[;,]", raw or ""):
+        name = re.split(r"\bvoor\b|\(", part, maxsplit=1)[0].strip(" .·-")
+        low = name.lower()
+        if not name or len(name) > 40:
+            continue
+        if any(w in low for w in ("nog niet", "geen ", "onbekend", "n.v.t", "diverse", "andere")):
+            continue
+        # los "Google/Gmail" op in aparte namen
+        for tok in re.split(r"\s*/\s*", name):
+            tok = tok.strip()
+            if tok and tok.lower() not in seen:
+                seen.add(tok.lower())
+                out.append(tok)
+    return out[:12]
+
+
 def _save_customer_record(sess, dossier):
     """Schrijf een schoon klantdossier naar AUDIT_DIR (losgekoppeld van Nova).
     Dit record is de bron voor het dashboard-build. Geeft het dashboard-token
@@ -219,7 +241,7 @@ def _save_customer_record(sess, dossier):
         "status": "audit_complete",
         "lang": sess.get("lang", "nl"),
         "profile": {k: payload[k] for k in ("naam", "email", "bedrijf", "telefoon")},
-        "connections": [t.strip() for t in payload["tools"].split(",") if t.strip()],
+        "connections": _clean_tools(payload["tools"]),
         "workflows": [t.strip() for t in re.split(r"[;\n]", payload["taak"]) if t.strip()],
         "uren": payload["uren"],
         "doel": payload["doel"],
