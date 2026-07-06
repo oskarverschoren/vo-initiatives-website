@@ -26,18 +26,64 @@
   var hide = function (el) { el.hidden = true; };
 
   var token = (new URLSearchParams(location.search).get("id") || "").trim();
-  if (!/^[0-9a-f]{32}$/.test(token)) {
-    hide(loading); show(missing); return;
-  }
+  var hasUrlToken = /^[0-9a-f]{32}$/.test(token);
 
-  fetch("/api/dashboard?id=" + token)
-    .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
-    .then(function (rec) {
-      if (!rec || !rec.ok) return Promise.reject();
-      render(rec);
-      hide(loading); show(main);
-    })
-    .catch(function () { hide(loading); show(missing); });
+  var loadDashboard = function () {
+    // met URL-token, of anders via de sessiecookie
+    return fetch("/api/dashboard" + (hasUrlToken ? "?id=" + token : ""), { credentials: "same-origin" })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function (rec) {
+        if (!rec || !rec.ok) return Promise.reject();
+        token = rec.token || token;
+        render(rec);
+        hide(loading); hide(document.getElementById("dashLogin")); show(main);
+      });
+  };
+
+  loadDashboard().catch(function () {
+    hide(loading);
+    // geen geldige toegang: URL-token fout -> niet gevonden; anders -> loginpagina
+    if (hasUrlToken) { show(missing); return; }
+    var loginBox = document.getElementById("dashLogin");
+    show(loginBox);
+    var emailForm = document.getElementById("loginEmailForm");
+    var codeForm = document.getElementById("loginCodeForm");
+    var emailVal = "";
+    emailForm.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      emailVal = emailForm.email.value.trim();
+      var btn = emailForm.querySelector("button");
+      btn.disabled = true;
+      fetch("/api/dashboard/login", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailVal })
+      }).finally(function () {
+        btn.disabled = false;
+        hide(emailForm); show(codeForm);
+        codeForm.code.focus();
+      });
+    });
+    codeForm.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var err = document.getElementById("loginCodeErr");
+      err.hidden = true;
+      var btn = codeForm.querySelector("button");
+      btn.disabled = true;
+      fetch("/api/dashboard/login/verify", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({ email: emailVal, code: codeForm.code.value.trim() })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (jr) {
+          if (jr && jr.ok) { show(loading); hide(loginBox); return loadDashboard(); }
+          err.textContent = (jr && jr.error) || "Code ongeldig of verlopen.";
+          err.hidden = false;
+        })
+        .catch(function () { err.textContent = "Even niet bereikbaar — probeer opnieuw."; err.hidden = false; })
+        .finally(function () { btn.disabled = false; });
+    });
+  });
 
   function connTypeFor(tool) {
     var s = tool.toLowerCase();

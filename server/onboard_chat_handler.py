@@ -50,10 +50,15 @@ MAX_TURNS = int(os.environ.get("MAX_TURNS", "30"))
 IP_SESSIONS_PER_HOUR = int(os.environ.get("IP_SESSIONS_PER_HOUR", "3"))
 
 CONN_DIR = os.environ.get("CONN_SECRETS_DIR", "/root/.hermes/audit-connections")
+SESS_DIR = os.environ.get("SESS_DIR", "/root/.hermes/dash-sessions")
+AGENTMAIL_KEY = os.environ.get("AGENTMAIL_API_KEY", "")
+AGENTMAIL_FROM = os.environ.get("AGENTMAIL_INBOX", "")
+SITE = "https://vo-initiatives.com"
 
 os.makedirs(STATE_DIR, exist_ok=True)
 os.makedirs(AUDIT_DIR, exist_ok=True)
 os.makedirs(CONN_DIR, exist_ok=True)
+os.makedirs(SESS_DIR, exist_ok=True)
 try:
     os.chmod(CONN_DIR, 0o700)
 except OSError:
@@ -414,6 +419,83 @@ def _gateway_chat(port, key, message):
     return data["choices"][0]["message"]["content"]
 
 
+# ---- toegang: e-mailcode login + 90-dagen sessiecookie (agentmail als kanaal) ----
+_login_ip_log = {}
+
+
+def _login_rate_ok(ip):
+    ts = [t for t in _login_ip_log.get(ip, []) if _now() - t < 3600]
+    _login_ip_log[ip] = ts
+    if len(ts) >= 10:
+        return False
+    ts.append(_now())
+    return True
+
+
+def _send_mail(to, subject, text):
+    if not (AGENTMAIL_KEY and AGENTMAIL_FROM):
+        return False
+    try:
+        body = json.dumps({"to": to, "subject": subject, "text": text}).encode()
+        req = urllib.request.Request(
+            f"https://api.agentmail.to/v0/inboxes/{AGENTMAIL_FROM}/messages/send",
+            data=body, headers={"Authorization": f"Bearer {AGENTMAIL_KEY}",
+                                "Content-Type": "application/json"})
+        urllib.request.urlopen(req, timeout=20)
+        return True
+    except Exception:
+        return False
+
+
+def _find_record_by_email(email):
+    email = email.strip().lower()
+    if "@" not in email:
+        return None
+    best = None
+    for name in os.listdir(AUDIT_DIR):
+        if not re.fullmatch(r"[0-9a-f]{32}\.json", name):
+            continue
+        try:
+            with open(os.path.join(AUDIT_DIR, name)) as f:
+                rec = json.load(f)
+        except Exception:
+            continue
+        rec_mail = str((rec.get("dossier") or {}).get("email", "")).strip().lower()
+        if rec_mail == email and (best is None or rec.get("created", 0) > best.get("created", 0)):
+            best = rec
+    return best
+
+
+def _hash_code(code):
+    return hashlib.sha256(("voi:" + code).encode()).hexdigest()
+
+
+def _new_session(record_token):
+    sid = uuid.uuid4().hex
+    with open(os.path.join(SESS_DIR, sid + ".json"), "w") as f:
+        json.dump({"token": record_token, "exp": _now() + 90 * 86400}, f)
+    return sid
+
+
+def _session_record(cookie_header):
+    m = re.search(r"voi_dash=([0-9a-f]{32})", cookie_header or "")
+    if not m:
+        return None
+    p = os.path.join(SESS_DIR, m.group(1) + ".json")
+    try:
+        with open(p) as f:
+            sess = json.load(f)
+        if sess.get("exp", 0) < _now():
+            os.remove(p)
+            return None
+        sess["exp"] = _now() + 90 * 86400  # glijdend venster
+        with open(p, "w") as f:
+            json.dump(sess, f)
+        return _load_record(sess.get("token", ""))
+    except Exception:
+        return None
+
+
 def _port_open(port):
     import socket
     try:
@@ -469,11 +551,12 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(200, {"ok": True, "paid": sess.get("paid", False), "turns": sess.get("turns", 0)})
         if path == "/api/dashboard":
             m = re.search(r"id=([0-9a-f]{32})", self.path)
-            rec = _load_record(m.group(1)) if m else None
+            rec = _load_record(m.group(1)) if m else _session_record(self.headers.get("Cookie"))
             if not rec:
-                return self._send(404, {"ok": False})
+                return self._send(401 if not m else 404, {"ok": False})
             return self._send(200, {
                 "ok": True,
+                "token": rec.get("token", ""),
                 "profile": rec.get("profile", {}),
                 "connections": rec.get("connections", []),
                 "connections_status": rec.get("connections_status", {}),
@@ -550,6 +633,52 @@ class Handler(BaseHTTPRequestHandler):
             _set_conn_status(rec, tool, "verbonden")
             _spawn_deep_audit(rec["token"])
             return self._send(200, {"ok": True, "tool": tool, "status": "verbonden"})
+
+        if path == "/api/dashboard/login":
+            if not _login_rate_ok(self._ip()):
+                return self._send(429, {"ok": False})
+            try:
+                email = str(json.loads(body).get("email", "")).strip().lower()[:200]
+            except Exception:
+                return self._send(400, {"ok": False})
+            rec = _find_record_by_email(email)
+            if rec:
+                code = f"{uuid.uuid4().int % 1000000:06d}"
+                rec["login"] = {"hash": _hash_code(code), "exp": _now() + 1800, "tries": 0}
+                _save_record(rec)
+                _send_mail(email, "Je inlogcode voor VOI",
+                           f"Je inlogcode: {code}\n\nDeze code is 30 minuten geldig.\n"
+                           f"Vroeg je dit niet aan? Negeer deze mail dan gewoon.\n\n— VO-Initiatives")
+            # altijd hetzelfde antwoord: geen e-mail-enumeratie
+            return self._send(200, {"ok": True})
+
+        if path == "/api/dashboard/login/verify":
+            try:
+                data = json.loads(body)
+                email = str(data.get("email", "")).strip().lower()[:200]
+                code = str(data.get("code", "")).strip()[:10]
+            except Exception:
+                return self._send(400, {"ok": False})
+            rec = _find_record_by_email(email)
+            login = (rec or {}).get("login") or {}
+            if not rec or login.get("exp", 0) < _now() or login.get("tries", 0) >= 5:
+                return self._send(401, {"ok": False, "error": "code ongeldig of verlopen"})
+            if _hash_code(code) != login.get("hash"):
+                rec["login"]["tries"] = login.get("tries", 0) + 1
+                _save_record(rec)
+                return self._send(401, {"ok": False, "error": "code ongeldig of verlopen"})
+            rec.pop("login", None)
+            _save_record(rec)
+            sid = _new_session(rec["token"])
+            body_out = json.dumps({"ok": True}).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Set-Cookie",
+                             f"voi_dash={sid}; Path=/; Max-Age=7776000; HttpOnly; Secure; SameSite=Lax")
+            self.send_header("Content-Length", str(len(body_out)))
+            self.end_headers()
+            self.wfile.write(body_out)
+            return
 
         if path == "/api/dashboard/chat":
             try:
@@ -647,6 +776,14 @@ class Handler(BaseHTTPRequestHandler):
                 if prov:
                     rec["provision"] = prov
                     _save_record(rec)
+                mail_to = str((rec.get("dossier") or {}).get("email", "")).strip()
+                if mail_to:
+                    _send_mail(mail_to, "Je VOI-dashboard staat klaar",
+                               f"Dag {(rec.get('profile') or {}).get('naam', '').split(' ')[0]},\n\n"
+                               f"Je dashboard: {SITE}/dashboard?id={token}\n\n"
+                               "Koppel er je tools en volg de opbouw van je agent.\n"
+                               "Opnieuw inloggen kan altijd op "
+                               f"{SITE}/dashboard met je e-mailadres.\n\n— VO-Initiatives")
                 out["done"] = True
                 out["dashboard_url"] = "/dashboard?id=" + token
                 out["preview"] = {
