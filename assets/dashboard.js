@@ -103,7 +103,7 @@
       })
         .then(function (r) { return r.json(); })
         .then(function (j) {
-          if (j && j.ok) { wiz.remove(); markConnected(); }
+          if (j && j.ok) { wiz.remove(); markConnected(); pollInsights(); }
           else {
             if (j && j.code === "app_password") err.innerHTML = tHtml("tErrAppPw", t("tConnErr", ""));
             else err.textContent = (j && j.error) || t("tConnErr", "Koppelen lukte niet — probeer opnieuw.");
@@ -191,5 +191,70 @@
       document.getElementById("goalText").textContent = rec.doel;
       show(document.getElementById("goalCard"));
     }
+
+    renderInsights(rec.insights);
+  }
+
+  function renderInsights(ins) {
+    var card = document.getElementById("insightsCard");
+    if (!ins || !(ins.observaties || []).length) return;
+    var bron = ins.bron || {};
+    document.getElementById("insightsBron").textContent =
+      t("tInsBron", "").replace("{m}", bron.mails || 0).replace("{e}", bron.events || 0);
+    var obsHost = document.getElementById("insightsObs");
+    obsHost.innerHTML = "";
+    (ins.observaties || []).concat(ins.workflow_signalen || []).forEach(function (o) {
+      var row = document.createElement("div");
+      row.className = "flow-row";
+      var dot = document.createElement("span");
+      dot.className = "flow-dot ins-dot";
+      var label = document.createElement("span");
+      label.className = "flow-name";
+      label.textContent = o;
+      row.appendChild(dot); row.appendChild(label);
+      obsHost.appendChild(row);
+    });
+    var vragen = ins.bevestig || [];
+    if (vragen.length) {
+      var vHost = document.getElementById("insightsVragen");
+      vHost.innerHTML = "";
+      vragen.forEach(function (v) {
+        var chip = document.createElement("span");
+        chip.className = "deep-chip";
+        chip.textContent = v;
+        vHost.appendChild(chip);
+      });
+      show(document.getElementById("insightsConfirm"));
+    }
+    show(card);
+  }
+
+  // na een nieuwe koppeling: wachten tot de inlees-agent klaar is en de kaart tonen
+  var insightsPoll = null;
+  function pollInsights() {
+    if (insightsPoll) return;
+    var card = document.getElementById("insightsCard");
+    if (card.hidden) {
+      var note = document.createElement("p");
+      note.className = "dash-note ins-wait";
+      note.textContent = t("tInsReading", "Je agent leest nu je gekoppelde tools…");
+      document.querySelector(".dash-deep").insertAdjacentElement("beforebegin", note);
+    }
+    var tries = 0;
+    insightsPoll = setInterval(function () {
+      tries += 1;
+      if (tries > 20) { clearInterval(insightsPoll); insightsPoll = null; return; }
+      fetch("/api/dashboard?id=" + token)
+        .then(function (r) { return r.json(); })
+        .then(function (rec) {
+          if (rec && rec.insights && (rec.insights.observaties || []).length) {
+            clearInterval(insightsPoll); insightsPoll = null;
+            var w = document.querySelector(".ins-wait");
+            if (w) w.remove();
+            renderInsights(rec.insights);
+            document.getElementById("insightsCard").scrollIntoView({ block: "center", behavior: "smooth" });
+          }
+        }).catch(function () {});
+    }, 8000);
   }
 })();

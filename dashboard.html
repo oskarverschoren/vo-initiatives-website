@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=20260703g">
-<script src="assets/theme.js?v=20260703g"></script>
+<link rel="stylesheet" href="assets/styles.css?v=20260703h">
+<script src="assets/theme.js?v=20260703h"></script>
 </head>
 <body>
 
@@ -76,6 +76,18 @@
       <p id="goalText" class="lead"></p>
     </section>
 
+    <section class="dash-card dash-insights" id="insightsCard" hidden>
+      <div class="dash-card-head">
+        <h2 data-i18n="dash.ins.t">Wat je agent al zag</h2>
+        <span class="dash-hint" id="insightsBron"></span>
+      </div>
+      <div id="insightsObs"></div>
+      <div class="ins-confirm" id="insightsConfirm" hidden>
+        <h3 data-i18n="dash.ins.confirm">Klopt dit?</h3>
+        <div id="insightsVragen"></div>
+      </div>
+    </section>
+
     <section class="dash-card dash-deep">
       <div class="dash-card-head"><h2 data-i18n="dash.deep.t">De diepere audit</h2></div>
       <p class="lead" data-i18n="dash.deep.p">Zodra je tools gekoppeld zijn, leest je agent je mails, documenten en gekoppelde apps in detail — zo kent hij je bedrijf volledig voor hij aan de slag gaat. Je kunt straks ook een schermopname of spraakbericht toevoegen om iets te tonen of uit te leggen.</p>
@@ -105,13 +117,15 @@
   <span hidden id="tHelpOutlook" data-i18n="dash.wiz.help.outlook">Gebruik een app-wachtwoord — niet je gewone wachtwoord (dat vragen we nooit). <a href="https://account.microsoft.com/security" target="_blank" rel="noopener">Maak er hier één aan →</a></span>
   <span hidden id="tHelpIcs" data-i18n="dash.wiz.help.ics">Plak de geheime iCal-link van je agenda — alleen-lezen, we kunnen niets wijzigen. <a href="https://calendar.google.com/calendar/r/settings" target="_blank" rel="noopener">Vind hem in Google Agenda-instellingen →</a></span>
   <span hidden id="tHelpApikey" data-i18n="dash.wiz.help.apikey">Maak in deze tool een API-key aan met zo beperkt mogelijke rechten en plak hem hier. Je agent gebruikt hem alleen voor jouw workflows.</span>
+  <span hidden id="tInsBron" data-i18n="dash.ins.bron">gelezen: {m} mails · {e} agenda-items</span>
+  <span hidden id="tInsReading" data-i18n="dash.ins.reading">Je agent leest nu je gekoppelde tools — dit verschijnt hier vanzelf…</span>
   <span hidden id="tErrAppPw" data-i18n="dash.wiz.err.apppw">Dat lijkt je gewone wachtwoord. Gebruik een app-wachtwoord van 16 tekens — <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener">maak er hier één aan →</a></span>
 
 </div>
 </main>
 
-<script src="assets/site-i18n.js?v=20260703g" defer></script>
-<script src="assets/dashboard.js?v=20260703g" defer></script>
-<script src="assets/site.js?v=20260703g" defer></script>
+<script src="assets/site-i18n.js?v=20260703h" defer></script>
+<script src="assets/dashboard.js?v=20260703h" defer></script>
+<script src="assets/site.js?v=20260703h" defer></script>
 </body>
 </html>

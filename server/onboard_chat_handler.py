@@ -28,6 +28,8 @@ import hashlib
 import hmac
 import imaplib
 import json
+import subprocess
+import sys
 import os
 import re
 import time
@@ -336,6 +338,19 @@ def _set_conn_status(record, tool, status):
     os.replace(tmp, os.path.join(AUDIT_DIR, record["token"] + ".json"))
 
 
+DEEP_AUDIT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "deep_audit.py")
+
+
+def _spawn_deep_audit(token):
+    """Start de inlees-agent op de achtergrond; mag nooit de koppel-flow blokkeren."""
+    try:
+        subprocess.Popen([sys.executable, DEEP_AUDIT, token],
+                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                         start_new_session=True)
+    except Exception:
+        pass
+
+
 def _verify_stripe(sig_header, body):
     if not STRIPE_WEBHOOK_SECRET:
         return False
@@ -383,6 +398,7 @@ class Handler(BaseHTTPRequestHandler):
                 "workflows": rec.get("workflows", []),
                 "status": rec.get("status", ""),
                 "doel": rec.get("doel", ""),
+                "insights": rec.get("insights"),
             })
         return self._send(404, {"ok": False})
 
@@ -449,6 +465,7 @@ class Handler(BaseHTTPRequestHandler):
                     return self._send(400, {"ok": False, "error": "API-key is nodig"})
                 _store_connection(rec["token"], tool, "apikey", {"apikey": apikey})
             _set_conn_status(rec, tool, "verbonden")
+            _spawn_deep_audit(rec["token"])
             return self._send(200, {"ok": True, "tool": tool, "status": "verbonden"})
 
         if path != "/api/onboard/chat":
