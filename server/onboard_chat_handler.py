@@ -37,6 +37,9 @@ import urllib.request
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import feed_lib
+
 API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 MODEL = os.environ.get("CHAT_MODEL", "anthropic/claude-haiku-4.5")
 FREE_TURNS = int(os.environ.get("FREE_TURNS", "8"))
@@ -54,6 +57,9 @@ SESS_DIR = os.environ.get("SESS_DIR", "/root/.hermes/dash-sessions")
 AGENTMAIL_KEY = os.environ.get("AGENTMAIL_API_KEY", "")
 AGENTMAIL_FROM = os.environ.get("AGENTMAIL_INBOX", "")
 SITE = "https://vo-initiatives.com"
+STRIPE_TIER = {t: os.environ.get(f"STRIPE_TIER_{t.upper()}", "") for t in ("licht", "standaard", "zwaar")}
+OPERATOR_SECRET = os.environ.get("OPERATOR_SECRET", "")
+OPERATOR_EMAIL = os.environ.get("OPERATOR_EMAIL", "")
 
 os.makedirs(STATE_DIR, exist_ok=True)
 os.makedirs(AUDIT_DIR, exist_ok=True)
@@ -515,6 +521,43 @@ def _provision_view(rec):
             "provisioned": os.path.isdir(os.path.join(CLIENTS_DIR, slug))}
 
 
+def _approve_sig(token):
+    return hmac.new(OPERATOR_SECRET.encode(), ("approve:" + token).encode(),
+                    hashlib.sha256).hexdigest()[:32]
+
+
+def _notify_operator(rec, wf_name):
+    """Eerste betaalde activatie: operator krijgt één goedkeurings-link per mail
+    (chat-first; Telegram optioneel later). Link is HMAC-getekend."""
+    if not (OPERATOR_EMAIL and OPERATOR_SECRET):
+        return
+    token = rec["token"]
+    slug = (rec.get("provision") or {}).get("slug", "?")
+    d = rec.get("dossier", {})
+    url = f"{SITE}/api/dashboard/approve?token={token}&sig={_approve_sig(token)}"
+    _send_mail(OPERATOR_EMAIL, f"Goedkeuring: {d.get('bedrijf', slug)} heeft betaald",
+               f"Klant: {d.get('bedrijf', '')} ({d.get('naam', '')}, {d.get('email', '')})\n"
+               f"Workflow: {wf_name}\nSlug: {slug}\n\n"
+               f"SOUL-review: /root/.hermes/clients/{slug}/persona.md\n\n"
+               f"ACTIVEER AGENT (approve-key + launch):\n{url}\n\n— VOI pipeline")
+
+
+def _run_approve(rec):
+    """Voert de twee operator-stappen uit: --approve-key + client_launch."""
+    slug = (rec.get("provision") or {}).get("slug", "")
+    if not slug:
+        return False, "geen slug"
+    try:
+        r1 = subprocess.run([sys.executable, PROVISION, "--approve-key", slug],
+                            capture_output=True, text=True, timeout=120)
+        r2 = subprocess.run(["bash", "/root/.hermes/scripts/client_launch.sh", slug],
+                            capture_output=True, text=True, timeout=300)
+        ok = r2.returncode == 0
+        return ok, (r1.stdout + r2.stdout + r2.stderr)[-400:]
+    except Exception as e:
+        return False, str(e)[:200]
+
+
 def _verify_stripe(sig_header, body):
     if not STRIPE_WEBHOOK_SECRET:
         return False
@@ -549,6 +592,36 @@ class Handler(BaseHTTPRequestHandler):
             if not sess:
                 return self._send(404, {"ok": False})
             return self._send(200, {"ok": True, "paid": sess.get("paid", False), "turns": sess.get("turns", 0)})
+        if path == "/api/dashboard/feed":
+            m = re.search(r"id=([0-9a-f]{32})", self.path)
+            rec = _load_record(m.group(1)) if m else _session_record(self.headers.get("Cookie"))
+            if not rec:
+                return self._send(401, {"ok": False})
+            return self._send(200, {"ok": True, "feed": feed_lib.feed_read(rec["token"]),
+                                    "wf": feed_lib.wf_view(rec)})
+
+        if path == "/api/dashboard/approve":
+            m_t = re.search(r"token=([0-9a-f]{32})", self.path)
+            m_s = re.search(r"sig=([0-9a-f]{32})", self.path)
+            rec = _load_record(m_t.group(1)) if m_t else None
+            if not (rec and m_s and OPERATOR_SECRET and
+                    hmac.compare_digest(m_s.group(1), _approve_sig(rec["token"]))):
+                return self._send(403, {"ok": False})
+            ok, log = _run_approve(rec)
+            if ok:
+                rec["approved"] = _now()
+                _save_record(rec)
+                feed_lib.feed_add(rec["token"], "agent",
+                    "Je agent is live! Vanaf nu praat je hier rechtstreeks met hem — en hij kent alles uit je audit al.")
+            page = ("<h1>" + ("Agent live" if ok else "Mislukt") + "</h1><pre>" +
+                    log.replace("<", "&lt;") + "</pre>").encode()
+            self.send_response(200 if ok else 500)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(page)))
+            self.end_headers()
+            self.wfile.write(page)
+            return
+
         if path == "/api/dashboard":
             m = re.search(r"id=([0-9a-f]{32})", self.path)
             rec = _load_record(m.group(1)) if m else _session_record(self.headers.get("Cookie"))
@@ -565,6 +638,7 @@ class Handler(BaseHTTPRequestHandler):
                 "doel": rec.get("doel", ""),
                 "insights": rec.get("insights"),
                 "provision": _provision_view(rec),
+                "wf": feed_lib.wf_view(rec),
             })
         return self._send(404, {"ok": False})
 
@@ -582,10 +656,27 @@ class Handler(BaseHTTPRequestHandler):
                 event = json.loads(body)
                 if event.get("type") == "checkout.session.completed":
                     ref = event["data"]["object"].get("client_reference_id", "")
-                    sess = _load(ref)
-                    if sess:
-                        sess["paid"] = True
-                        _save(sess)
+                    m_wf = re.fullmatch(r"([0-9a-f]{32})-(\d+)", ref or "")
+                    if m_wf:
+                        rec = _load_record(m_wf.group(1))
+                        meta = feed_lib.wf_ensure(rec) if rec else {}
+                        item = meta.get(m_wf.group(2))
+                        if rec and item and item["status"] != "actief":
+                            first_paid = feed_lib.wf_active_total(rec) == 0
+                            item["status"] = "actief"
+                            _save_record(rec)
+                            extra = (" Daarmee zit je op VOI Onbeperkt — alles erbij is gratis."
+                                     if feed_lib.wf_unlimited(rec) else "")
+                            feed_lib.feed_add(rec["token"], "agent",
+                                f"Betaling ontvangen — '{item['name']}' is geactiveerd." + extra +
+                                " Ik zet hem klaar; je hoort van me zodra hij draait.")
+                            if first_paid:
+                                _notify_operator(rec, item["name"])
+                    else:
+                        sess = _load(ref)
+                        if sess:
+                            sess["paid"] = True
+                            _save(sess)
             except Exception:
                 pass
             return self._send(200, {"ok": True})
@@ -631,6 +722,8 @@ class Handler(BaseHTTPRequestHandler):
                     return self._send(400, {"ok": False, "error": "API-key is nodig"})
                 _store_connection(rec["token"], tool, "apikey", {"apikey": apikey})
             _set_conn_status(rec, tool, "verbonden")
+            feed_lib.feed_add(rec["token"], "agent",
+                f"{tool} is gekoppeld — ik begin meteen met lezen. Zodra ik een beeld heb, meld ik me hier.")
             _spawn_deep_audit(rec["token"])
             return self._send(200, {"ok": True, "tool": tool, "status": "verbonden"})
 
@@ -680,6 +773,34 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(body_out)
             return
 
+        if path == "/api/dashboard/activate":
+            try:
+                data = json.loads(body)
+            except Exception:
+                return self._send(400, {"ok": False})
+            rec = _load_record(str(data.get("id", "")))
+            idx = str(data.get("idx", ""))
+            if not rec:
+                return self._send(404, {"ok": False})
+            meta = feed_lib.wf_ensure(rec)
+            item = meta.get(idx)
+            if not item:
+                return self._send(404, {"ok": False, "error": "onbekende workflow"})
+            if item["status"] == "actief":
+                return self._send(200, {"ok": True, "status": "actief"})
+            if feed_lib.wf_unlimited(rec):
+                item["status"] = "actief"
+                _save_record(rec)
+                feed_lib.feed_add(rec["token"], "agent",
+                    f"'{item['name']}' staat aan — onder VOI Onbeperkt zonder meerprijs. Ik ga ermee aan de slag.")
+                return self._send(200, {"ok": True, "status": "actief", "onbeperkt": True})
+            link = STRIPE_TIER.get(item.get("tier", "standaard"), "")
+            if not link:
+                return self._send(503, {"ok": False, "error": "betaling nog niet geconfigureerd"})
+            url = link + ("&" if "?" in link else "?") + f"client_reference_id={rec['token']}-{idx}"
+            return self._send(200, {"ok": True, "status": "wacht_betaling", "payment_url": url,
+                                    "price": item.get("price"), "tier": item.get("tier")})
+
         if path == "/api/dashboard/chat":
             try:
                 data = json.loads(body)
@@ -689,17 +810,39 @@ class Handler(BaseHTTPRequestHandler):
             msg = str(data.get("message", "")).strip()[:4000]
             if not rec or not msg:
                 return self._send(404, {"ok": False})
+            # dagcap tegen misbruik van de klant-chat
+            today = time.strftime("%Y%m%d")
+            usage = rec.get("chat_usage") or {}
+            count = usage.get(today, 0)
+            if count >= 60:
+                return self._send(429, {"ok": False, "error": "daglimiet bereikt — morgen weer"})
+            rec["chat_usage"] = {today: count + 1}
+
+            feed_lib.feed_add(rec["token"], "user", msg)
             prov = rec.get("provision") or {}
             port, key = _gateway_for(prov.get("slug", ""))
-            if not port:
-                return self._send(409, {"ok": False, "code": "not_active"})
-            if not _port_open(port):
-                return self._send(409, {"ok": False, "code": "not_active"})
-            try:
-                reply = _gateway_chat(port, key, msg)
-            except Exception:
-                return self._send(502, {"ok": False, "code": "gateway_error"})
-            return self._send(200, {"ok": True, "reply": reply})
+            reply = None
+            via = "gateway"
+            if port and _port_open(port):
+                try:
+                    reply = _gateway_chat(port, key, msg)
+                except Exception:
+                    reply = None
+            if reply is None:
+                # concierge: dezelfde agent-persona met alle klantkennis, tot de gateway live is
+                via = "concierge"
+                history = [{"role": ("assistant" if e["role"] == "agent" else "user"),
+                            "content": e["text"]}
+                           for e in feed_lib.feed_read(rec["token"], limit=16)
+                           if e["role"] in ("agent", "user")]
+                convo = [{"role": "system", "content": feed_lib.concierge_prompt(rec)}] + history
+                try:
+                    reply = _llm(convo)
+                except Exception:
+                    return self._send(502, {"ok": False, "code": "gateway_error"})
+            _save_record(rec)
+            feed_lib.feed_add(rec["token"], "agent", reply)
+            return self._send(200, {"ok": True, "reply": reply, "via": via})
 
         if path != "/api/onboard/chat":
             return self._send(404, {"ok": False})
@@ -776,6 +919,13 @@ class Handler(BaseHTTPRequestHandler):
                 if prov:
                     rec["provision"] = prov
                     _save_record(rec)
+                feed_lib.wf_ensure(rec)
+                _save_record(rec)
+                voornaam = (rec.get("profile") or {}).get("naam", "").split(" ")[0]
+                feed_lib.feed_add(token, "agent",
+                    f"Dag {voornaam}! Je audit is verwerkt en je opstart draait. "
+                    "Koppel hiernaast je tools — dan lees ik zelf hoe alles loopt en kom ik bij je terug "
+                    "met wat ik zie. Vragen kun je hier altijd kwijt.")
                 mail_to = str((rec.get("dossier") or {}).get("email", "")).strip()
                 if mail_to:
                     _send_mail(mail_to, "Je VOI-dashboard staat klaar",

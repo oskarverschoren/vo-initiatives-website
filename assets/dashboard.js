@@ -1,7 +1,7 @@
-/* VO-Initiatives — web-dashboard: laadt het klantrecord en beheert de tool-koppelingen.
-   Koppelen: Gmail/Outlook via IMAP app-wachtwoord (live getest), agenda via geheime
-   ICS-link, overige tools via API-key. Credentials gaan één kant op (POST) en worden
-   nooit teruggelezen. */
+/* VO-Initiatives — chat-first dashboard.
+   Het gesprek met de agent is het hoofdscherm (feed = geschiedenis + proactieve
+   berichten). Zijrail: plan (trappen -> €2.250 = Onbeperkt), workflows met
+   activatie via Stripe, verbindingen (IMAP/ICS/API-key, one-way), doel. */
 (function () {
   "use strict";
 
@@ -11,39 +11,55 @@
   var loading = document.getElementById("dashLoading");
   var missing = document.getElementById("dashMissing");
 
-  // Vertaalde stukjes staan als verborgen template-spans in de HTML (data-i18n).
   var t = function (id, fallback) {
     var el = document.getElementById(id);
     return el ? el.textContent : fallback;
   };
-  // Voor uitleg met een klikbare link: lees de HTML i.p.v. platte tekst.
   var tHtml = function (id, fallback) {
     var el = document.getElementById(id);
     return el ? el.innerHTML : fallback;
   };
-
   var show = function (el) { el.hidden = false; };
   var hide = function (el) { el.hidden = true; };
 
   var token = (new URLSearchParams(location.search).get("id") || "").trim();
   var hasUrlToken = /^[0-9a-f]{32}$/.test(token);
+  var feedCount = 0;
+  var chatBusy = false;
 
+  /* ---------- laden ---------- */
   var loadDashboard = function () {
-    // met URL-token, of anders via de sessiecookie
     return fetch("/api/dashboard" + (hasUrlToken ? "?id=" + token : ""), { credentials: "same-origin" })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(function (rec) {
         if (!rec || !rec.ok) return Promise.reject();
         token = rec.token || token;
         render(rec);
-        hide(loading); hide(document.getElementById("dashLogin")); show(main);
+        return loadFeed().then(function () {
+          hide(loading); hide(document.getElementById("dashLogin")); show(main);
+          startFeedPoll();
+        });
       });
+  };
+
+  var loadFeed = function () {
+    return fetch("/api/dashboard/feed?id=" + token, { credentials: "same-origin" })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (!j || !j.ok) return;
+        renderFeed(j.feed || []);
+        if (j.wf) renderPlanAndFlows(j.wf);
+      }).catch(function () {});
   };
 
   loadDashboard().catch(function () {
     hide(loading);
-    // geen geldige toegang: URL-token fout -> niet gevonden; anders -> loginpagina
     if (hasUrlToken) { show(missing); return; }
+    initLogin();
+  });
+
+  /* ---------- login (e-mailcode) ---------- */
+  function initLogin() {
     var loginBox = document.getElementById("dashLogin");
     show(loginBox);
     var emailForm = document.getElementById("loginEmailForm");
@@ -83,13 +99,135 @@
         .catch(function () { err.textContent = "Even niet bereikbaar — probeer opnieuw."; err.hidden = false; })
         .finally(function () { btn.disabled = false; });
     });
+  }
+
+  /* ---------- chat/feed ---------- */
+  var log = document.getElementById("agentLog");
+
+  function msgEl(role, text) {
+    var m = document.createElement("div");
+    m.className = "msg " + (role === "user" ? "user" : "agent");
+    m.textContent = text;
+    return m;
+  }
+
+  function renderFeed(items) {
+    if (items.length === feedCount) return;
+    var stick = log.scrollTop + log.clientHeight >= log.scrollHeight - 60;
+    log.innerHTML = "";
+    items.forEach(function (e) { log.appendChild(msgEl(e.role, e.text)); });
+    feedCount = items.length;
+    if (stick || feedCount <= 3) log.scrollTop = log.scrollHeight;
+  }
+
+  var pollTimer = null;
+  function startFeedPoll() {
+    if (pollTimer) return;
+    pollTimer = setInterval(function () { if (!chatBusy) loadFeed(); }, 12000);
+  }
+
+  var chatForm = document.getElementById("agentInput");
+  var chatText = document.getElementById("agentText");
+  chatForm.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var text = chatText.value.trim();
+    if (!text || chatBusy) return;
+    chatBusy = true;
+    log.appendChild(msgEl("user", text));
+    log.scrollTop = log.scrollHeight;
+    chatText.value = "";
+    var typing = document.createElement("div");
+    typing.className = "msg agent typing";
+    typing.innerHTML = "<i></i><i></i><i></i>";
+    log.appendChild(typing);
+    log.scrollTop = log.scrollHeight;
+    fetch("/api/dashboard/chat", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: token, message: text })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (jr) {
+        typing.remove();
+        if (jr && jr.ok && jr.reply) log.appendChild(msgEl("agent", jr.reply));
+        else log.appendChild(msgEl("agent", (jr && jr.error) || t("tAgentErr", "Even niet bereikbaar — probeer zo opnieuw.")));
+        log.scrollTop = log.scrollHeight;
+        feedCount += 2;
+      })
+      .catch(function () { typing.remove(); log.appendChild(msgEl("agent", t("tAgentErr", "Even niet bereikbaar."))); })
+      .finally(function () { chatBusy = false; chatText.focus(); });
+  });
+  chatText.addEventListener("keydown", function (ev) {
+    if (ev.key === "Enter" && !ev.shiftKey) { ev.preventDefault(); chatForm.requestSubmit(); }
   });
 
+  /* ---------- plan + workflows ---------- */
+  function renderPlanAndFlows(wf) {
+    var pct = Math.min(100, Math.round(100 * (wf.totaal || 0) / (wf.cap || 2250)));
+    document.getElementById("planBar").style.width = pct + "%";
+    var note = document.getElementById("planNote");
+    if (wf.onbeperkt) {
+      note.textContent = t("tUnlimited", "VOI Onbeperkt.");
+      document.getElementById("dashPlanBadge").textContent = "VOI Onbeperkt";
+    } else {
+      note.textContent = t("tPlanNote", "€{x} van €2.250/m").replace("{x}", wf.totaal || 0);
+    }
+
+    var host = document.getElementById("flowList");
+    host.innerHTML = "";
+    (wf.items || []).forEach(function (item) {
+      var row = document.createElement("div");
+      row.className = "flow-row";
+      var dot = document.createElement("span");
+      dot.className = "flow-dot" + (item.status === "actief" ? " on" : "");
+      var label = document.createElement("span");
+      label.className = "flow-name";
+      label.textContent = item.name;
+      row.appendChild(dot); row.appendChild(label);
+
+      if (item.status === "actief") {
+        var okChip = document.createElement("span");
+        okChip.className = "conn-ok";
+        okChip.textContent = t("tActive", "Actief");
+        row.appendChild(okChip);
+      } else {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn btn-secondary conn-btn";
+        btn.textContent = t("tActivate", "Activeer") + " · €" + item.price + t("tPerMonth", "/m");
+        btn.addEventListener("click", function () { activate(item, btn); });
+        row.appendChild(btn);
+      }
+      host.appendChild(row);
+    });
+  }
+
+  function activate(item, btn) {
+    btn.disabled = true;
+    fetch("/api/dashboard/activate", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: token, idx: item.idx })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (jr) {
+        if (jr && jr.ok && jr.payment_url) {
+          window.open(jr.payment_url, "_blank", "noopener");
+          log.appendChild(msgEl("agent", t("tPayOpened", 'Betaalpagina geopend voor "{w}".').replace("{w}", item.name)));
+          log.scrollTop = log.scrollHeight;
+          feedCount += 1;
+        } else if (jr && jr.ok) {
+          loadFeed();
+        }
+      })
+      .catch(function () {})
+      .finally(function () { btn.disabled = false; });
+  }
+
+  /* ---------- verbindingen (wizards) ---------- */
   function connTypeFor(tool) {
     var s = tool.toLowerCase();
+    if (/agenda|calendar|cal\.com/.test(s)) return { type: "ics", help: "tHelpIcs" };
     if (/gmail|google mail|^google$/.test(s)) return { type: "imap", help: "tHelpGmail" };
     if (/outlook|hotmail|office/.test(s)) return { type: "imap", help: "tHelpOutlook" };
-    if (/agenda|calendar|cal\.com/.test(s)) return { type: "ics", help: "tHelpIcs" };
     return { type: "apikey", help: "tHelpApikey" };
   }
 
@@ -106,29 +244,25 @@
     return label;
   }
 
-  function buildWizard(tool, row, markConnected) {
+  function buildWizard(tool, markConnected) {
     var kind = connTypeFor(tool);
     var wiz = document.createElement("form");
     wiz.className = "conn-wizard";
-
     var help = document.createElement("p");
     help.className = "conn-help";
     help.innerHTML = tHtml(kind.help, "");
     wiz.appendChild(help);
-
     if (kind.type === "imap") {
       wiz.appendChild(field(t("tFldEmail", "E-mailadres"), "email", "email"));
       wiz.appendChild(field(t("tFldAppPw", "App-wachtwoord"), "password", "password", "xxxx xxxx xxxx xxxx"));
     } else if (kind.type === "ics") {
-      wiz.appendChild(field(t("tFldIcs", "Geheime iCal/ICS-link"), "url", "url", "https://calendar.google.com/calendar/ical/…/basic.ics"));
+      wiz.appendChild(field(t("tFldIcs", "Geheime iCal/ICS-link"), "url", "url"));
     } else {
       wiz.appendChild(field(t("tFldApikey", "API-key"), "apikey", "password"));
     }
-
     var err = document.createElement("p");
     err.className = "of-error"; err.hidden = true;
     wiz.appendChild(err);
-
     var submit = document.createElement("button");
     submit.type = "submit";
     submit.className = "btn btn-primary conn-submit";
@@ -143,35 +277,35 @@
       submit.disabled = true;
       submit.textContent = t("tTesting", "Testen…");
       fetch("/api/dashboard/connect", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       })
         .then(function (r) { return r.json(); })
         .then(function (j) {
-          if (j && j.ok) { wiz.remove(); markConnected(); pollInsights(); }
+          if (j && j.ok) { wiz.remove(); markConnected(); loadFeed(); }
           else {
             if (j && j.code === "app_password") err.innerHTML = tHtml("tErrAppPw", t("tConnErr", ""));
             else err.textContent = (j && j.error) || t("tConnErr", "Koppelen lukte niet — probeer opnieuw.");
             err.hidden = false;
           }
         })
-        .catch(function () {
-          err.textContent = t("tConnErr", "Koppelen lukte niet — probeer opnieuw.");
-          err.hidden = false;
-        })
-        .finally(function () {
-          submit.disabled = false;
-          submit.textContent = t("tTestLink", "Test & koppel");
-        });
+        .catch(function () { err.textContent = t("tConnErr", "Koppelen lukte niet."); err.hidden = false; })
+        .finally(function () { submit.disabled = false; submit.textContent = t("tTestLink", "Test & koppel"); });
     });
     return wiz;
   }
 
+  /* ---------- render ---------- */
   function render(rec) {
     var naam = (rec.profile && rec.profile.naam ? rec.profile.naam.split(/\s+/)[0] : "");
     var hello = t("tHello", "Welkom");
     document.getElementById("dashGreet").textContent = naam ? hello + ", " + naam : hello;
+
+    var prov = rec.provision || {};
+    document.getElementById("agentStatus").textContent =
+      prov.active ? t("tAgentLive", "Live") : t("tConcierge", "In opbouw");
+
+    if (rec.wf) renderPlanAndFlows(rec.wf);
 
     var statusMap = rec.connections_status || {};
     var connHost = document.getElementById("connList");
@@ -184,16 +318,13 @@
       left.className = "conn-name";
       left.textContent = name;
       row.appendChild(left);
-
       var setConnected = function () {
         row.querySelectorAll(".conn-btn,.conn-ok").forEach(function (e) { e.remove(); });
         var okChip = document.createElement("span");
         okChip.className = "conn-ok";
-        okChip.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.5L5 9.5L10 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-        okChip.appendChild(document.createTextNode(" " + t("tConnected", "Verbonden")));
+        okChip.textContent = t("tConnected", "Verbonden");
         row.appendChild(okChip);
       };
-
       if (statusMap[name] === "verbonden") {
         setConnected();
       } else {
@@ -202,9 +333,9 @@
         btn.type = "button";
         btn.textContent = t("tLink", "Koppel");
         btn.addEventListener("click", function () {
-          var open = row.parentNode.querySelector(".conn-wizard");
+          var open = connHost.querySelector(".conn-wizard");
           if (open) open.remove();
-          var wiz = buildWizard(name, row, setConnected);
+          var wiz = buildWizard(name, setConnected);
           row.insertAdjacentElement("afterend", wiz);
           wiz.querySelector("input").focus();
         });
@@ -213,154 +344,9 @@
       connHost.appendChild(row);
     });
 
-    var flowHost = document.getElementById("flowList");
-    flowHost.innerHTML = "";
-    var flows = (rec.workflows && rec.workflows.length) ? rec.workflows : [t("tFlowDef", "Werkplek automatiseren")];
-    flows.slice(0, 8).forEach(function (name) {
-      var row = document.createElement("div");
-      row.className = "flow-row";
-      var dot = document.createElement("span");
-      dot.className = "flow-dot";
-      var label = document.createElement("span");
-      label.className = "flow-name";
-      label.textContent = name;
-      var status = document.createElement("span");
-      status.className = "flow-status";
-      status.textContent = t("tBuilding", "in opbouw");
-      row.appendChild(dot);
-      row.appendChild(label);
-      row.appendChild(status);
-      flowHost.appendChild(row);
-    });
-
     if (rec.doel && rec.doel.trim()) {
       document.getElementById("goalText").textContent = rec.doel;
       show(document.getElementById("goalCard"));
     }
-
-    renderInsights(rec.insights);
-    renderAgent(rec.provision);
-  }
-
-  function renderAgent(prov) {
-    if (!prov) return;
-    var card = document.getElementById("agentCard");
-    var form = document.getElementById("agentInput");
-    var status = document.getElementById("agentStatus");
-    show(card);
-    if (!prov.active) {
-      status.textContent = t("tAgentSoon", "wordt geactiveerd");
-      hide(form);
-      show(document.getElementById("agentPending"));
-      return;
-    }
-    status.textContent = t("tAgentLive", "Live");
-    var log = document.getElementById("agentLog");
-    var addAgentMsg = function (role, text) {
-      var m = document.createElement("div");
-      m.className = "msg " + role;
-      m.textContent = text;
-      log.appendChild(m);
-      log.scrollTop = log.scrollHeight;
-      return m;
-    };
-    var busy = false;
-    form.addEventListener("submit", function (ev) {
-      ev.preventDefault();
-      var text = document.getElementById("agentText").value.trim();
-      if (!text || busy) return;
-      busy = true;
-      addAgentMsg("user", text);
-      document.getElementById("agentText").value = "";
-      var typing = document.createElement("div");
-      typing.className = "msg agent typing";
-      typing.innerHTML = "<i></i><i></i><i></i>";
-      log.appendChild(typing);
-      fetch("/api/dashboard/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: token, message: text })
-      })
-        .then(function (r) { return r.json(); })
-        .then(function (jr) {
-          typing.remove();
-          if (jr && jr.ok && jr.reply) { addAgentMsg("agent", jr.reply); return; }
-          if (jr && jr.code === "not_active") {
-            status.textContent = t("tAgentSoon", "wordt geactiveerd");
-            hide(form);
-            show(document.getElementById("agentPending"));
-            return;
-          }
-          addAgentMsg("agent", t("tAgentErr", "Even niet bereikbaar."));
-        })
-        .catch(function () { typing.remove(); addAgentMsg("agent", t("tAgentErr", "Even niet bereikbaar.")); })
-        .finally(function () { busy = false; });
-    });
-    document.getElementById("agentText").addEventListener("keydown", function (ev) {
-      if (ev.key === "Enter" && !ev.shiftKey) { ev.preventDefault(); form.requestSubmit(); }
-    });
-  }
-
-  function renderInsights(ins) {
-    var card = document.getElementById("insightsCard");
-    if (!ins || !(ins.observaties || []).length) return;
-    var bron = ins.bron || {};
-    document.getElementById("insightsBron").textContent =
-      t("tInsBron", "").replace("{m}", bron.mails || 0).replace("{e}", bron.events || 0);
-    var obsHost = document.getElementById("insightsObs");
-    obsHost.innerHTML = "";
-    (ins.observaties || []).concat(ins.workflow_signalen || []).forEach(function (o) {
-      var row = document.createElement("div");
-      row.className = "flow-row";
-      var dot = document.createElement("span");
-      dot.className = "flow-dot ins-dot";
-      var label = document.createElement("span");
-      label.className = "flow-name";
-      label.textContent = o;
-      row.appendChild(dot); row.appendChild(label);
-      obsHost.appendChild(row);
-    });
-    var vragen = ins.bevestig || [];
-    if (vragen.length) {
-      var vHost = document.getElementById("insightsVragen");
-      vHost.innerHTML = "";
-      vragen.forEach(function (v) {
-        var chip = document.createElement("span");
-        chip.className = "deep-chip";
-        chip.textContent = v;
-        vHost.appendChild(chip);
-      });
-      show(document.getElementById("insightsConfirm"));
-    }
-    show(card);
-  }
-
-  // na een nieuwe koppeling: wachten tot de inlees-agent klaar is en de kaart tonen
-  var insightsPoll = null;
-  function pollInsights() {
-    if (insightsPoll) return;
-    var card = document.getElementById("insightsCard");
-    if (card.hidden) {
-      var note = document.createElement("p");
-      note.className = "dash-note ins-wait";
-      note.textContent = t("tInsReading", "Je agent leest nu je gekoppelde tools…");
-      document.querySelector(".dash-deep").insertAdjacentElement("beforebegin", note);
-    }
-    var tries = 0;
-    insightsPoll = setInterval(function () {
-      tries += 1;
-      if (tries > 20) { clearInterval(insightsPoll); insightsPoll = null; return; }
-      fetch("/api/dashboard?id=" + token)
-        .then(function (r) { return r.json(); })
-        .then(function (rec) {
-          if (rec && rec.insights && (rec.insights.observaties || []).length) {
-            clearInterval(insightsPoll); insightsPoll = null;
-            var w = document.querySelector(".ins-wait");
-            if (w) w.remove();
-            renderInsights(rec.insights);
-            document.getElementById("insightsCard").scrollIntoView({ block: "center", behavior: "smooth" });
-          }
-        }).catch(function () {});
-    }, 8000);
   }
 })();

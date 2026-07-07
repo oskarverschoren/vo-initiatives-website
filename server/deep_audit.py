@@ -23,6 +23,8 @@ import time
 import urllib.request
 from collections import Counter
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 MODEL = os.environ.get("CHAT_MODEL", "anthropic/claude-haiku-4.5")
 AUDIT_DIR = os.environ.get("AUDIT_DIR", "/root/.hermes/audits")
@@ -251,6 +253,19 @@ def main(token):
 
     try:
         sync_memory(record)
+    except Exception:
+        pass
+
+    # bevindingen als proactief bericht in het gesprek (chat-first)
+    try:
+        import feed_lib
+        ins = record.get("insights") or {}
+        if ins.get("observaties"):
+            regels = "\n".join("• " + o for o in ins["observaties"][:5])
+            vragen = ins.get("bevestig") or []
+            vraag = ("\n\n" + vragen[0]) if vragen else ""
+            feed_lib.feed_add(token, "agent",
+                f"Ik heb je gekoppelde tools gelezen. Dit valt me op:\n{regels}{vraag}")
     except Exception:
         pass
 
