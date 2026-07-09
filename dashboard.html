@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Je dashboard — VO-Initiatives</title>
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=20260707a">
-<script src="assets/theme.js?v=20260707a"></script>
+<link rel="stylesheet" href="assets/styles.css?v=20260709b">
+<script src="assets/theme.js?v=20260709b"></script>
 </head>
 <body>
 
@@ -32,7 +33,7 @@
 </header>
 
 <main>
-<div class="frame pad">
+<div class="frame pad dash-frame">
 
   <div class="dash-state" id="dashLoading">
     <div class="dash-spinner" aria-hidden="true"></div>
@@ -68,12 +69,58 @@
     </section>
 
     <div class="dash-layout">
+      <aside class="idea-rail" id="ideaRail" aria-label="Ideeën voor je agent" data-i18n-aria="dash.ideas.aria">
+        <h2 class="rail-title" data-i18n="dash.ideas.t">Waar wil je aan werken?</h2>
+        <p class="rail-hint" data-i18n="dash.ideas.hint">Klik — je agent pakt het op in de chat.</p>
+        <button type="button" class="idea" data-prompt="Bouw een workflow die mijn offertes automatisch opvolgt." data-i18n-map="prompt:dash.idea1.p">
+          <span class="idea-ic"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M1.5 4l6.5 5 6.5-5" stroke="currentColor" stroke-width="1.3"/></svg></span>
+          <span class="idea-body"><b data-i18n="dash.idea1.t">Offertes opvolgen</b><span data-i18n="dash.idea1.d">Niets blijft liggen</span></span>
+        </button>
+        <button type="button" class="idea" data-prompt="Bouw een workflow die inkomende facturen verwerkt en controleert." data-i18n-map="prompt:dash.idea2.p">
+          <span class="idea-ic"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.5" y="2" width="11" height="12" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+          <span class="idea-body"><b data-i18n="dash.idea2.t">Facturen verwerken</b><span data-i18n="dash.idea2.d">Gelezen en gecontroleerd</span></span>
+        </button>
+        <button type="button" class="idea" data-prompt="Zet elke maandag automatisch mijn weekrapport met cijfers klaar." data-i18n-map="prompt:dash.idea3.p">
+          <span class="idea-ic"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 13.5h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M4 13V8M8 13V4M12 13V6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+          <span class="idea-body"><b data-i18n="dash.idea3.t">Weekrapport &amp; KPI's</b><span data-i18n="dash.idea3.d">Elke maandag klaar</span></span>
+        </button>
+        <button type="button" class="idea" data-prompt="Stuur klanten automatisch een update zodra hun order van status verandert." data-i18n-map="prompt:dash.idea4.p">
+          <span class="idea-ic"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 14.5A6.5 6.5 0 118 1.5a6.5 6.5 0 010 13z" stroke="currentColor" stroke-width="1.3"/><path d="M8 4.5V8l2.5 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+          <span class="idea-body"><b data-i18n="dash.idea4.t">Track &amp; trace</b><span data-i18n="dash.idea4.d">Klant vanzelf op de hoogte</span></span>
+        </button>
+        <button type="button" class="idea" data-prompt="Vang nieuwe leads op en plan automatisch een afspraak in." data-i18n-map="prompt:dash.idea5.p">
+          <span class="idea-ic"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M1.5 6h13M5 1v2.5M11 1v2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+          <span class="idea-body"><b data-i18n="dash.idea5.t">Leads &amp; afspraken</b><span data-i18n="dash.idea5.d">Binnen het half uur beantwoord</span></span>
+        </button>
+        <button type="button" class="idea" data-prompt="Bereid wekelijks social-mediaposts voor in onze stijl." data-i18n-map="prompt:dash.idea6.p">
+          <span class="idea-ic"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8.5V4a1.5 1.5 0 011.5-1.5h9A1.5 1.5 0 0114 4v5a1.5 1.5 0 01-1.5 1.5H5L2 13V8.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+          <span class="idea-body"><b data-i18n="dash.idea6.t">Social media</b><span data-i18n="dash.idea6.d">Posts in jouw stijl, klaar om te keuren</span></span>
+        </button>
+        <button type="button" class="idea" data-prompt="Bouw een koppeling met onze eigen software." data-i18n-map="prompt:dash.idea7.p">
+          <span class="idea-ic"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="11" cy="5" r="2.6" stroke="currentColor" stroke-width="1.3"/><circle cx="4.5" cy="11.5" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M6 10L9.2 6.8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+          <span class="idea-body"><b data-i18n="dash.idea7.t">Eigen koppeling</b><span data-i18n="dash.idea7.d">Je agent bouwt ze zelf</span></span>
+        </button>
+        <button type="button" class="idea" data-prompt="Neem taken over in onze oude software zonder koppeling." data-i18n-map="prompt:dash.idea8.p">
+          <span class="idea-ic"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M6 14h4M8 11.5V14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+          <span class="idea-body"><b data-i18n="dash.idea8.t">Oude software</b><span data-i18n="dash.idea8.d">Werkt erin zoals een collega</span></span>
+        </button>
+      </aside>
       <section class="dash-card dash-agent" id="agentCard">
         <div class="dash-card-head">
           <h2 data-i18n="dash.agent.t2">Je agent</h2>
           <span class="dash-hint" id="agentStatus"></span>
         </div>
+        <div class="focus-bar" id="focusBar" hidden>
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/><circle cx="7" cy="7" r="2" fill="currentColor"/></svg>
+          <span id="focusLabel"></span>
+          <button type="button" class="focus-close" id="focusClose" aria-label="Focus sluiten" data-i18n-aria="dash.focus.close">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
         <div class="chat-log agent-log" id="agentLog" aria-live="polite"></div>
+        <div class="agent-status" id="agentStatusLine" aria-live="polite" hidden>
+          <span class="dash-dot"></span><span class="status-shimmer" id="agentStatusText"></span>
+        </div>
         <form class="chat-input" id="agentInput">
           <textarea rows="1" id="agentText" data-i18n-ph="chat.ph" placeholder="Typ je antwoord…" autocomplete="off"></textarea>
           <button type="submit" class="chat-send" aria-label="Verstuur" data-i18n-aria="chat.send">
@@ -87,6 +134,7 @@
           <div class="dash-card-head"><h2 data-i18n="dash.plan.t">Je plan</h2></div>
           <div class="plan-meter" aria-hidden="true"><i id="planBar" style="width:0%"></i></div>
           <p class="dash-note plan-note" id="planNote"></p>
+          <button type="button" class="btn btn-secondary conn-btn portal-btn" id="portalBtn" hidden data-i18n="dash.plan.portal">Beheer je abonnement</button>
         </section>
 
         <section class="dash-card">
@@ -119,6 +167,11 @@
   <span hidden id="tFlowDef" data-i18n="dash.flow.default">Werkplek automatiseren</span>
   <span hidden id="tBuilding" data-i18n="dash.flow.building">in opbouw</span>
   <span hidden id="tConnected" data-i18n="dash.conn.ok">Verbonden</span>
+  <span hidden id="tSaved" data-i18n="dash.conn.saved">Key bewaard</span>
+  <span hidden id="tReplace" data-i18n="dash.conn.replace">Klik om te vervangen of opnieuw te koppelen</span>
+  <span hidden id="tAddTool" data-i18n="dash.conn.add">Tool toevoegen</span>
+  <span hidden id="tAddName" data-i18n="dash.conn.addname">Naam van de tool</span>
+  <span hidden id="tNext" data-i18n="dash.conn.next">Verder</span>
   <span hidden id="tTestLink" data-i18n="dash.wiz.test">Test &amp; koppel</span>
   <span hidden id="tTesting" data-i18n="dash.wiz.testing">Testen…</span>
   <span hidden id="tConnErr" data-i18n="dash.wiz.err">Koppelen lukte niet — probeer opnieuw.</span>
@@ -132,8 +185,19 @@
   <span hidden id="tHelpApikey" data-i18n="dash.wiz.help.apikey">Maak in deze tool een API-key aan met zo beperkt mogelijke rechten en plak hem hier. Je agent gebruikt hem alleen voor jouw workflows.</span>
   <span hidden id="tActivate" data-i18n="dash.wf.activate">Activeer</span>
   <span hidden id="tActive" data-i18n="dash.wf.active">Actief</span>
+  <span hidden id="tBuild" data-i18n="dash.wf.build">Bouw &amp; test — gratis</span>
+  <span hidden id="tInBuild" data-i18n="dash.wf.inbuild">In aanbouw</span>
+  <span hidden id="tReview" data-i18n="dash.wf.review">Goedkeuren &amp; activeer</span>
+  <span hidden id="tLive" data-i18n="dash.wf.live">Live</span>
+  <span hidden id="tWerkGroup" data-i18n="dash.werk.group">Agent werkte — {n} stappen</span>
+  <span hidden id="tThink1" data-i18n="dash.think.1">Je bericht aan het lezen…</span>
+  <span hidden id="tThink2" data-i18n="dash.think.2">Aan het nadenken…</span>
+  <span hidden id="tThink3" data-i18n="dash.think.3">Antwoord aan het schrijven…</span>
+  <span hidden id="tThink4" data-i18n="dash.think.4">Nog even — dit is een lange…</span>
+  <span hidden id="tFocusOn" data-i18n="dash.focus.on">Gefocust op '{w}'</span>
+  <span hidden id="tFocusPh" data-i18n="dash.focus.ph">Over '{w}': typ je bericht…</span>
   <span hidden id="tPerMonth" data-i18n="dash.wf.pm">/m</span>
-  <span hidden id="tPayOpened" data-i18n="dash.wf.payopened">Betaalpagina geopend voor "{w}" — zodra de betaling binnen is, activeer ik hem hier vanzelf.</span>
+  <span hidden id="tPayOpened" data-i18n="dash.wf.payopened">Betaalpagina geopend voor "{w}" — zodra de betaling binnen is, zet ik hem hier live.</span>
   <span hidden id="tUnlimited" data-i18n="dash.plan.unlimited">VOI Onbeperkt — onbeperkt workflows en cronjobs.</span>
   <span hidden id="tPlanNote" data-i18n="dash.plan.note">€{x} van €2.250/m — vanaf daar alles onbeperkt.</span>
   <span hidden id="tConcierge" data-i18n="dash.agent.concierge">In opbouw</span>
@@ -147,8 +211,8 @@
 </div>
 </main>
 
-<script src="assets/site-i18n.js?v=20260707a" defer></script>
-<script src="assets/dashboard.js?v=20260707a" defer></script>
-<script src="assets/site.js?v=20260707a" defer></script>
+<script src="assets/site-i18n.js?v=20260709b" defer></script>
+<script src="assets/dashboard.js?v=20260709b" defer></script>
+<script src="assets/site.js?v=20260709b" defer></script>
 </body>
 </html>
